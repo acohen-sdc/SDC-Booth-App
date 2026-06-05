@@ -960,54 +960,87 @@ const SectionBanner = ({ title, kicker, right }) => (
 const SECTIONS = ["home","case-studies","industries","capabilities","videos","numbers","contact"];
 const SECTION_LABELS = ["Home","Case Studies","Industries","Capabilities","Videos","By the Numbers","Contact"];
 
-// ─── STAFF EXIT (hidden: tap logo 5× rapidly) ────────────────────────────────
-const useStaffExit = () => {
+// ─── STAFF MENU (hidden: tap logo 5× rapidly) ────────────────────────────────
+const useStaffMenu = () => {
   const taps = useRef([]);
-  const [showExit, setShowExit] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [locked, setLocked] = useState(false);
   const TAP_COUNT = 5;
-  const TAP_WINDOW = 3000; // ms
+  const TAP_WINDOW = 3000;
 
   const handleLogoTap = useCallback(() => {
     const now = Date.now();
     taps.current = [...taps.current.filter(t => now - t < TAP_WINDOW), now];
     if (taps.current.length >= TAP_COUNT) {
       taps.current = [];
-      setShowExit(true);
+      if (locked) { setLocked(false); } // tapping logo 5× also unlocks
+      else { setShowMenu(true); }
     }
-  }, []);
+  }, [locked]);
 
-  return { showExit, setShowExit, handleLogoTap };
+  return { showMenu, setShowMenu, locked, setLocked, handleLogoTap };
 };
 
-const StaffExitOverlay = ({ onCancel }) => (
+const StaffMenuOverlay = ({ onCancel, onLock }) => (
   <div style={{
     position:"fixed", inset:0, zIndex:9999,
-    background:"rgba(0,0,0,0.85)",
+    background:"rgba(0,0,0,0.88)",
     display:"flex", flexDirection:"column",
     alignItems:"center", justifyContent:"center", gap:24
   }}>
-    <div style={{fontSize:22, fontWeight:700, color:"#fff", letterSpacing:"0.1em", textTransform:"uppercase"}}>Staff Exit</div>
-    <div style={{fontSize:16, color:"var(--text-dim)"}}>Close the kiosk application?</div>
-    <div style={{display:"flex", gap:20, marginTop:12}}>
+    <div style={{fontSize:22, fontWeight:700, color:"#fff", letterSpacing:"0.1em", textTransform:"uppercase"}}>Staff Menu</div>
+    <div style={{fontSize:15, color:"var(--text-dim)", marginBottom:4}}>Choose an action:</div>
+    <div style={{display:"flex", gap:16, marginTop:4, flexWrap:"wrap", justifyContent:"center"}}>
+      <button onClick={onLock} style={{
+        background:"#1574C4", color:"#fff", border:"none",
+        borderRadius:10, padding:"18px 40px",
+        fontSize:18, fontWeight:700, cursor:"pointer"
+      }}>🔒 Lock Screen</button>
       <button onClick={() => window.close()} style={{
         background:"#c0392b", color:"#fff", border:"none",
-        borderRadius:10, padding:"18px 48px",
-        fontSize:20, fontWeight:700, cursor:"pointer"
-      }}>Exit Kiosk</button>
+        borderRadius:10, padding:"18px 40px",
+        fontSize:18, fontWeight:700, cursor:"pointer"
+      }}>✕ Exit Kiosk</button>
       <button onClick={onCancel} style={{
         background:"var(--panel-2)", color:"var(--text-dim)",
         border:"1px solid var(--border-2)",
-        borderRadius:10, padding:"18px 48px",
-        fontSize:20, fontWeight:700, cursor:"pointer"
+        borderRadius:10, padding:"18px 40px",
+        fontSize:18, fontWeight:700, cursor:"pointer"
       }}>Cancel</button>
     </div>
     <div style={{fontSize:13, color:"var(--text-mute)", marginTop:8}}>Tap logo 5× to show this menu</div>
   </div>
 );
 
+const LockOverlay = ({ onUnlock }) => (
+  <div
+    style={{
+      position:"fixed", inset:0, zIndex:9998,
+      background:"rgba(6,29,57,0.97)",
+      display:"flex", flexDirection:"column",
+      alignItems:"center", justifyContent:"center", gap:20,
+      cursor:"default"
+    }}
+    // Block all touch/click events from reaching the app beneath
+    onPointerDown={e => e.stopPropagation()}
+    onTouchStart={e => e.stopPropagation()}
+  >
+    <div style={{fontSize:64, marginBottom:8}}>🔒</div>
+    <div style={{fontSize:26, fontWeight:800, color:"#fff", letterSpacing:"0.05em"}}>Screen Locked</div>
+    <div style={{fontSize:16, color:"var(--text-dim)", marginBottom:24}}>Tap the SDC logo 5× rapidly to unlock</div>
+    <div style={{
+      background:"var(--panel-2)", border:"1px solid var(--border)",
+      borderRadius:12, padding:"16px 32px",
+      fontSize:14, color:"var(--text-mute)", textAlign:"center"
+    }}>
+      This kiosk is temporarily locked by staff.<br/>Please see a team member for assistance.
+    </div>
+  </div>
+);
+
 const Header = ({ route, onNavigate, onBack, title }) => {
   const isHome = route.name === "home";
-  const { showExit, setShowExit, handleLogoTap } = useStaffExit();
+  const { showMenu, setShowMenu, locked, setLocked, handleLogoTap } = useStaffMenu();
 
   const sectionIdx = (() => {
     if (["case-study-detail"].includes(route.name)) return 1;
@@ -1019,7 +1052,11 @@ const Header = ({ route, onNavigate, onBack, title }) => {
 
   return (
     <>
-      {showExit && <StaffExitOverlay onCancel={() => setShowExit(false)} />}
+      {locked && <LockOverlay onUnlock={() => setLocked(false)} />}
+      {showMenu && <StaffMenuOverlay
+        onCancel={() => setShowMenu(false)}
+        onLock={() => { setShowMenu(false); setLocked(true); }}
+      />}
       <header className="kheader">
         <div className="kheader-left">
           <div className="logo-block" onClick={handleLogoTap} style={{cursor:"default"}}>
