@@ -751,16 +751,31 @@ button { font-family: inherit; cursor: pointer; }
   window.addEventListener("resize", fit);
   fit();
 
+  // Enter / exit fullscreen (removes title bar, prevents window drag)
+  function enterFullscreen() {
+    const el = document.documentElement;
+    if (el.requestFullscreen)            el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.mozRequestFullScreen)    el.mozRequestFullScreen();
+    else if (el.msRequestFullscreen)     el.msRequestFullscreen();
+  }
+  function exitFullscreen() {
+    if (document.exitFullscreen)            document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    else if (document.mozCancelFullScreen)  document.mozCancelFullScreen();
+    else if (document.msExitFullscreen)     document.msExitFullscreen();
+  }
+
   // Global zoom controls used by the React staff menu
   window.KioskZoom = {
     get: () => parseFloat(stage.style.getPropertyValue("--scale") || 1),
     set: (s) => { stage.style.setProperty("--scale", Math.min(3, Math.max(0.2, s))); },
     isLocked: () => locked,
-    lock:   () => { locked = true;  },
-    unlock: () => { locked = false; fit(); },
+    lock:   () => { locked = true;  enterFullscreen(); },  // lock zoom + go fullscreen (no drag)
+    unlock: () => { locked = false; exitFullscreen(); fit(); }, // unlock + exit fullscreen
     zoomIn:  () => { window.KioskZoom.set(window.KioskZoom.get() + 0.05); },
     zoomOut: () => { window.KioskZoom.set(window.KioskZoom.get() - 0.05); },
-    reset:   () => { locked = false; fit(); },
+    reset:   () => { locked = false; exitFullscreen(); fit(); },
   };
 })();
 </script>
