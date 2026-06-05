@@ -2,20 +2,20 @@
 :: ============================================================
 ::  SDC Kiosk Launcher
 ::  Opens the kiosk app in true fullscreen kiosk mode.
-::  Uses a SEPARATE browser profile so your regular browser
-::  windows are never touched or affected.
+::  Uses a separate browser profile so regular browser
+::  windows are never affected.
 ::  Tap the SDC logo 5x to exit (touchscreen staff exit).
-::  Browser priority: Brave → Chrome → Edge
 :: ============================================================
 
-:: Get the folder this batch file lives in
+:: Get the folder this batch file lives in (no trailing backslash issue)
 set "APP_DIR=%~dp0"
 set "APP_FILE=%APP_DIR%SDC Kiosk App - Self Contained.html"
+set "KIOSK_PROFILE=%APP_DIR%kiosk-profile"
 
-:: Dedicated kiosk profile folder — completely isolated from your normal browser
-set "KIOSK_PROFILE=%APP_DIR%kiosk-browser-profile"
+:: Convert backslashes to forward slashes for file:// URL
+set "APP_URL=%APP_FILE:\=/%"
 
-:: ---- Find Brave (preferred) ----
+:: ---- Find Brave ----
 set "BRAVE="
 for %%P in (
   "%PROGRAMFILES%\BraveSoftware\Brave-Browser\Application\brave.exe"
@@ -35,7 +35,7 @@ for %%P in (
   if exist %%P if not defined CHROME set "CHROME=%%~P"
 )
 
-:: ---- Find Edge as last resort ----
+:: ---- Find Edge ----
 set "EDGE="
 for %%P in (
   "%PROGRAMFILES%\Microsoft\Edge\Application\msedge.exe"
@@ -45,56 +45,21 @@ for %%P in (
   if exist %%P if not defined EDGE set "EDGE=%%~P"
 )
 
-:: ---- Launch with Brave (isolated kiosk profile) ----
+:: ---- Launch Brave ----
 if defined BRAVE (
-  start "" "%BRAVE%" ^
-    --kiosk "file:///%APP_FILE:\=/%" ^
-    --user-data-dir="%KIOSK_PROFILE%" ^
-    --no-first-run ^
-    --disable-pinch ^
-    --disable-translate ^
-    --disable-infobars ^
-    --disable-features=TranslateUI ^
-    --overscroll-history-navigation=0 ^
-    --disable-back-forward-cache ^
-    --disable-session-crashed-bubble ^
-    --hide-crash-restore-bubble ^
-    --noerrdialogs ^
-    --check-for-update-interval=31536000
+  start "" "%BRAVE%" --kiosk "file:///%APP_URL%" --user-data-dir="%KIOSK_PROFILE%" --no-first-run --disable-pinch --disable-translate --disable-infobars --disable-features=TranslateUI --overscroll-history-navigation=0 --disable-back-forward-cache --disable-session-crashed-bubble --hide-crash-restore-bubble --noerrdialogs --check-for-update-interval=31536000
   goto :done
 )
 
-:: ---- Launch with Chrome (isolated kiosk profile) ----
+:: ---- Launch Chrome ----
 if defined CHROME (
-  start "" "%CHROME%" ^
-    --kiosk "file:///%APP_FILE:\=/%" ^
-    --user-data-dir="%KIOSK_PROFILE%" ^
-    --no-first-run ^
-    --disable-pinch ^
-    --disable-translate ^
-    --disable-infobars ^
-    --disable-features=TranslateUI ^
-    --overscroll-history-navigation=0 ^
-    --disable-back-forward-cache ^
-    --disable-session-crashed-bubble ^
-    --hide-crash-restore-bubble ^
-    --noerrdialogs ^
-    --check-for-update-interval=31536000
+  start "" "%CHROME%" --kiosk "file:///%APP_URL%" --user-data-dir="%KIOSK_PROFILE%" --no-first-run --disable-pinch --disable-translate --disable-infobars --disable-features=TranslateUI --overscroll-history-navigation=0 --disable-back-forward-cache --disable-session-crashed-bubble --hide-crash-restore-bubble --noerrdialogs --check-for-update-interval=31536000
   goto :done
 )
 
-:: ---- Launch with Edge (isolated kiosk profile) ----
+:: ---- Launch Edge ----
 if defined EDGE (
-  start "" "%EDGE%" ^
-    --kiosk "file:///%APP_FILE:\=/%" ^
-    --user-data-dir="%KIOSK_PROFILE%" ^
-    --no-first-run ^
-    --disable-pinch ^
-    --disable-translate ^
-    --disable-infobars ^
-    --overscroll-history-navigation=0 ^
-    --noerrdialogs ^
-    --edge-kiosk-type=fullscreen
+  start "" "%EDGE%" --kiosk "file:///%APP_URL%" --user-data-dir="%KIOSK_PROFILE%" --no-first-run --disable-pinch --disable-translate --disable-infobars --overscroll-history-navigation=0 --noerrdialogs --edge-kiosk-type=fullscreen
   goto :done
 )
 
