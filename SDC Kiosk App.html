@@ -960,8 +960,55 @@ const SectionBanner = ({ title, kicker, right }) => (
 const SECTIONS = ["home","case-studies","industries","capabilities","videos","numbers","contact"];
 const SECTION_LABELS = ["Home","Case Studies","Industries","Capabilities","Videos","By the Numbers","Contact"];
 
+// ─── STAFF EXIT (hidden: tap logo 5× rapidly) ────────────────────────────────
+const useStaffExit = () => {
+  const taps = useRef([]);
+  const [showExit, setShowExit] = useState(false);
+  const TAP_COUNT = 5;
+  const TAP_WINDOW = 3000; // ms
+
+  const handleLogoTap = useCallback(() => {
+    const now = Date.now();
+    taps.current = [...taps.current.filter(t => now - t < TAP_WINDOW), now];
+    if (taps.current.length >= TAP_COUNT) {
+      taps.current = [];
+      setShowExit(true);
+    }
+  }, []);
+
+  return { showExit, setShowExit, handleLogoTap };
+};
+
+const StaffExitOverlay = ({ onCancel }) => (
+  <div style={{
+    position:"fixed", inset:0, zIndex:9999,
+    background:"rgba(0,0,0,0.85)",
+    display:"flex", flexDirection:"column",
+    alignItems:"center", justifyContent:"center", gap:24
+  }}>
+    <div style={{fontSize:22, fontWeight:700, color:"#fff", letterSpacing:"0.1em", textTransform:"uppercase"}}>Staff Exit</div>
+    <div style={{fontSize:16, color:"var(--text-dim)"}}>Close the kiosk application?</div>
+    <div style={{display:"flex", gap:20, marginTop:12}}>
+      <button onClick={() => window.close()} style={{
+        background:"#c0392b", color:"#fff", border:"none",
+        borderRadius:10, padding:"18px 48px",
+        fontSize:20, fontWeight:700, cursor:"pointer"
+      }}>Exit Kiosk</button>
+      <button onClick={onCancel} style={{
+        background:"var(--panel-2)", color:"var(--text-dim)",
+        border:"1px solid var(--border-2)",
+        borderRadius:10, padding:"18px 48px",
+        fontSize:20, fontWeight:700, cursor:"pointer"
+      }}>Cancel</button>
+    </div>
+    <div style={{fontSize:13, color:"var(--text-mute)", marginTop:8}}>Tap logo 5× to show this menu</div>
+  </div>
+);
+
 const Header = ({ route, onNavigate, onBack, title }) => {
   const isHome = route.name === "home";
+  const { showExit, setShowExit, handleLogoTap } = useStaffExit();
+
   const sectionIdx = (() => {
     if (["case-study-detail"].includes(route.name)) return 1;
     if (["industry-detail"].includes(route.name)) return 2;
@@ -971,34 +1018,37 @@ const Header = ({ route, onNavigate, onBack, title }) => {
   })();
 
   return (
-    <header className="kheader">
-      <div className="kheader-left">
-        <div className="logo-block">
-          <img src="Blue SDC Logo.png" alt="SDC Automation" className="sdc-logo" />
-        </div>
-        <div className="header-divider" />
-        {!isHome && (
-          <button className="back-btn" onClick={onBack}>
-            <ArrowLeft size={18} color="#5BA0E0" />
-            <span>{title || "Back"}</span>
-          </button>
-        )}
-        {isHome && (
-          <div className="show-badge">
-            Automate 2026 &nbsp;·&nbsp; Booth <span>#26011</span>
+    <>
+      {showExit && <StaffExitOverlay onCancel={() => setShowExit(false)} />}
+      <header className="kheader">
+        <div className="kheader-left">
+          <div className="logo-block" onClick={handleLogoTap} style={{cursor:"default"}}>
+            <img src="Blue SDC Logo.png" alt="SDC Automation" className="sdc-logo" />
           </div>
-        )}
-      </div>
-      <div className="kheader-right">
-        <div className="dots">
-          {SECTION_LABELS.map((s, i) => (
-            <span key={i} title={s}
-              className={`dot ${i === sectionIdx ? "dot-active" : ""}`}
-              onClick={() => onNavigate({ name: SECTIONS[i] })} />
-          ))}
+          <div className="header-divider" />
+          {!isHome && (
+            <button className="back-btn" onClick={onBack}>
+              <ArrowLeft size={18} color="#5BA0E0" />
+              <span>{title || "Back"}</span>
+            </button>
+          )}
+          {isHome && (
+            <div className="show-badge">
+              Automate 2026 &nbsp;·&nbsp; Booth <span>#26011</span>
+            </div>
+          )}
         </div>
-      </div>
-    </header>
+        <div className="kheader-right">
+          <div className="dots">
+            {SECTION_LABELS.map((s, i) => (
+              <span key={i} title={s}
+                className={`dot ${i === sectionIdx ? "dot-active" : ""}`}
+                onClick={() => onNavigate({ name: SECTIONS[i] })} />
+            ))}
+          </div>
+        </div>
+      </header>
+    </>
   );
 };
 
