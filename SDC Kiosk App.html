@@ -995,7 +995,6 @@ const SECTION_LABELS = ["Home","Case Studies","Industries","Capabilities","Video
 const useStaffMenu = () => {
   const taps = useRef([]);
   const [showMenu, setShowMenu] = useState(false);
-  const [locked, setLocked] = useState(false);
   const TAP_COUNT = 5;
   const TAP_WINDOW = 3000;
 
@@ -1004,26 +1003,19 @@ const useStaffMenu = () => {
     taps.current = [...taps.current.filter(t => now - t < TAP_WINDOW), now];
     if (taps.current.length >= TAP_COUNT) {
       taps.current = [];
-      if (locked) { setLocked(false); } // tapping logo 5× also unlocks
-      else { setShowMenu(true); }
+      setShowMenu(true);
     }
-  }, [locked]);
+  }, []);
 
-  return { showMenu, setShowMenu, locked, setLocked, handleLogoTap };
+  return { showMenu, setShowMenu, handleLogoTap };
 };
 
-const StaffMenuOverlay = ({ onCancel, onLock }) => {
+const StaffMenuOverlay = ({ onCancel }) => {
   const [scale, setScale] = useState(() => window.KioskZoom.get());
   const [zoomLocked, setZoomLocked] = useState(() => window.KioskZoom.isLocked());
 
-  const zoomIn = () => {
-    window.KioskZoom.zoomIn();
-    setScale(window.KioskZoom.get());
-  };
-  const zoomOut = () => {
-    window.KioskZoom.zoomOut();
-    setScale(window.KioskZoom.get());
-  };
+  const zoomIn = () => { window.KioskZoom.zoomIn(); setScale(window.KioskZoom.get()); };
+  const zoomOut = () => { window.KioskZoom.zoomOut(); setScale(window.KioskZoom.get()); };
   const toggleZoomLock = () => {
     if (zoomLocked) { window.KioskZoom.unlock(); setZoomLocked(false); }
     else            { window.KioskZoom.lock();   setZoomLocked(true);  }
@@ -1075,9 +1067,8 @@ const StaffMenuOverlay = ({ onCancel, onLock }) => {
         {zoomLocked && <div style={{fontSize:12, color:"#74C415", fontWeight:700}}>✓ Zoom is locked at {Math.round(scale * 100)}%</div>}
       </div>
 
-      {/* ── Other actions ── */}
+      {/* ── Actions ── */}
       <div style={{display:"flex", gap:14, flexWrap:"wrap", justifyContent:"center"}}>
-        <button onClick={onLock} style={{...btnBase, background:"#1574C4", color:"#fff"}}>🔒 Lock Screen</button>
         <button onClick={() => window.close()} style={{...btnBase, background:"#c0392b", color:"#fff"}}>✕ Exit Kiosk</button>
         <button onClick={onCancel} style={{...btnBase, background:"var(--panel-2)", color:"var(--text-dim)", border:"1px solid var(--border-2)"}}>Cancel</button>
       </div>
@@ -1087,35 +1078,9 @@ const StaffMenuOverlay = ({ onCancel, onLock }) => {
   );
 };
 
-const LockOverlay = ({ onUnlock }) => (
-  <div
-    style={{
-      position:"fixed", inset:0, zIndex:9998,
-      background:"rgba(6,29,57,0.97)",
-      display:"flex", flexDirection:"column",
-      alignItems:"center", justifyContent:"center", gap:20,
-      cursor:"default"
-    }}
-    // Block all touch/click events from reaching the app beneath
-    onPointerDown={e => e.stopPropagation()}
-    onTouchStart={e => e.stopPropagation()}
-  >
-    <div style={{fontSize:64, marginBottom:8}}>🔒</div>
-    <div style={{fontSize:26, fontWeight:800, color:"#fff", letterSpacing:"0.05em"}}>Screen Locked</div>
-    <div style={{fontSize:16, color:"var(--text-dim)", marginBottom:24}}>Tap the SDC logo 5× rapidly to unlock</div>
-    <div style={{
-      background:"var(--panel-2)", border:"1px solid var(--border)",
-      borderRadius:12, padding:"16px 32px",
-      fontSize:14, color:"var(--text-mute)", textAlign:"center"
-    }}>
-      This kiosk is temporarily locked by staff.<br/>Please see a team member for assistance.
-    </div>
-  </div>
-);
-
 const Header = ({ route, onNavigate, onBack, title }) => {
   const isHome = route.name === "home";
-  const { showMenu, setShowMenu, locked, setLocked, handleLogoTap } = useStaffMenu();
+  const { showMenu, setShowMenu, handleLogoTap } = useStaffMenu();
 
   const sectionIdx = (() => {
     if (["case-study-detail"].includes(route.name)) return 1;
@@ -1127,11 +1092,7 @@ const Header = ({ route, onNavigate, onBack, title }) => {
 
   return (
     <>
-      {locked && <LockOverlay onUnlock={() => setLocked(false)} />}
-      {showMenu && <StaffMenuOverlay
-        onCancel={() => setShowMenu(false)}
-        onLock={() => { setShowMenu(false); setLocked(true); }}
-      />}
+      {showMenu && <StaffMenuOverlay onCancel={() => setShowMenu(false)} />}
       <header className="kheader">
         <div className="kheader-left">
           <div className="logo-block" onClick={handleLogoTap} style={{cursor:"default"}}>
