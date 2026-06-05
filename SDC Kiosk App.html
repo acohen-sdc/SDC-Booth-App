@@ -93,7 +93,7 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute;
   top: 50%; left: 50%;
   width: 1920px; height: 1080px;
-  transform: translate(-50%, -50%) scale(var(--scale, 1));
+  transform: translate(-50%, -50%) scale(var(--scale-x, 1), var(--scale-y, 1));
   transform-origin: center;
   background: var(--bg);
   overflow: hidden;
@@ -741,8 +741,13 @@ button { font-family: inherit; cursor: pointer; }
 (function() {
   const stage = document.getElementById("stage");
   function fit() {
-    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-    stage.style.setProperty("--scale", s);
+    // Scale X and Y independently so the app stretches to fill
+    // any screen size exactly — no black bars, no cropping.
+    const scaleX = window.innerWidth  / 1920;
+    const scaleY = window.innerHeight / 1080;
+    stage.style.setProperty("--scale-x", scaleX);
+    stage.style.setProperty("--scale-y", scaleY);
+    document.body.style.overflow = "hidden";
   }
   window.addEventListener("resize", fit);
   fit();
