@@ -37,10 +37,6 @@
 }
 
 * { box-sizing: border-box; }
-html {
-  /* Base font scales with viewport width so all rem/em values adapt to any screen */
-  font-size: calc(0.833333vw); /* 16px at 1920px wide → scales proportionally */
-}
 html, body {
   margin: 0; padding: 0;
   background: #000;
@@ -49,7 +45,6 @@ html, body {
   font-weight: 500;
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
-  width: 100vw;
   height: 100vh;
 }
 button { font-family: inherit; cursor: pointer; }
@@ -95,10 +90,11 @@ button { font-family: inherit; cursor: pointer; }
 /* Stage */
 #root { position: fixed; inset: 0; }
 .stage {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 1920px; height: 1080px;
+  transform: translate(-50%, -50%) scale(var(--scale, 1));
+  transform-origin: center;
   background: var(--bg);
   overflow: hidden;
 }
@@ -106,13 +102,12 @@ button { font-family: inherit; cursor: pointer; }
 /* Frame */
 .frame {
   position: absolute; inset: 0;
-  width: 100%; height: 100%;
   background: var(--bg);
   display: flex; flex-direction: column;
-  padding: 0 1.667vw 0;
+  padding: 0 32px 0;
   gap: 0;
 }
-.kheader { margin-top: 1.042vh; }
+.kheader { margin-top: 20px; }
 .frame-body {
   flex: 1; min-height: 0;
   background: var(--panel);
@@ -744,9 +739,13 @@ button { font-family: inherit; cursor: pointer; }
 
 <script>
 (function() {
-  // No scaling needed — stage fills 100vw x 100vh natively.
-  // Internal layout uses flex to fill all available space.
-  document.body.style.overflow = "hidden";
+  const stage = document.getElementById("stage");
+  function fit() {
+    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    stage.style.setProperty("--scale", s);
+  }
+  window.addEventListener("resize", fit);
+  fit();
 })();
 </script>
 
