@@ -93,7 +93,7 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute;
   top: 50%; left: 50%;
   width: 1920px; height: 1080px;
-  transform: translate(-50%, -50%) scale(var(--scale, 1));
+  transform: translate(calc(-50% + var(--offset-x, 0) * 1px), calc(-50% + var(--offset-y, 0) * 1px)) scale(var(--scale, 1));
   transform-origin: center;
   background: var(--bg);
   overflow: hidden;
@@ -740,18 +740,43 @@ button { font-family: inherit; cursor: pointer; }
 <script>
 (function() {
   const stage = document.getElementById("stage");
+  const STORAGE_KEY = "sdc_kiosk_view";
   let locked = false;
 
+  // ── Persist/restore settings via localStorage ──────────────────────────────
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        scale: parseFloat(stage.style.getPropertyValue("--scale") || 1),
+        offsetX: parseFloat(stage.style.getPropertyValue("--offset-x") || 0),
+        offsetY: parseFloat(stage.style.getPropertyValue("--offset-y") || 0),
+        locked
+      }));
+    } catch(e) {}
+  }
+
+  function restore() {
+    try {
+      const d = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      if (d.scale)   { stage.style.setProperty("--scale",    d.scale);   }
+      if (d.offsetX) { stage.style.setProperty("--offset-x", d.offsetX); }
+      if (d.offsetY) { stage.style.setProperty("--offset-y", d.offsetY); }
+      if (d.locked)  { locked = true; enterFullscreen(); }
+    } catch(e) {}
+  }
+
+  // ── Auto-fit (skipped when locked) ─────────────────────────────────────────
   function fit() {
-    if (locked) return; // don't auto-resize when zoom is locked
+    if (locked) return;
     const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
     stage.style.setProperty("--scale", s);
+    stage.style.setProperty("--offset-x", 0);
+    stage.style.setProperty("--offset-y", 0);
   }
 
   window.addEventListener("resize", fit);
-  fit();
 
-  // Enter / exit fullscreen (removes title bar, prevents window drag)
+  // ── Fullscreen helpers ──────────────────────────────────────────────────────
   function enterFullscreen() {
     const el = document.documentElement;
     if (el.requestFullscreen)            el.requestFullscreen();
@@ -766,17 +791,34 @@ button { font-family: inherit; cursor: pointer; }
     else if (document.msExitFullscreen)     document.msExitFullscreen();
   }
 
-  // Global zoom controls used by the React staff menu
+  // ── Global KioskZoom API ────────────────────────────────────────────────────
   window.KioskZoom = {
-    get: () => parseFloat(stage.style.getPropertyValue("--scale") || 1),
-    set: (s) => { stage.style.setProperty("--scale", Math.min(3, Math.max(0.2, s))); },
+    // Zoom
+    getScale:  () => parseFloat(stage.style.getPropertyValue("--scale") || 1),
+    setScale:  (s) => { stage.style.setProperty("--scale", Math.min(3, Math.max(0.1, +s.toFixed(3)))); },
+    zoomIn:    (step = 0.05) => { window.KioskZoom.setScale(window.KioskZoom.getScale() + step); },
+    zoomOut:   (step = 0.05) => { window.KioskZoom.setScale(window.KioskZoom.getScale() - step); },
+    // Position offset (px, applied before scale)
+    getOffsetX: () => parseFloat(stage.style.getPropertyValue("--offset-x") || 0),
+    getOffsetY: () => parseFloat(stage.style.getPropertyValue("--offset-y") || 0),
+    setOffsetX: (v) => { stage.style.setProperty("--offset-x", Math.max(-500, Math.min(500, v))); },
+    setOffsetY: (v) => { stage.style.setProperty("--offset-y", Math.max(-500, Math.min(500, v))); },
+    nudgeX:    (d) => { window.KioskZoom.setOffsetX(window.KioskZoom.getOffsetX() + d); },
+    nudgeY:    (d) => { window.KioskZoom.setOffsetY(window.KioskZoom.getOffsetY() + d); },
+    // Lock / unlock
     isLocked: () => locked,
-    lock:   () => { locked = true;  enterFullscreen(); },  // lock zoom + go fullscreen (no drag)
-    unlock: () => { locked = false; exitFullscreen(); fit(); }, // unlock + exit fullscreen
-    zoomIn:  () => { window.KioskZoom.set(window.KioskZoom.get() + 0.05); },
-    zoomOut: () => { window.KioskZoom.set(window.KioskZoom.get() - 0.05); },
-    reset:   () => { locked = false; exitFullscreen(); fit(); },
+    lock:   () => { locked = true;  save(); enterFullscreen(); },
+    unlock: () => { locked = false; save(); exitFullscreen(); fit(); },
+    // Reset everything
+    reset:  () => { locked = false; exitFullscreen(); fit(); save(); },
+    // Persist current state
+    save,
   };
+
+  // Restore saved state on load, then auto-fit if not locked
+  restore();
+  if (!locked) fit();
+})();
 })();
 </script>
 
@@ -1011,69 +1053,135 @@ const useStaffMenu = () => {
 };
 
 const StaffMenuOverlay = ({ onCancel }) => {
-  const [scale, setScale] = useState(() => window.KioskZoom.get());
-  const [zoomLocked, setZoomLocked] = useState(() => window.KioskZoom.isLocked());
+  const [scale,   setScale]   = useState(() => window.KioskZoom.getScale());
+  const [offsetX, setOffsetX] = useState(() => window.KioskZoom.getOffsetX());
+  const [offsetY, setOffsetY] = useState(() => window.KioskZoom.getOffsetY());
+  const [isLocked, setIsLocked] = useState(() => window.KioskZoom.isLocked());
 
-  const zoomIn = () => { window.KioskZoom.zoomIn(); setScale(window.KioskZoom.get()); };
-  const zoomOut = () => { window.KioskZoom.zoomOut(); setScale(window.KioskZoom.get()); };
-  const toggleZoomLock = () => {
-    if (zoomLocked) { window.KioskZoom.unlock(); setZoomLocked(false); }
-    else            { window.KioskZoom.lock();   setZoomLocked(true);  }
-  };
-  const resetZoom = () => {
-    window.KioskZoom.reset();
-    setScale(window.KioskZoom.get());
-    setZoomLocked(false);
+  const refresh = () => {
+    setScale(window.KioskZoom.getScale());
+    setOffsetX(window.KioskZoom.getOffsetX());
+    setOffsetY(window.KioskZoom.getOffsetY());
   };
 
-  const btnBase = { border:"none", borderRadius:10, fontSize:18, fontWeight:700, cursor:"pointer", padding:"16px 32px" };
+  const zoomBy   = (d) => { window.KioskZoom.zoomIn(d); refresh(); };
+  const nudgeX   = (d) => { window.KioskZoom.nudgeX(d); refresh(); };
+  const nudgeY   = (d) => { window.KioskZoom.nudgeY(d); refresh(); };
+  const setPreset= (s) => { window.KioskZoom.setScale(s); refresh(); };
+
+  const toggleLock = () => {
+    if (isLocked) { window.KioskZoom.unlock(); setIsLocked(false); }
+    else          { window.KioskZoom.lock();   setIsLocked(true);  }
+    refresh();
+  };
+  const reset = () => { window.KioskZoom.reset(); setIsLocked(false); refresh(); };
+
+  const b  = { border:"none", borderRadius:8, fontWeight:700, cursor:"pointer", fontFamily:"inherit" };
+  const bLg = { ...b, fontSize:20, padding:"12px 20px" };
+  const bSm = { ...b, fontSize:13, padding:"8px 14px" };
+  const panel = { background:"var(--panel-2)", border:"1px solid var(--border)", borderRadius:12, padding:"16px 22px", display:"flex", flexDirection:"column", alignItems:"center", gap:12 };
+  const label = { fontSize:11, fontWeight:700, color:"var(--blue-2)", letterSpacing:"0.14em", textTransform:"uppercase", marginBottom:2 };
+
+  const PRESETS = [
+    { label:"75%",  val:0.75 },
+    { label:"85%",  val:0.85 },
+    { label:"90%",  val:0.90 },
+    { label:"95%",  val:0.95 },
+    { label:"100%", val:1.00 },
+    { label:"110%", val:1.10 },
+  ];
 
   return (
     <div style={{
       position:"fixed", inset:0, zIndex:9999,
-      background:"rgba(0,0,0,0.88)",
+      background:"rgba(0,0,0,0.9)",
       display:"flex", flexDirection:"column",
-      alignItems:"center", justifyContent:"center", gap:20
+      alignItems:"center", justifyContent:"center", gap:14,
+      overflowY:"auto", padding:"20px 0"
     }}>
-      <div style={{fontSize:22, fontWeight:700, color:"#fff", letterSpacing:"0.1em", textTransform:"uppercase"}}>Staff Menu</div>
+      <div style={{fontSize:20, fontWeight:800, color:"#fff", letterSpacing:"0.1em", textTransform:"uppercase"}}>Staff Menu</div>
 
-      {/* ── Zoom controls ── */}
-      <div style={{
-        background:"var(--panel-2)", border:"1px solid var(--border)",
-        borderRadius:14, padding:"20px 32px",
-        display:"flex", flexDirection:"column", alignItems:"center", gap:14,
-        minWidth:380
-      }}>
-        <div style={{fontSize:13, fontWeight:700, color:"var(--blue-2)", letterSpacing:"0.12em", textTransform:"uppercase"}}>Zoom / Screen Fit</div>
-        <div style={{display:"flex", alignItems:"center", gap:16}}>
-          <button onClick={zoomOut} style={{...btnBase, background:"var(--panel-3)", color:"#fff", fontSize:24, padding:"12px 24px"}}>−</button>
-          <div style={{textAlign:"center", minWidth:100}}>
-            <div style={{fontSize:28, fontWeight:800, color:"#fff"}}>{Math.round(scale * 100)}%</div>
-            <div style={{fontSize:12, color:"var(--text-mute)"}}>current zoom</div>
+      <div style={{display:"flex", gap:14, flexWrap:"wrap", justifyContent:"center", maxWidth:900}}>
+
+        {/* ── ZOOM ── */}
+        <div style={panel}>
+          <div style={label}>Zoom</div>
+          <div style={{fontSize:32, fontWeight:800, color:"#fff", lineHeight:1}}>{Math.round(scale * 100)}%</div>
+          {/* Coarse: 5% */}
+          <div style={{display:"flex", gap:8, alignItems:"center"}}>
+            <button onClick={() => zoomBy(-0.05)} style={{...bLg, background:"var(--panel-3)", color:"#fff"}}>−5%</button>
+            <button onClick={() => zoomBy( 0.05)} style={{...bLg, background:"var(--panel-3)", color:"#fff"}}>+5%</button>
           </div>
-          <button onClick={zoomIn} style={{...btnBase, background:"var(--panel-3)", color:"#fff", fontSize:24, padding:"12px 24px"}}>+</button>
+          {/* Fine: 1% */}
+          <div style={{display:"flex", gap:8, alignItems:"center"}}>
+            <button onClick={() => zoomBy(-0.01)} style={{...bSm, background:"var(--panel-3)", color:"var(--text-dim)"}}>−1%</button>
+            <span style={{fontSize:12, color:"var(--text-mute)"}}>fine</span>
+            <button onClick={() => zoomBy( 0.01)} style={{...bSm, background:"var(--panel-3)", color:"var(--text-dim)"}}>+1%</button>
+          </div>
+          {/* Presets */}
+          <div style={{display:"flex", gap:6, flexWrap:"wrap", justifyContent:"center"}}>
+            {PRESETS.map(p => (
+              <button key={p.label} onClick={() => setPreset(p.val)} style={{
+                ...bSm,
+                background: Math.round(scale*100) === Math.round(p.val*100) ? "var(--blue)" : "var(--panel-3)",
+                color: Math.round(scale*100) === Math.round(p.val*100) ? "#fff" : "var(--text-dim)"
+              }}>{p.label}</button>
+            ))}
+          </div>
         </div>
-        <div style={{display:"flex", gap:12}}>
-          <button onClick={toggleZoomLock} style={{
-            ...btnBase, padding:"12px 24px", fontSize:15,
-            background: zoomLocked ? "#74C415" : "#1574C4", color:"#fff"
-          }}>
-            {zoomLocked ? "🔓 Unlock Zoom" : "🔒 Lock Zoom"}
-          </button>
-          <button onClick={resetZoom} style={{...btnBase, padding:"12px 24px", fontSize:15, background:"var(--panel-3)", color:"var(--text-dim)"}}>
-            Reset
-          </button>
+
+        {/* ── POSITION ── */}
+        <div style={panel}>
+          <div style={label}>Position Offset</div>
+          <div style={{fontSize:14, color:"var(--text-dim)", fontWeight:600}}>
+            X: {Math.round(offsetX)}px &nbsp;·&nbsp; Y: {Math.round(offsetY)}px
+          </div>
+          {/* Y axis */}
+          <button onClick={() => nudgeY(-10)} style={{...bLg, background:"var(--panel-3)", color:"#fff"}}>▲</button>
+          <div style={{display:"flex", gap:8}}>
+            <button onClick={() => nudgeX(-10)} style={{...bLg, background:"var(--panel-3)", color:"#fff"}}>◀</button>
+            <button onClick={() => { window.KioskZoom.setOffsetX(0); window.KioskZoom.setOffsetY(0); refresh(); }}
+              style={{...bSm, background:"var(--panel-3)", color:"var(--text-mute)", padding:"12px 16px"}}>○</button>
+            <button onClick={() => nudgeX( 10)} style={{...bLg, background:"var(--panel-3)", color:"#fff"}}>▶</button>
+          </div>
+          <button onClick={() => nudgeY( 10)} style={{...bLg, background:"var(--panel-3)", color:"#fff"}}>▼</button>
+          {/* Fine nudge */}
+          <div style={{display:"flex", gap:6, marginTop:2}}>
+            <button onClick={() => nudgeX(-2)} style={{...bSm, background:"var(--panel-3)", color:"var(--text-dim)"}}>◀1</button>
+            <button onClick={() => nudgeY(-2)} style={{...bSm, background:"var(--panel-3)", color:"var(--text-dim)"}}>▲1</button>
+            <button onClick={() => nudgeY( 2)} style={{...bSm, background:"var(--panel-3)", color:"var(--text-dim)"}}>▼1</button>
+            <button onClick={() => nudgeX( 2)} style={{...bSm, background:"var(--panel-3)", color:"var(--text-dim)"}}>▶1</button>
+          </div>
+          <div style={{fontSize:11, color:"var(--text-mute)"}}>Arrow = 10px · numbered = 2px</div>
         </div>
-        {zoomLocked && <div style={{fontSize:12, color:"#74C415", fontWeight:700}}>✓ Zoom is locked at {Math.round(scale * 100)}%</div>}
+
       </div>
 
-      {/* ── Actions ── */}
-      <div style={{display:"flex", gap:14, flexWrap:"wrap", justifyContent:"center"}}>
-        <button onClick={() => window.close()} style={{...btnBase, background:"#c0392b", color:"#fff"}}>✕ Exit Kiosk</button>
-        <button onClick={onCancel} style={{...btnBase, background:"var(--panel-2)", color:"var(--text-dim)", border:"1px solid var(--border-2)"}}>Cancel</button>
+      {/* ── Lock / Reset / Exit ── */}
+      <div style={{display:"flex", gap:12, flexWrap:"wrap", justifyContent:"center", marginTop:4}}>
+        <button onClick={toggleLock} style={{
+          ...b, fontSize:16, padding:"14px 28px",
+          background: isLocked ? "#74C415" : "#1574C4", color:"#fff"
+        }}>
+          {isLocked ? "🔓 Unlock Position & Zoom" : "🔒 Lock Position & Zoom"}
+        </button>
+        <button onClick={reset} style={{...b, fontSize:16, padding:"14px 24px", background:"var(--panel-3)", color:"var(--text-dim)"}}>
+          Reset All
+        </button>
+        <button onClick={() => window.close()} style={{...b, fontSize:16, padding:"14px 24px", background:"#c0392b", color:"#fff"}}>
+          ✕ Exit Kiosk
+        </button>
+        <button onClick={onCancel} style={{...b, fontSize:16, padding:"14px 24px", background:"var(--panel-2)", color:"var(--text-dim)", border:"1px solid var(--border-2)"}}>
+          Cancel
+        </button>
       </div>
 
-      <div style={{fontSize:13, color:"var(--text-mute)"}}>Tap logo 5× to show this menu</div>
+      {isLocked && (
+        <div style={{fontSize:13, color:"#74C415", fontWeight:700}}>
+          ✓ Locked at {Math.round(scale*100)}% · X:{Math.round(offsetX)}px Y:{Math.round(offsetY)}px — saved automatically
+        </div>
+      )}
+      <div style={{fontSize:12, color:"var(--text-mute)"}}>Tap logo 5× to show this menu</div>
     </div>
   );
 };
