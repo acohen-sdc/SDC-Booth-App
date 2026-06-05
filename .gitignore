@@ -1,0 +1,20 @@
+# Large media — too big for git, deploy separately on USB/drive
+Video Files/
+
+# Office / export / data dump files
+*.pdf
+*.xlsx
+*.txt
+
+# Auto-updater log (written on the kiosk, not committed)
+update-log.txt
+
+# Build scripts (one-time tooling, not part of the deployable app)
+bake_assets.py
+
+# OS / cloud sync junk
+*.tmp
+.849C9593-D756-4E56-8D6E-42412F2A707B
+Thumbs.db
+.DS_Store
+desktop.ini

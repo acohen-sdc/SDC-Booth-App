@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 121.48 121.48">
+  <!-- Case Studies: open book / document with checkmarks -->
+  <!-- Clipboard/report with data lines and a check -->
+  <!-- Outer document page -->
+  <rect x="26" y="18" width="58" height="72" rx="4" fill="#ABD4EE"/>
+  <!-- Page fold top-right corner -->
+  <polygon points="68,18 84,18 84,34 68,18" fill="#213D6B"/>
+  <polygon points="68,18 68,34 84,34" fill="#2573BA"/>
+  <!-- Content lines on document -->
+  <rect x="33" y="42" width="32" height="4" rx="2" fill="#213D6B"/>
+  <rect x="33" y="52" width="24" height="4" rx="2" fill="#213D6B"/>
+  <rect x="33" y="62" width="28" height="4" rx="2" fill="#213D6B"/>
+  <!-- Check badge bottom-right -->
+  <circle cx="72" cy="78" r="14" fill="#2573BA"/>
+  <polyline points="65,78 70,83 79,71" fill="none" stroke="#ABD4EE" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

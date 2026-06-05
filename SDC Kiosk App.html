@@ -1,0 +1,1698 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SDC Kiosk — Automate 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<style>
+/* =================================================================
+   SDC Kiosk — Automate 2026
+   Brand: Steven Douglas Corp. (sdcautomation.com)
+   Colors: Primary Blue #1574C4 · Dark Navy #061D39 · Accent Green #74C415
+   ================================================================= */
+
+:root {
+  --blue: #1574C4;
+  --blue-2: #5BA0E0;
+  --blue-light: #AACEE8;
+  --navy: #061D39;
+  --navy-2: #0a2547;
+  --yellow: #74C415;   /* accent color changed to green per design notes */
+  --green: #74C415;
+  --gray: #D9D9D9;
+  --black: #231F20;
+  --bg: #0a0e14;
+  --panel: #14181f;
+  --panel-2: #1a1f28;
+  --panel-3: #1f2530;
+  --border: #2a3140;
+  --border-2: #353d4d;
+  --text: #ffffff;
+  --text-dim: #a8b1c0;
+  --text-mute: #6c7689;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: #000;
+  color: var(--text);
+  font-family: "Montserrat", system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  height: 100vh;
+}
+button { font-family: inherit; cursor: pointer; }
+
+/* Touch to Explore neon flicker */
+.touch-text {
+  font-size: 36px; font-weight: 800;
+  color: var(--green);
+  letter-spacing: 0.04em; text-transform: uppercase;
+  line-height: 1.1; text-align: right;
+  text-shadow:
+    0 0 8px #74C415,
+    0 0 20px #74C415,
+    0 0 40px #74C415,
+    0 0 80px rgba(116,196,21,0.5);
+  animation: neonFlicker 4s infinite;
+}
+@keyframes neonFlicker {
+  0%,  18%, 20%, 50%, 52%, 64%, 66%, 100% {
+    text-shadow:
+      0 0 8px #74C415,
+      0 0 20px #74C415,
+      0 0 40px #74C415,
+      0 0 80px rgba(116,196,21,0.5);
+    opacity: 1;
+  }
+  19%, 51%, 65% {
+    text-shadow: none;
+    opacity: 0.6;
+  }
+}
+
+/* Who we work with label */
+.logo-bar-label {
+  background: var(--panel-2);
+  padding: 12px 28px 8px;
+  font-size: 11px; font-weight: 700;
+  color: var(--text-mute);
+  letter-spacing: 0.16em; text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Stage */
+#root { position: fixed; inset: 0; }
+.stage {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 1920px; height: 1080px;
+  transform: translate(-50%, -50%) scale(var(--scale, 1));
+  transform-origin: center;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* Frame */
+.frame {
+  position: absolute; inset: 0;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  padding: 0 32px 0;
+  gap: 0;
+}
+.kheader { margin-top: 20px; }
+.frame-body {
+  flex: 1; min-height: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 0 0 14px 14px;
+  border-top: none;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-2) transparent;
+}
+.frame-body::-webkit-scrollbar { width: 6px; }
+.frame-body::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 3px; }
+
+/* Header */
+.kheader {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 14px 14px 0 0;
+  padding: 14px 32px;
+  height: 120px;
+  flex: 0 0 auto;
+}
+.kheader-left { display: flex; align-items: center; gap: 20px; }
+.kheader-right { display: flex; align-items: center; gap: 24px; }
+
+.sdc-logo { height: 87px; width: auto; object-fit: contain; }
+.logo-block { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.logo-block-name {
+  font-size: 11px; font-weight: 700; color: var(--text-mute);
+  letter-spacing: 0.18em; text-transform: uppercase;
+}
+.header-divider {
+  width: 1px; height: 40px; background: var(--border-2);
+  margin: 0 4px;
+}
+
+.back-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--border-2);
+  color: var(--blue-2);
+  border-radius: 8px;
+  padding: 8px 16px 8px 12px;
+  font-size: 15px; font-weight: 700;
+  transition: background 0.15s, border-color 0.15s;
+}
+.back-btn:hover { background: var(--panel-3); border-color: var(--blue); color: #fff; }
+
+.show-badge {
+  color: var(--text-mute);
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-left: 1px solid var(--border-2);
+  padding-left: 20px;
+}
+.show-badge span { color: var(--yellow); }
+
+.dots { display: flex; align-items: center; gap: 10px; }
+.dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+.dot:hover { background: rgba(255,255,255,0.4); }
+.dot-active { background: var(--green); transform: scale(1.15); }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--blue) 0%, #0d5fa3 100%);
+  padding: 40px 52px 44px;
+  position: relative;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.06) 0%, transparent 60%);
+}
+.hero-left { position: relative; z-index: 1; }
+.hero-title {
+  font-size: 54px; font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0; color: #fff;
+  line-height: 1.05;
+}
+.hero-sub {
+  margin: 10px 0 0; color: rgba(255,255,255,0.88);
+  font-size: 22px; font-weight: 500;
+}
+.hero-sub em { color: var(--yellow); font-style: normal; font-weight: 700; }
+.hero-right { position: relative; z-index: 1; flex-shrink: 0; }
+
+/* Screen content */
+.screen-content { padding: 24px 44px 32px; }
+.frame-body > .hero + .screen-content { padding-top: 0; }
+
+/* Section banner */
+.section-banner {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 4px 0 22px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  gap: 24px;
+}
+.section-kicker {
+  font-size: 12px; color: var(--blue-2); font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.section-title {
+  margin: 0; font-size: 42px; font-weight: 800;
+  letter-spacing: -0.02em; color: #fff;
+}
+.banner-meta { color: var(--text-dim); font-weight: 600; font-size: 16px; white-space: nowrap; }
+
+/* Home grid */
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding: 14px 0 0;
+}
+.home-card {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 26px 28px 24px;
+  display: flex; flex-direction: column;
+  text-align: left; color: #fff;
+  min-height: 200px;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+}
+.home-card:hover { background: var(--panel-3); border-color: var(--blue); transform: translateY(-2px); }
+.home-card-icon { margin-bottom: 16px; }
+.home-card-icon img { width: 68px; height: 68px; object-fit: contain; }
+.home-card-title { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+.home-card-blurb { color: var(--text-dim); font-size: 16px; line-height: 1.4; flex: 1; }
+
+/* Pills */
+.pill {
+  align-self: flex-start;
+  display: inline-flex; align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px; font-weight: 700;
+  border: none;
+}
+.pill-primary { background: var(--blue); color: #fff; }
+.pill-navy { background: var(--navy); color: var(--blue-2); border: 1px solid var(--blue); }
+.pill-yellow { background: var(--yellow); color: var(--black); }
+.pill-green { background: rgba(116,196,21,0.15); color: #74C415; border: 1px solid rgba(116,196,21,0.3); }
+.pill-static { cursor: default; }
+
+/* Customer logo bar */
+.logo-bar-outer {
+  margin-top: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.logo-bar-wrap {
+  background: var(--panel-2);
+  overflow: hidden;
+  height: 72px;
+  display: flex; align-items: center;
+}
+.logo-bar-track {
+  display: flex; align-items: center; gap: 72px;
+  animation: scrollLogosLTR 80s linear infinite;
+  white-space: nowrap;
+  padding: 0 36px;
+}
+.logo-bar-track:hover { animation-play-state: paused; }
+@keyframes scrollLogosLTR {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.logo-bar-item {
+  flex: 0 0 auto;
+  height: 44px;
+  display: flex; align-items: center;
+}
+.logo-bar-item img {
+  height: 38px; width: auto;
+  max-width: 130px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.logo-bar-item img:hover { opacity: 0.85; }
+
+/* Tile grid */
+.tile-grid { display: grid; gap: 14px; }
+.tile-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.tile-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.tile-card {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 18px 22px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 10px; color: #fff;
+  min-height: 160px;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+}
+.tile-card:hover { background: var(--panel-3); border-color: var(--blue); transform: translateY(-2px); }
+.tile-card img { width: 56px; height: 56px; object-fit: contain; }
+.tile-label { font-size: 19px; font-weight: 700; text-align: center; }
+.tile-sub { color: var(--text-dim); font-size: 12px; text-align: center; line-height: 1.4; }
+.tile-desc { color: var(--text-dim); font-size: 13px; text-align: center; line-height: 1.4; margin-top: 2px; }
+
+/* App tile */
+.app-tile {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 20px;
+  display: flex; flex-direction: column;
+  text-align: left; color: #fff;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+  min-height: 200px;
+}
+.app-tile:hover { background: var(--panel-3); border-color: var(--blue); transform: translateY(-2px); }
+.app-tile img { width: 48px; height: 48px; object-fit: contain; margin-bottom: 12px; }
+.app-tile-name { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.app-tile-desc { color: var(--text-dim); font-size: 13px; line-height: 1.4; flex: 1; }
+.app-tile-rate {
+  margin-top: 12px; align-self: flex-start;
+  background: var(--navy); color: var(--blue-2);
+  border: 1px solid var(--blue);
+  padding: 5px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700;
+}
+
+/* Case study filter bar */
+.case-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+
+/* Notice */
+.notice {
+  margin-top: 20px;
+  background: rgba(116,196,21,0.15); color: #fff;
+  border: 1px solid rgba(116,196,21,0.4);
+  border-radius: 10px; padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 15px; font-weight: 600;
+}
+
+/* Case list (kept for industry detail) */
+.case-list { display: flex; flex-direction: column; gap: 10px; }
+.case-list-compact .case-row { padding: 14px 18px; }
+.case-row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px 14px 14px;
+  text-align: left; color: #fff; gap: 18px;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+}
+.case-row:hover { background: var(--panel-3); border-color: var(--blue); transform: translateX(2px); }
+.case-row-thumb {
+  flex: 0 0 110px; width: 110px; height: 100px;
+  border-radius: 8px; overflow: hidden;
+  background: var(--panel-3);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+}
+.case-row-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.case-row-thumb-placeholder { width: 32px; height: 32px; opacity: 0.2; }
+.case-row-left { flex: 1; min-width: 0; }
+.case-row-meta { display: flex; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.case-row-title { font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+.case-row-blurb {
+  color: var(--text-dim); font-size: 13px; line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.case-row-blurb-tight { -webkit-line-clamp: 1; }
+.case-row-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; min-width: 130px; }
+.case-row-value { color: var(--blue-2); font-weight: 700; font-size: 15px; }
+.case-row-delivered {
+  color: var(--green); font-weight: 600; font-size: 12px;
+  padding: 4px 9px; border-radius: 999px;
+  background: rgba(116,196,21,0.1); border: 1px solid rgba(116,196,21,0.3);
+}
+
+/* Case card grid */
+.case-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.case-card {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  text-align: left; color: #fff;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+}
+.case-card:hover { background: var(--panel-3); border-color: var(--blue); transform: translateY(-2px); }
+.case-card-img {
+  width: 100%; height: 160px;
+  object-fit: cover; display: block;
+  background: var(--panel-3);
+}
+.case-card-img-placeholder {
+  width: 100%; height: 160px;
+  background: var(--panel-3);
+  display: flex; align-items: center; justify-content: center;
+}
+.case-card-img-placeholder img { width: 40px; height: 40px; opacity: 0.2; }
+.case-card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; flex: 1; }
+.case-card-meta { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+.case-card-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; line-height: 1.25; }
+.case-card-blurb {
+  color: var(--text-dim); font-size: 12px; line-height: 1.4; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  margin-bottom: 10px;
+}
+.case-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+.case-card-rate { color: var(--blue-2); font-weight: 700; font-size: 13px; }
+.case-card-lead {
+  color: var(--green); font-size: 11px; font-weight: 600;
+  padding: 3px 8px; border-radius: 999px;
+  background: rgba(116,196,21,0.1); border: 1px solid rgba(116,196,21,0.3);
+}
+
+/* Case study detail */
+.detail-grid {
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px;
+}
+.detail-meta { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.detail-title { font-size: 38px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 12px; line-height: 1.1; }
+.detail-blurb { font-size: 18px; font-weight: 500; color: var(--text-dim); line-height: 1.5; margin: 0 0 18px; }
+.detail-badges { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.badge { display: inline-block; padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 700; }
+.badge-primary { background: var(--blue); color: #fff; }
+.badge-navy { background: var(--navy); color: var(--blue-2); border: 1px solid var(--blue); }
+
+/* Case image */
+.case-image {
+  width: 100%; border-radius: 10px;
+  border: 1px solid var(--border);
+  object-fit: cover;
+  height: 420px;
+  background: var(--panel-3);
+}
+.case-image-placeholder {
+  width: 100%; height: 420px;
+  border-radius: 10px;
+  border: 1px dashed var(--border-2);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; color: var(--text-mute);
+  font-size: 13px;
+  background: var(--panel-3);
+}
+
+/* Tech tags */
+.tech-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tech-tag {
+  background: var(--panel-3); border: 1px solid var(--border-2);
+  color: var(--text-dim); padding: 5px 10px;
+  border-radius: 6px; font-size: 12px; font-weight: 600;
+}
+
+/* Highlights */
+.highlights-card {
+  background: var(--panel-3); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px 26px;
+}
+.highlights-title { font-size: 18px; font-weight: 700; margin-bottom: 14px; }
+.highlights-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px; }
+.highlight-row {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.highlight-row:last-child { border-bottom: none; padding-bottom: 0; }
+.highlight-text { font-size: 15px; line-height: 1.3; }
+.highlight-value { font-weight: 700; color: #fff; }
+.highlight-label { color: var(--text-dim); }
+
+.watch-btn {
+  width: 100%; background: var(--blue); color: #fff;
+  border: none; border-radius: 10px;
+  padding: 16px 20px; font-size: 18px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.watch-btn:hover { background: #1880D7; transform: translateY(-1px); }
+
+/* Industry detail */
+.industry-blurb {
+  font-size: 20px; color: var(--text-dim); font-weight: 500;
+  line-height: 1.45; max-width: 1100px; margin-bottom: 20px;
+}
+.industry-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; }
+.ind-col-title {
+  font-size: 12px; font-weight: 700; color: var(--blue-2);
+  letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 12px;
+}
+.ind-video-list { display: flex; flex-direction: column; gap: 8px; }
+.empty {
+  background: var(--panel-2); border: 1px dashed var(--border-2);
+  border-radius: 8px; padding: 18px; color: var(--text-dim); font-size: 14px;
+}
+
+/* Video library */
+.offline-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--yellow); font-weight: 700; font-size: 14px;
+}
+.offline-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--yellow); box-shadow: 0 0 10px var(--yellow);
+}
+.video-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.filter-chip {
+  background: var(--panel-2); border: 1px solid var(--border);
+  color: var(--text-dim); padding: 8px 16px;
+  border-radius: 999px; font-size: 14px; font-weight: 600;
+  transition: all 0.15s ease;
+}
+.filter-chip:hover { color: #fff; border-color: var(--blue); }
+.filter-chip-active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+.video-list { display: flex; flex-direction: column; gap: 8px; }
+.video-row {
+  display: flex; align-items: center; gap: 18px;
+  background: var(--panel-2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 20px;
+  color: #fff; text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+}
+.video-row:hover { background: var(--panel-3); border-color: var(--blue); transform: translateX(2px); }
+.video-play {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--blue);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.video-row-body { flex: 1; min-width: 0; }
+.video-row-title { font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+.video-row-tags { color: var(--text-dim); font-size: 13px; }
+.dot-sep { color: var(--text-mute); margin: 0 6px; }
+
+/* Video detail / player */
+.video-detail { display: grid; grid-template-columns: 1.6fr 1fr; gap: 28px; }
+.video-stage {
+  background: #000; border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.video-stage video { width: 100%; display: block; background: #000; max-height: 480px; }
+.video-stage-placeholder {
+  aspect-ratio: 16/9;
+  background: radial-gradient(ellipse at center, #1a2638 0%, #000 75%);
+  display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px;
+  color: var(--text-mute); font-size: 14px;
+}
+.video-controls {
+  background: #0d1117; padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+  border-top: 1px solid var(--border);
+}
+.video-ctrl-play {
+  background: var(--blue); color: #fff;
+  width: 38px; height: 38px; border-radius: 50%; border: none;
+  font-size: 12px; display: flex; align-items: center; justify-content: center;
+}
+.video-progress { flex: 1; height: 5px; background: #1f2530; border-radius: 3px; overflow: hidden; }
+.video-progress-fill { height: 100%; background: var(--blue); transition: width 0.2s ease; }
+.video-time { color: var(--text-dim); font-size: 13px; min-width: 90px; text-align: right; }
+
+.video-side {
+  background: var(--panel-2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px 26px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.video-side-title { font-size: 20px; font-weight: 700; }
+.video-side-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.video-side-tags { color: var(--text-dim); font-size: 15px; line-height: 1.4; }
+.video-side-note { color: var(--text-mute); font-size: 13px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
+.ghost-btn {
+  background: transparent; color: var(--blue-2);
+  border: 1px solid var(--blue); border-radius: 8px;
+  padding: 12px 16px; font-size: 15px; font-weight: 700;
+  text-align: left; transition: background 0.15s ease;
+}
+.ghost-btn:hover { background: rgba(21,116,196,0.15); }
+
+/* Numbers */
+.numbers-intro {
+  font-size: 19px; color: var(--text-dim); font-weight: 500;
+  line-height: 1.5; max-width: 1100px; margin-bottom: 24px;
+}
+.numbers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+.stat-card {
+  background: var(--panel-2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px 24px;
+}
+.stat-value {
+  font-size: 64px; font-weight: 800; letter-spacing: -0.03em;
+  color: var(--blue); line-height: 1; margin-bottom: 10px;
+}
+.stat-label { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.stat-sub { font-size: 14px; color: var(--text-dim); line-height: 1.4; }
+.promise {
+  background: var(--navy); border-left: 4px solid var(--yellow);
+  border-radius: 4px 12px 12px 4px; padding: 28px 36px; position: relative;
+}
+.promise-quote-mark {
+  position: absolute; top: 4px; left: 26px;
+  font-family: Georgia, serif; font-size: 80px; font-weight: 700;
+  color: var(--green); line-height: 1; opacity: 0.7;
+}
+.promise-text {
+  font-size: 26px; font-weight: 700; color: #fff;
+  line-height: 1.3; letter-spacing: -0.01em;
+}
+.promise-attr {
+  margin-top: 10px; font-size: 13px; font-weight: 700;
+  color: var(--green); letter-spacing: 0.16em; text-transform: uppercase;
+}
+
+/* Contact */
+.contact-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; margin-bottom: 20px; }
+.contact-left { display: flex; flex-direction: column; gap: 18px; }
+.contact-block { background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; }
+.contact-label { font-size: 12px; font-weight: 700; color: var(--blue-2); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 12px; }
+.contact-phone { display: block; font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -0.02em; text-decoration: none; margin-bottom: 4px; }
+.contact-email { display: block; font-size: 19px; font-weight: 600; color: var(--blue); text-decoration: none; }
+.contact-addr { font-size: 19px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.contact-note { color: var(--text-dim); font-size: 14px; }
+.contact-web { font-size: 24px; font-weight: 700; color: var(--blue); margin-bottom: 4px; }
+.contact-right { display: flex; flex-direction: column; gap: 16px; }
+.qr-card {
+  background: var(--green); color: #fff;
+  border-radius: 12px; padding: 22px 24px;
+  display: flex; align-items: center; gap: 20px;
+}
+.qr-art { background: #fff; padding: 12px; border-radius: 8px; }
+.qr-title { font-size: 19px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+.qr-sub { font-size: 14px; font-weight: 500; line-height: 1.4; color: rgba(255,255,255,0.85); }
+.leave-card {
+  background: var(--navy); border: 1px solid var(--blue);
+  border-radius: 12px; padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.leave-card-title { font-size: 19px; font-weight: 700; color: #fff; }
+.leave-card-sub { font-size: 15px; color: var(--blue-light); }
+
+/* Footer */
+.kfooter {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 4px 0;
+  font-size: 14px; color: var(--text-mute); flex: 0 0 auto;
+}
+.kfooter-email, .kfooter-phone { color: var(--blue-2); font-weight: 600; }
+.kfooter-sep { color: var(--text-mute); margin: 0 6px; }
+
+/* Home button overlay */
+.home-overlay {
+  position: absolute; bottom: 80px; right: 44px;
+  width: 58px; height: 58px; border-radius: 50%;
+  background: var(--blue); border: none;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 24px rgba(21,116,196,0.5);
+  z-index: 10; transition: transform 0.15s ease;
+}
+.home-overlay:hover { transform: scale(1.08); }
+
+/* Attract screen */
+.attract {
+  position: absolute; inset: 0; z-index: 30;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; overflow: hidden;
+}
+.attract-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(21,116,196,0.4) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 60%, rgba(170,206,232,0.18) 0%, transparent 50%),
+    var(--navy);
+  animation: attractGlow 10s ease-in-out infinite;
+}
+@keyframes attractGlow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+.attract-inner { position: relative; z-index: 1; text-align: center; }
+.attract-logo { height: 80px; margin-bottom: 28px; }
+.attract-tagline {
+  color: var(--yellow); font-size: 24px; font-weight: 700;
+  letter-spacing: 0.04em; margin-bottom: 28px;
+}
+.attract-pitch {
+  font-size: 20px; color: rgba(255,255,255,0.85);
+  line-height: 1.5; max-width: 900px; margin: 0 auto 60px;
+}
+.attract-touch { display: inline-flex; flex-direction: column; align-items: center; position: relative; }
+.touch-pulse {
+  width: 72px; height: 72px; border-radius: 50%;
+  border: 3px solid var(--yellow);
+  animation: touchRing 2s ease-out infinite;
+  margin-bottom: 20px;
+}
+.touch-pulse-2 { position: absolute; top: 0; animation-delay: 1s; }
+@keyframes touchRing {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.attract-touch-label { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: 0.16em; text-transform: uppercase; }
+
+/* Scrollable case list helper */
+.scrollable-list { max-height: 680px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border-2) transparent; }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div id="root"></div>
+</div>
+
+<script>
+(function() {
+  const stage = document.getElementById("stage");
+  function fit() {
+    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    stage.style.setProperty("--scale", s);
+  }
+  window.addEventListener("resize", fit);
+  fit();
+})();
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<script>
+// ─── SDC DATA ───────────────────────────────────────────────────────────────
+window.SDC_DATA = {
+  company: {
+    name: "Steven Douglas Corp.",
+    short: "SDC",
+    tagline: "Engineering Excellence. Trusted Partnerships.",
+    subheadline: "Custom Machine Builders · Founded 1998 · 1,500+ Projects",
+    site: "sdcautomation.com",
+    email: "sales@sdcautomation.com",
+    phone: "440-564-5200",
+    address: "7750 Discovery Lane, Concord Twp, OH 44077",
+    signature: "Whatever you do, SDC can help you do it better, faster, and more reliably.",
+    show: "Automate 2026",
+    booth: "#26011",
+    venue: "McCormick Place, Chicago"
+  },
+
+  stats: [
+    { value: "1,500+", label: "Custom Machines Built", sub: "Production-critical automation delivered since 1998" },
+    { value: "28", label: "Years Engineering", sub: "Second-generation family-owned and operated" },
+    { value: "$250K–$2M+", label: "Typical Machine Value", sub: "Engineered-to-order, concept through FAT" },
+    { value: "9", label: "Industries Served", sub: "Automotive to aerospace, life sciences to energy" },
+    { value: "140 PPM", label: "High-Speed Assembly", sub: "Small-part, vision-inspected, traced end-to-end" },
+    { value: "100%", label: "Built in Concord, OH", sub: "One shop floor. One team. From first drawing to shipment." },
+  ],
+
+  industries: [
+    { id: "life-sciences", name: "Life Sciences", icon: "Life Sciences Icon.svg", blurb: "Catheter assembly, endoscope tools, implant packaging, and Class II/III device automation. Micron-level precision and full regulatory traceability.", cases: ["automated-rf", "endoscope-brush", "microscopic-medical", "medical-feed-tube"] },
+    { id: "automotive", name: "Automotive", icon: "Automotive Icon.svg", blurb: "Ignition coil production, connector assembly, sensor integration, and high-speed small part assembly for Tier 1 & Tier 2 automotive suppliers.", cases: ["ignition-coil", "ev-charging", "automotive-dash"] },
+    { id: "consumer", name: "Consumer Products", icon: "Consumer Products Icon.svg", blurb: "Fragrance diffusers, cap assembly, dispenser mechanisms, and flexible multi-SKU production lines running at rates up to 140+ parts per minute.", cases: ["wick-assembly", "hose-clamp-cartoning", "drill-bit", "precision-packaging", "custom-cartoning", "fluid-dispensing"] },
+    { id: "electronics", name: "Electronics", icon: "Electronics Icon.svg", blurb: "Sub-assembly, functional test, inspection, and high-mix/low-volume flexible automation for electronic components and devices.", cases: ["precision-label", "industry-40-hmi", "electrical-small-part", "electrical-safety-switch"] },
+    { id: "energy", name: "Energy", icon: "Energy Icon.svg", blurb: "Automated assembly and testing for energy system components — supporting the transition to cleaner, more reliable power systems.", cases: ["solar-dynamic", "solar-sweep", "solar-reflectance", "gas-valve", "optical-electrical-tester", "leak-testing-propane"] },
+    { id: "aerospace", name: "Aerospace", icon: "Aerospace Icon.svg", blurb: "Precision assembly, torque-to-spec, and full component traceability for mission-critical aerospace and defense applications.", cases: ["honeycomb-welding", "filter-assembly", "fin-former", "button-flow-test", "resistance-welding"] },
+    { id: "industrial", name: "General Industrial", icon: "Applications_Icon.svg", blurb: "Gas burner assembly, press-fit, seal assembly, stamping, and fiber laser marking for industrial fluid and combustion component manufacturers.", cases: ["gas-burner", "hose-clamp-assembly", "hose-assembly-test", "custom-tool-packaging", "robotic-eoat"] },
+  ],
+
+  capabilities: [
+    { id: "assembly", name: "Assembly", icon: "Assembly Icon.svg", desc: "Custom assembly machines for complex small-part production — high-speed rotary dial systems to multi-robot inline cells.", rate: "Up to 140 PPM" },
+    { id: "testing", name: "Testing & Inspection", icon: "Testing and Inspection Icon.svg", desc: "Automated testing and inspection — leak testing, continuity testing, vision inspection, and functional test integrated directly into assembly cells.", rate: "100% inline" },
+    { id: "material-handling", name: "Material Handling & Packaging", icon: "Material Handling Icon.svg", desc: "Cartoning, labeling, conveyors, and sortation — from bulk feeding through final retail-ready packaging.", rate: "25+ CPM" },
+    { id: "micro-precision", name: "Micro Precision", icon: "Micro Precision App Icon.svg", desc: "Assembly at the microscopic level — down to rivets measured in thousandths of an inch, using Mecademic robots, Asyril flex trays, and vision-guided laser welding.", rate: "±0.001\" tolerance" },
+    { id: "robotic", name: "Robotic Integration", icon: "Robotic Integration Icon.svg", desc: "Authorized FANUC and Yaskawa Motoman integrator, Epson AutomateElite Gold Partner. SCARA, 6-axis, and collaborative robots.", rate: "0.3s cycles" },
+    { id: "laser", name: "Laser Applications", icon: "Laser Application Icon.svg", desc: "Laser welding, marking, and etching — IPG vision-guided laser welders for micro-scale joining and Telesis fiber laser markers for traceability.", rate: "Class 1 enclosed" },
+    { id: "part-feeding", name: "Part Feeding Technology", icon: "Part Feeding Tech Icon.svg", desc: "Proprietary SDC Flex Feeder and custom Bellco vibratory bowl feeders for complex, irregular parts from bulk at production speed.", rate: "Mixed parts OK" },
+    { id: "dispensing", name: "Dispensing", icon: "Dispensing Icon.svg", desc: "Servo-driven dispensing of sealants, adhesives, lubricants — consistent bead size, placement, and volume every cycle.", rate: "±0.5% volume" },
+    { id: "machine-vision", name: "Machine Vision", icon: "Machine Vision Icon.svg", desc: "Cognex and Keyence vision systems for 100% inline inspection, robotic guidance, barcode reading, and pass/fail sorting.", rate: "100% inspection" },
+  ],
+
+  caseStudies: [
+    { id: "automated-rf", title: "Automated RF Circuit Board Tuning", industry: "Life Sciences", industryId: "life-sciences", capability: "Micro Precision · Robotic Integration · Machine Vision", blurb: "Dual-robot automated tuning machine with live RF measurement eliminated manual tuning errors entirely. FANUC SR-20iA SCARA + Mecademic Meca500 with 3 Keyence VS vision systems.", technologies: ["FANUC SR-20iA SCARA", "Mecademic Meca500", "Keyence VS vision ×3", "3 network analyzers", "2 source measure units", "Allen Bradley PLC", "ATI auto tool changer"], rate: "1 board every 2 seconds", investment: "$750K–$1.5M", leadTime: "36–40 weeks", keyImpact: "Eliminated manual tuning errors; repeat orders followed", delivered: "On-Time", image: "Automated RF Circuit Board Tuning.jpg", video: "Automated RF Circuit Board Tuning Case Study.mp4" },
+    { id: "ignition-coil", title: "High-Speed Ignition Coil Assembly", industry: "Automotive", industryId: "automotive", capability: "Assembly · Machine Vision · Robotic Integration · Laser", blurb: "SDChassis-based machine consolidates wire insertion, forming, testing, and inspection for ignition coil production at 1 assembly every 2.5 seconds.", technologies: ["SDChassis", "Two Epson SCARA robots", "SDC servo wire feeding", "Cognex machine vision", "Vibratory feeders"], rate: "1 assembly every 2.5 seconds", investment: "$500K–$1M", leadTime: "36–38 weeks", keyImpact: "Repeat order — customer replicated machine across facility", delivered: "On-Time", image: "High-Speed Ignition Coil Assembly.jpg", video: null },
+    { id: "endoscope-brush", title: "Endoscope Brush Coil Staker", industry: "Life Sciences", industryId: "life-sciences", capability: "Robotic Integration · Micro Precision · Machine Vision", blurb: "Dual-robot semi-automated system processes 4 assemblies in 24 seconds, with Keyence VS vision inspection at every step.", technologies: ["Two Epson SCARA robots", "Servo-driven coiling turret", "Automated heat stake press", "Keyence VS vision", "Allen-Bradley PLC & HMI"], rate: "4 assemblies per 24 seconds", investment: "$250K–$400K", leadTime: "24–28 weeks", keyImpact: "One of 8 SDC machines in customer's facility", delivered: "On-Time", image: "Endoscope Brush Coil Staker.jpg", video: "Endoscope Brush Coil Staker.mp4" },
+    { id: "wick-assembly", title: "High-Speed Wick Assembly Machine", industry: "Consumer Products", industryId: "consumer", capability: "Assembly · Parts Feeding Technology", blurb: "Servo-driven indexing dial machine running two stations simultaneously at 140 parts per minute with zero defects leaving the line.", technologies: ["Servo-driven indexing dial", "4 Bellco vibratory bowl feeders", "4 AMCI stepper motors", "Allen-Bradley PLC & HMI", "SMC valve banks"], rate: "140 PPM", investment: "$250K–$400K", leadTime: "24–28 weeks", keyImpact: "Zero defective parts leave the line", delivered: "On-Time", image: "High-Speed Wick Assembly Machine.jpg", video: "High-Speed Wick Assembly Machine.mp4" },
+    { id: "hose-assembly-test", title: "Hose Assembly & Test Machine", industry: "General Industrial", industryId: "industrial", capability: "Testing & Inspection · Material Handling", blurb: "Single machine handles spin welding, compression testing, air leak testing to 15 PSI, inkjet marking, and sorting at 24 PPM. Replaced 3 machines with 1.", technologies: ["FANUC SCARA robot", "Cognex vision", "2 spin weld stations", "CTS air leak test (15 PSI)", "Two Keyence CIJ inkjet heads", "Bellco vibratory feeder"], rate: "24 PPM", investment: "$500K–$1M", leadTime: "32–36 weeks", keyImpact: "Replaced 3 machines with 1", delivered: "On-Time", image: "Hose Assembly & Test Machine.jpg", video: "Hose Assembly & Test Machine.mp4" },
+    { id: "microscopic-medical", title: "Microscopic Medical Device Assembly", industry: "Life Sciences", industryId: "life-sciences", capability: "Micro Precision · Assembly · Machine Vision · Laser", blurb: "26 links and 52 rivets per assembly; rivet shanks 12/1,000ths inch diameter. Mecademic robot, Asyril flex feeder, IPG vision-guided laser welder.", technologies: ["Mecademic Meca500 6-axis robot", "Asyril Asycube50 flex tray", "IPG vision-guided laser welder", "Keyence XG-X vision", "4 Bellco vibratory bowls", "Allen Bradley Compact Logix"], rate: "15 assemblies per hour", investment: "$1M–$2M", leadTime: "40–48 weeks", keyImpact: "Phased validation; repeat machine orders", delivered: "On-Time", image: "Microscopic Medical Device Assembly Images.jpg", video: "Microscopic Medical Device Assembly.mp4" },
+    { id: "gas-burner", title: "Gas Burner Assembly Machine", industry: "General Industrial", industryId: "industrial", capability: "Robotic Integration · Material Handling · Parts Feeding Technology", blurb: "Five FANUC robots, 3 SDC Flex Feeders, SDC Indexing Ring (20 fixtures), Telesis fiber laser — 1 burner assembly every 2 seconds with simple tooling changeover.", technologies: ["Four FANUC SCARA robots", "One FANUC 6-axis robot", "Three SDC Flex Feeders", "SDC Indexing Ring (20 fixtures)", "SEYI SN1-28 press", "Telesis F30DSVE 30W fiber laser"], rate: "1 assembly every 2 seconds", investment: "$750K–$1.5M", leadTime: "36–40 weeks", keyImpact: "Simple tooling inserts enable size changeover", delivered: "On-Time", image: "Gas Burner Assembly Machine.jpg", video: "Gas Burner Assembly Machine.mp4" },
+    { id: "precision-label", title: "Precision Label Application", industry: "Electronics", industryId: "electronics", capability: "Machine Vision · Robotic Integration · Material Handling", blurb: "FANUC SR-3iA SCARA robot applies foil shielding strips to two jack module styles at 30 PPM with automatic tooling changeover.", technologies: ["FANUC SR-3iA SCARA robot", "Two ATI end effectors with auto tool changer", "Cognex vision system", "Foil label applicator", "Allen-Bradley PLC & HMI"], rate: "30 PPM", investment: "$500K–$750K", leadTime: "28–32 weeks", keyImpact: "Vision inspection catches every defect; reduced downtime", delivered: "On-Time", image: "Precision Label Application.png", video: "Precision Label Application.mp4" },
+    { id: "industry-40-hmi", title: "Industry 4.0 HMI with Ignition Software", industry: "Electronics", industryId: "electronics", capability: "All Capabilities", blurb: "Ignition HMI adopted as new SDC standard. First full deployment: precision packaging line with 8 concurrent HMI touchscreens, 2 overhead displays, 60+ servo screen templates.", technologies: ["Ignition HMI (Inductive Automation)", "Allen Bradley PLC", "SQL Server integration", "8 concurrent touchscreens", "2 large format displays", "Custom billet aluminum HMI enclosure"], rate: "30+ PPM", investment: "Wide Range", leadTime: "Wide Range", keyImpact: "Now standard on all new SDC machines", delivered: "On-Time", image: "Industry 4.0 HMI with Ignition Software.jpg", video: null },
+    { id: "hose-clamp-cartoning", title: "Automatic Hose Clamp Cartoning Machine", industry: "Consumer Products", industryId: "consumer", capability: "Material Handling · Packaging · Parts Feeding Technology", blurb: "SDC Rotary Cartoner handles 10 clamp sizes, 3 carton sizes, 25 cartons per minute, 30-minute changeover. Repeat order from customer.", technologies: ["SDC Rotary Cartoner", "Bellco high-speed centrifugal feeder", "CTM Labeling 3600a-PA", "Allen-Bradley Compact Logix PLC", "Check weigher with reject system"], rate: "25 cartons per minute", investment: "$500K–$750K", leadTime: "36–44 weeks", keyImpact: "Repeat order", delivered: "On-Time", image: "Automatic Hose Clamp Cartoning Machine.jpg", video: "Automatic Hose Clamp Cartoning Machine.mp4" },
+    { id: "medical-feed-tube", title: "Automatic Medical Feed Tube Assembly", industry: "Life Sciences", industryId: "life-sciences", capability: "Robotic Integration · Material Handling · Assembly · Dispensing", blurb: "Three FANUC LR Mate 200iD robots, SDC Flex Feeders, custom dereeling, dual solvent dipping stations — 240 assemblies per hour. Automated fiberglass handling improved safety.", technologies: ["Three FANUC LR Mate 200iD robots", "FANUC vision with Banner lighting", "SDC Flex Feeding with vision", "Custom servo-driven tube dereeling/cutting", "Allen Bradley PLC & HMI"], rate: "4 PPM (240/hr)", investment: "$750K–$1M", leadTime: "28–32 weeks", keyImpact: "Fiberglass handling automated; improved safety", delivered: "On-Time", image: "Automatic Medical Feed Tube Assembly.png", video: "Automatic Medical Feed Tube Assembly.mp4" },
+    { id: "custom-tool-packaging", title: "Custom Automated Tool Packaging Machine", industry: "General Industrial", industryId: "industrial", capability: "Robotic Integration · Material Handling · Machine Vision", blurb: "4-robot system on SDC Indexing Ring — 40+ package types, 20,000+ part configurations, Telesis fiber laser, Glideline pallet conveyor, Ignition software.", technologies: ["3 FANUC SCARA robots", "FANUC 6-axis robot", "2 SDC Flex Feeders", "SDC Indexing Ring", "Telesis pulsed-fiber laser", "Glideline power & free conveyor", "Ignition software with A-B PLC"], rate: "10+ PPM", investment: "$750K–$1M", leadTime: "36–40 weeks", keyImpact: "FANUC-preferred customer; modular architecture", delivered: "On-Time", image: "Custom Automated Tool Packaging Machine.jpg", video: "Custom Automated Tool Packaging Machine.mp4" },
+    { id: "electrical-small-part", title: "High-Speed Electrical Small Part Assembly", industry: "Electronics", industryId: "electronics", capability: "Assembly · Material Handling · Parts Feeding Technology", blurb: "SDChassis-based 30-station servo indexing dial — 1 part every 1.2 seconds with integrated Cognex vision. Replaced labor-intensive manual process.", technologies: ["SDChassis", "30-station servo-driven rotary dial", "Cognex vision and inspection", "Custom terminal strip feed/cut/insert", "Allen-Bradley PLC & HMI"], rate: "100+ PPM", investment: "$750K–$1M", leadTime: "32–36 weeks", keyImpact: "Replaced labor-intensive manual process", delivered: "On-Time", image: "High-Speed Electrical Small Part Assembly.jpg", video: "High-Speed Electrical Small Part Assembly.mp4" },
+    { id: "electrical-safety-switch", title: "Electrical Safety Switch Assembly", industry: "Electronics", industryId: "electronics", capability: "Robotic Integration · Assembly · Machine Vision", blurb: "Yaskawa Motoman robots, SDC Flex Feeding, SDC Indexing Ring, bin-picking vision, automated screwdriving, grease dispensing, 10kV hipot testing.", technologies: ["Yaskawa Motoman 6-axis robot", "Yaskawa Motoman SG400 SCARA", "3 SDC servo pick-and-place units", "SDC Flex Feeding", "Deprag screwdrivers & nutrunners", "Keyence vision system"], rate: "1 assembly every 15 seconds", investment: "$1M–$2M", leadTime: "36–40 weeks", keyImpact: "Hybrid bin-picking + flex feeding optimized footprint and cost", delivered: "On-Time", image: "Electrical Safety Switch Assembly.jpg", video: "Electrical Safety Switch Assembly.mp4" },
+    { id: "drill-bit", title: "Drill Bit Assembly & Packaging Machine", industry: "Consumer Products", industryId: "consumer", capability: "Robotic Integration · Material Handling · Machine Vision", blurb: "4-robot system on SDC Indexing Ring with Keyence 3D bin-picking, SDC Flex Feeders, vision-guided label placement, robotic label wrapping at 3.5 parts per second.", technologies: ["Two SDC Flex Feeders", "Two 6-axis FANUC robots", "Two FANUC SCARA robots", "SDC Indexing Ring", "Keyence 3D bin-picking vision", "Ultrasonic welding"], rate: "15+ PPM", investment: "$1M–$2M", leadTime: "40–48 weeks", keyImpact: "Repeat customer; flexible platform handles multiple drill bit sizes", delivered: "On-Time", image: "Drill Bit Assembly & Packaging Machine.jpg", video: "Drill Bit Assembly & Packaging Machine.mp4" },
+    { id: "precision-packaging", title: "Precision Packaging Automation Line", industry: "Consumer Products", industryId: "consumer", capability: "Robotic Integration · Material Handling · Machine Vision · Dispensing", blurb: "12 FANUC SCARA robots, SDC tray handling, 30 Cognex barcode readers, Ignition HMI with SQL — 60,000 cartons per day, 10× fulfillment speed increase.", technologies: ["12 FANUC SCARA robots", "SDC servo-controlled box erectors", "30+ servo motors", "Ignition HMI with Allen Bradley PLC", "30 Cognex DM374 barcode readers", "Mettler Toledo weighing terminal"], rate: "60,000 cartons/day", investment: "$2M+", leadTime: "44–52 weeks", keyImpact: "First Ignition HMI project; templates now standard", delivered: "On-Time", image: "Precision Packaging Automation Line.jpg", video: "Precision Packaging Automation Line.mp4" },
+    { id: "hose-clamp-assembly", title: "High-Speed Hose Clamp Assembly Machine", industry: "General Industrial", industryId: "industrial", capability: "Assembly · Material Handling · Laser", blurb: "SDC Indexing Ring with 36 nests, 72 fixtures, coil feeding, SEYI press, servo curling, screwdriving — 52 PPM across 20+ sizes, no mechanical changeover.", technologies: ["Durant Tool dual spindle uncoiler", "PA Industries 5300 Advantage Feeder", "SEYI SN1-66 Mechanical Press", "SDC Indexing Ring", "Servo screwdriving and curling", "Allen-Bradley PLC & HMI"], rate: "40+ PPM", investment: "$750K–$1M", leadTime: "32–36 weeks", keyImpact: "98% minimum efficiency; programmable changeover", delivered: "On-Time", image: "High-Speed Hose Clamp Assembly Machine.jpg", video: "High-Speed Hose Clamp Assembly Machine.mp4" },
+    { id: "custom-cartoning", title: "Custom Cartoning and Packaging Machines", industry: "Consumer Products", industryId: "consumer", capability: "Material Handling · Packaging", blurb: "Two simultaneous cartoning projects — reverse tuck (hose fittings, 3 sizes) and full overlap seal end (pest management kits). 20–30 cartons per minute, HMI-only changeover.", technologies: ["Epson SCARA robot", "SDC custom conveyors", "Keyence vision systems", "Servo-driven indexing dials", "Custom pick-and-place motion modules"], rate: "25+ cartons per minute", investment: "$250K–$500K", leadTime: "28–32 weeks", keyImpact: "Standard cartoner platform adapted for two unique applications", delivered: "On-Time", image: "Custom Cartoning and Packaging Machines.jpg", video: "Custom Cartoning and Packaging Machines.mp4" },
+    { id: "robotic-eoat", title: "SDC Custom Robotic End-of-Arm Tooling", industry: "General Industrial", industryId: "industrial", capability: "Robotic Integration · Material Handling · Dispensing", blurb: "Three custom EOAT attachments for single FANUC R-2000ic robot — automatic changeover for parts up to 54 inches tall. Compact footprint for large parts.", technologies: ["FANUC R-2000ic heavy-payload robot", "Vacuum liner tool (6\"–13\" dia.)", "Multi liner tool (18\"–54\", servo-adjustable)", "Resin roll out tool", "FANUC DCS dual-check safety"], rate: "30 parts per hour", investment: "$1M–$2M", leadTime: "40–48 weeks", keyImpact: "Automatic EOAT changeover; compact footprint for large parts", delivered: "On-Time", image: "SDC Custom Robotic End-of-Arm Tooling.jpg", video: "SDC Custom Robotic End-of-Arm Tooling.mp4" },
+    { id: "honeycomb-welding", title: "Honeycomb Core Welding Machine", industry: "Aerospace", industryId: "aerospace", capability: "Assembly · Material Handling · Machine Vision · Laser", blurb: "Four-welder servo system with Keyence vision weld inspection — upgraded from prior proven design — at 0.5 seconds per weld.", technologies: ["Four servo-driven weld wheels", "Servo-driven forming gear and pin plates", "Servo-driven XY strip cutter", "Power despooler with dancer", "Keyence vision system"], rate: "0.5 seconds per weld", investment: "$250K–$500K", leadTime: "28–32 weeks", keyImpact: "Repeat customer; upgraded proven design", delivered: "On-Time", image: "Honeycomb Core Welding Machine.png", video: "Honeycomb Core Welding Machine.mp4" },
+    { id: "filter-assembly", title: "Automatic Filter Assembly Machine", industry: "Aerospace", industryId: "aerospace", capability: "Assembly · Material Handling", blurb: "Servo-driven fiberglass media wrapping with multi-belt nesting, three circular slitters, heat stake seaming, light curtain safety — 1–2 filters per minute.", technologies: ["Servo-driven pulley system", "Multi-belt rolling nest", "8-roll media feed racks", "Three circular slitter blades", "11-gripper pull-down mechanism", "Heat stake device", "Banner EZ Screen LS light curtain"], rate: "2 filters per minute", investment: "$500K–$1M", leadTime: "28–32 weeks", keyImpact: "Servo-driven changeover for different filter sizes", delivered: "On-Time", image: "Automatic Filter Assembly Machine.jpg", video: "Automatic Filter Assembly Machine.mp4" },
+    { id: "fin-former", title: "Fin Former Machine", industry: "Aerospace", industryId: "aerospace", capability: "Assembly · Material Handling", blurb: "Servo ball screw replaced air-over-oil cylinder bottleneck — up to 60 cycles per minute, no mechanical changeover for widths or materials.", technologies: ["Servo-driven ball screw", "Servo-driven pinch feed roller", "Servo-driven metal knife pleater", "Industrial despooler with oil pads", "Inline interval spray marker"], rate: "60+ cycles per minute", investment: "$500K–$1M", leadTime: "32–36 weeks", keyImpact: "Ball screw removed bottleneck; centerline guiding handles material variation", delivered: "On-Time", image: "Fin Former Machine.JPG", video: null },
+    { id: "button-flow-test", title: "High-Speed Material Handling & Button Flow Test", industry: "Aerospace", industryId: "aerospace", capability: "Testing & Inspection · Material Handling · Vision Inspection", blurb: "3-axis robot with vision alignment, flow test station, punch/die — 10 parts per second punch rate.", technologies: ["3-axis robot with custom gripper", "Ball screw slide", "Vision inspection and alignment", "Punch and die (air over oil)", "Spray and flow test station", "PLC machine controls"], rate: "10+ parts per second", investment: "$500K–$750K", leadTime: "28–32 weeks", keyImpact: "Vision-aligned high-speed punch and flow test", delivered: "On-Time", image: "Button Flow Test Machine.JPG", video: "Button Flow Test Machine.mp4" },
+    { id: "resistance-welding", title: "Automated Material Processing & Resistance Welding", industry: "Aerospace", industryId: "aerospace", capability: "Assembly · Machine Vision · Material Handling", blurb: "Full automated system forms and resistance-welds titanium honeycomb blankets up to 48×120 inches from spooled strip — 4 welds per second.", technologies: ["Allen Bradley Compact Logix PLC", "Kinetix 5500 servo drives", "Powered dereeler with inclinometer", "Pneumatic punch and servo former", "Multiple resistance welders", "Laser retroreflective sensor"], rate: "4 welds per second", investment: "$500K–$750K", leadTime: "28–32 weeks", keyImpact: "Inclinometer auto-adjusts tension as spool depletes", delivered: "On-Time", image: "Resistance Welding Machine.JPG", video: null },
+    { id: "solar-dynamic", title: "Solar Panel Dynamic Load Test Machine", industry: "Energy", industryId: "energy", capability: "Testing & Inspection · Material Handling", blurb: "Programmable static and dynamic PV panel load test machine with pneumatic actuators, zone control, deflection sensors, UL 61730 compliance.", technologies: ["Pneumatic actuators with suction cups", "Variable zone control", "Deflection sensors", "Calibrated load cell", "Programmable test schedule", "UL 61730 compliance"], rate: "15 min test cycle", investment: "$250K–$500K", leadTime: "28–32 weeks", keyImpact: "SDC has built many solar testing systems for this customer", delivered: "On-Time", image: "Solar Panel Dynamic Load Test Machine.jpg", video: "Solar Panel Dynamic Load Test Machine.mp4" },
+    { id: "solar-sweep", title: "Solar Panel Sweep Test Machine", industry: "Energy", industryId: "energy", capability: "Testing & Inspection · Material Handling", blurb: "Motor-driven wire brush abrasion test with adjustable roller pressure, dual vacuum zones, HEPA filtration, humidity control, smooth servo motion.", technologies: ["Motor-driven wire brush abrasion system", "Two vacuum zones", "Fumex HEPA filter", "Adjustable roller pressure", "Chamber humidity control", "Servo-driven smooth motion"], rate: "15 min test cycle", investment: "$250K–$500K", leadTime: "28–32 weeks", keyImpact: "Complete environmental simulation in one machine", delivered: "On-Time", image: "Solar Panel Sweep Test Machine.jpg", video: "Solar Panel Sweep Test Machine.mp4" },
+    { id: "solar-reflectance", title: "Solar Panel Reflectance Test", industry: "Energy", industryId: "energy", capability: "Testing & Inspection · Material Handling", blurb: "Servo-driven XY gantry reflectance tester — retrofitted for next-gen panels, then a duplicate built. Custom .NET software with SQL Server recipe management.", technologies: ["Servo-driven X-Y gantry", "Optical sensor head", "Custom .NET PC application", "SQL Server database", "Ethernet communications"], rate: "15 min test cycle", investment: "$250K–$500K", leadTime: "28–32 weeks", keyImpact: "Customer returned machine for upgrade, then ordered a duplicate", delivered: "On-Time", image: "Solar Panel Reflectance Test.jpg", video: "Solar Panel Reflectance Test.mp4" },
+    { id: "gas-valve", title: "Semi-Automated Gas Valve Assembly", industry: "Energy", industryId: "energy", capability: "Assembly · Material Handling", blurb: "Servo torquing, servo-geared horizontal travel, sealant applicator on 3-axis slide, quick-change tooling — 140 parts per hour across multiple diameters and valve geometries.", technologies: ["Servo-driven valve torquing station", "Sealant applicator with 3-axis servo slide", "Pneumatic shuttle with hydraulic grippers", "Quick-change tooling", "Electronically geared rotary and horizontal motion", "Allen-Bradley PLC"], rate: "140 parts per hour", investment: "$1M–$2M", leadTime: "40–48 weeks", keyImpact: "Electronically geared servo motion maintains thread pitch", delivered: "On-Time", image: "Semi-Automated Gas Valve Assembly.jpg", video: "Semi-Automated Gas Valve Assembly.mp4" },
+    { id: "optical-electrical-tester", title: "Precision Optical & Electrical Tester", industry: "Energy", industryId: "energy", capability: "Testing & Inspection", blurb: "FANUC LR Mate 200iD 7L robot with four cassette stations, barcode reading, Cognex vision, custom .NET software with SQL recipe management, hot-swap capability.", technologies: ["FANUC LR Mate 200iD 7L robot", "Four coupon cassette stations", "Barcode reader", "Cognex inspection camera", "Custom .NET PC application", "SQL Server database", "Light curtain for hot-swap"], rate: "3 per minute", investment: "$500K–$750K", leadTime: "28–32 weeks", keyImpact: "Hot-swap capability for continuous operation", delivered: "On-Time", image: "Precision Optical & Electrical Tester.jpg", video: "Precision Optical & Electrical Tester.mp4" },
+    { id: "leak-testing-propane", title: "Custom Leak Testing Machine — Propane & Gas Tubing", industry: "Energy", industryId: "energy", capability: "Testing & Inspection · Material Handling", blurb: "Semi-automated two-station machine, ultra-high accuracy differential pressure testing to 0.001 PSI, inkjet marking, modular quick-change tooling.", technologies: ["Two test stations", "Ultra-high accuracy differential pressure transducers (0.001 PSI)", "Allen-Bradley PLC with HMI", "Inkjet marking system", "Built-in calibrated leak", "Modular quick-change tooling"], rate: "2 tests per minute", investment: "$500K–$750K", leadTime: "28–32 weeks", keyImpact: "One station tests while other reloads — continuous output", delivered: "On-Time", image: "Custom Leak Testing Machine.jpg", video: null },
+    { id: "ev-charging", title: "EV Charging Assembly Line", industry: "Automotive", industryId: "automotive", capability: "Assembly · Material Handling", blurb: "Semi-automated modular assembly line with RFID tracking, O-ring terminal subassembly automation, integrated PLCs, sensitive PCB handling, ergonomic operator stations.", technologies: ["Sensitive electronic PCB handling fixtures", "RFID tracking", "O-ring terminal subassembly automation", "Integrated PLCs", "Vision systems", "Custom ergonomic operator workstations"], rate: "1 assembly per minute", investment: "$750K–$1M", leadTime: "32–36 weeks", keyImpact: "Full RFID traceability through entire assembly", delivered: "On-Time", image: "EV Charging Assembly Line.PNG", video: null },
+    { id: "automotive-dash", title: "Automotive Dash Panel Production Equipment", industry: "Automotive", industryId: "automotive", capability: "Robotic Integration · Material Handling", blurb: "Yaskawa Motoman MH-24 robot with dual-ended spindle, tool wear compensation via laser micrometer, Keyence 3-camera vision — 1 part per 2.5 minutes, 32 holes per part.", technologies: ["Yaskawa Motoman MH-24 with DX200", "18,000 RPM dual-ended spindle", "Keyence vision (3 inspection cameras)", "Keyence laser micrometer for tool wear", "Rockwell Kinetix 5500 servos", "Safety zone controller"], rate: "1 part per 2.5 minutes", investment: "$500K–$750K", leadTime: "28–32 weeks", keyImpact: "Laser micrometer auto-compensates for tool wear in real time", delivered: "On-Time", image: "Automotive Dash Panel Production Equipment.jpg", video: null },
+    { id: "fluid-dispensing", title: "Fluid Dispensing and Packaging Machine", industry: "Consumer Products", industryId: "consumer", capability: "Dispensing · Material Handling", blurb: "High-speed fluid dispensing system — three servo-controlled nozzles apply mosquito repellant to media prior to wrapping at 120 PPM.", technologies: ["SDC fluid dispensing system", "Servo-controlled horizontal motion module", "Motion-engaged displacement pump", "Keyence color sensor", "MGS Intermittent Pick-and-Place denesting"], rate: "120 PPM", investment: "$500K–$750K", leadTime: "28–32 weeks", keyImpact: "Precise servo motion ensures consistent fluid application at speed", delivered: "On-Time", image: "Fluid Dispensing and Packaging Machine.jpg", video: "Fluid Dispensing and Packaging Machine.mp4" },
+  ],
+
+  videos: [
+    { id: "v-rf", caseId: "automated-rf", title: "Automated RF Circuit Board Tuning", industry: "Life Sciences", category: "Life Sciences", tags: ["Dual robot", "RF measurement", "Mecademic"], file: "Automated RF Circuit Board Tuning Case Study.mp4" },
+    { id: "v-wick", caseId: "wick-assembly", title: "High-Speed Wick Assembly Machine", industry: "Consumer Products", category: "Consumer Products", tags: ["140 PPM", "Servo indexing", "Zero defects"], file: "High-Speed Wick Assembly Machine.mp4" },
+    { id: "v-hose-test", caseId: "hose-assembly-test", title: "Hose Assembly & Test Machine", industry: "General Industrial", category: "General Industrial", tags: ["Spin welding", "Leak test", "24 PPM"], file: "Hose Assembly & Test Machine.mp4" },
+    { id: "v-microscopic", caseId: "microscopic-medical", title: "Microscopic Medical Device Assembly", industry: "Life Sciences", category: "Life Sciences", tags: ["Mecademic robot", "IPG laser welder", "12/1,000ths\" rivets"], file: "Microscopic Medical Device Assembly.mp4" },
+    { id: "v-hose-clamp-cart", caseId: "hose-clamp-cartoning", title: "Automatic Hose Clamp Cartoning Machine", industry: "General Industrial", category: "General Industrial", tags: ["SDC Rotary Cartoner", "10 clamp sizes", "25 CPM"], file: "Automatic Hose Clamp Cartoning Machine.mp4" },
+    { id: "v-med-tube", caseId: "medical-feed-tube", title: "Automatic Medical Feed Tube Assembly", industry: "Life Sciences", category: "Life Sciences", tags: ["Three FANUC LR Mates", "Fiberglass handling", "240/hr"], file: "Automatic Medical Feed Tube Assembly.mp4" },
+    { id: "v-tool-pkg", caseId: "custom-tool-packaging", title: "Custom Automated Tool Packaging Machine", industry: "General Industrial", category: "General Industrial", tags: ["4-robot system", "40+ package types", "Ignition HMI"], file: "Custom Automated Tool Packaging Machine.mp4" },
+    { id: "v-elec-small", caseId: "electrical-small-part", title: "High-Speed Electrical Small Part Assembly", industry: "Electronics", category: "Electronics", tags: ["SDChassis", "30-station dial", "100+ PPM"], file: "High-Speed Electrical Small Part Assembly.mp4" },
+    { id: "v-safety-switch", caseId: "electrical-safety-switch", title: "Electrical Safety Switch Assembly", industry: "Electronics", category: "Electronics", tags: ["Yaskawa Motoman", "Bin picking", "10kV hipot"], file: "Electrical Safety Switch Assembly.mp4" },
+    { id: "v-drill-bit", caseId: "drill-bit", title: "Drill Bit Assembly & Packaging Machine", industry: "Consumer Products", category: "Consumer Products", tags: ["4-robot system", "3D bin picking", "15+ PPM"], file: "Drill Bit Assembly & Packaging Machine.mp4" },
+    { id: "v-precision-pkg", caseId: "precision-packaging", title: "Precision Packaging Automation Line", industry: "Consumer Products", category: "Consumer Products", tags: ["12 FANUC SARAs", "60K cartons/day", "Ignition HMI"], file: "Precision Packaging Automation Line.mp4" },
+    { id: "v-hose-clamp-asm", caseId: "hose-clamp-assembly", title: "High-Speed Hose Clamp Assembly Machine", industry: "General Industrial", category: "General Industrial", tags: ["SDC Indexing Ring", "52 PPM", "20+ sizes"], file: "High-Speed Hose Clamp Assembly Machine.mp4" },
+    { id: "v-cartoning", caseId: "custom-cartoning", title: "Custom Cartoning and Packaging Machines", industry: "Consumer Products", category: "Consumer Products", tags: ["Reverse tuck", "Full overlap", "25 CPM"], file: "Custom Cartoning and Packaging Machines.mp4" },
+    { id: "v-eoat", caseId: "robotic-eoat", title: "SDC Custom Robotic End-of-Arm Tooling", industry: "General Industrial", category: "General Industrial", tags: ["FANUC R-2000ic", "Auto changeover", "54\" parts"], file: "SDC Custom Robotic End-of-Arm Tooling.mp4" },
+    { id: "v-honeycomb", caseId: "honeycomb-welding", title: "Honeycomb Core Welding Machine", industry: "Aerospace", category: "Aerospace", tags: ["4 servo welders", "Keyence vision", "0.5s/weld"], file: "Honeycomb Core Welding Machine.mp4" },
+    { id: "v-filter", caseId: "filter-assembly", title: "Automatic Filter Assembly Machine", industry: "Aerospace", category: "Aerospace", tags: ["Fiberglass media", "3 slitters", "Heat stake"], file: "Automatic Filter Assembly Machine.mp4" },
+    { id: "v-button-flow", caseId: "button-flow-test", title: "High-Speed Button Flow Test Machine", industry: "Aerospace", category: "Aerospace", tags: ["3-axis robot", "Flow test", "10 parts/sec"], file: "Button Flow Test Machine.mp4" },
+    { id: "v-solar-dynamic", caseId: "solar-dynamic", title: "Solar Panel Dynamic Load Test Machine", industry: "Energy", category: "Energy", tags: ["Pneumatic actuators", "Zone control", "UL 61730"], file: "Solar Panel Dynamic Load Test Machine.mp4" },
+    { id: "v-solar-sweep", caseId: "solar-sweep", title: "Solar Panel Sweep Test Machine", industry: "Energy", category: "Energy", tags: ["Wire brush abrasion", "HEPA filtration", "Humidity control"], file: "Solar Panel Sweep Test Machine.mp4" },
+    { id: "v-solar-reflect", caseId: "solar-reflectance", title: "Solar Panel Reflectance Test", industry: "Energy", category: "Energy", tags: ["XY gantry", ".NET software", "SQL recipes"], file: "Solar Panel Reflectance Test.mp4" },
+    { id: "v-gas-valve", caseId: "gas-valve", title: "Semi-Automated Gas Valve Assembly", industry: "Energy", category: "Energy", tags: ["Servo torquing", "Sealant application", "140/hr"], file: "Semi-Automated Gas Valve Assembly.mp4" },
+    { id: "v-optical", caseId: "optical-electrical-tester", title: "Precision Optical & Electrical Tester", industry: "Energy", category: "Energy", tags: ["FANUC 6-axis", "4 cassette stations", "Hot-swap"], file: "Precision Optical & Electrical Tester.mp4" },
+    { id: "v-fluid", caseId: "fluid-dispensing", title: "Fluid Dispensing and Packaging Machine", industry: "Consumer Products", category: "Consumer Products", tags: ["120 PPM", "Servo nozzles", "Displacement pump"], file: "Fluid Dispensing and Packaging Machine.mp4" },
+    { id: "v-endoscope", caseId: "endoscope-brush", title: "Endoscope Brush Coil Staker", industry: "Life Sciences", category: "Life Sciences", tags: ["Two Epson SARAs", "4 per 24 sec", "8 SDC systems"], file: "Endoscope Brush Coil Staker.mp4" },
+    { id: "v-gas-burner", caseId: "gas-burner", title: "Gas Burner Assembly Machine", industry: "General Industrial", category: "General Industrial", tags: ["5 FANUC robots", "SDC Flex Feeders", "Fiber laser"], file: "Gas Burner Assembly Machine.mp4" },
+    { id: "v-precision-label", caseId: "precision-label", title: "Precision Label Application", industry: "Electronics", category: "Electronics", tags: ["FANUC SCARA", "Foil shielding", "30 PPM"], file: "Precision Label Application.mp4" },
+  ],
+
+  customerLogos: [
+    // ✅ Clean transparent PNGs only
+    "Belcan.png",
+    "GE aero.png",
+    "Indy honeycomb.png",
+    "JM.png",
+    "Mar-Bal.png",
+    "PandT.png",
+    "alene.png",
+    "aptiv.png",
+    "beckett.png",
+    "bleep.png",
+    "duracell.png",
+    "first solar.png",
+    "foundation.png",
+    "ge.png",
+    "gillette.png",
+    "honeywell.png",
+    "kdc one.png",
+    "kyocera.png",
+    "milwaukee.png",
+    "momentive.png",
+    "nestle.png",
+    "newell.png",
+    "pentair.png",
+    "rochling.png",
+    "shurtape.png",
+    "sonoco.png",
+    "stuller.png",
+    "tesla.png",
+    "thermacell.png",
+    // ⚠️ EXCLUDED — solid background (JPEG or no alpha):
+    // "Centrus.jpg", "Ilpea.jpg", "Nasa.jpg", "SSP.jpg", "hp.jpg",
+    // "norma group.jpg", "wooster.jpg", "boxit.png",
+    // "ge healthcare.png", "schneider electric.png"
+  ],
+};
+</script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useMemo, useCallback } = React;
+
+// ─── ICONS (SVG) ────────────────────────────────────────────────────────────
+const PlayIcon = ({ size = 24, color = "#fff" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={color}><path d="M8 5v14l11-7z"/></svg>
+);
+const ArrowLeft = ({ size = 24, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+);
+const HomeIcon = ({ size = 24, color = "#fff" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/></svg>
+);
+const ChevronRight = ({ size = 22, color = "#5BA0E0" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+);
+const InfoIcon = ({ size = 18, color = "#74C415" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+);
+const QRIcon = ({ size = 140, color = "#061D39" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5">
+    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+    <rect x="3" y="14" width="7" height="7"/>
+    <rect x="5" y="5" width="3" height="3" fill={color} stroke="none"/>
+    <rect x="16" y="5" width="3" height="3" fill={color} stroke="none"/>
+    <rect x="5" y="16" width="3" height="3" fill={color} stroke="none"/>
+    <path d="M14 14h3v3h-3zM17 14h3M17 17v3M14 20h3"/>
+  </svg>
+);
+
+// ─── HELPERS ────────────────────────────────────────────────────────────────
+const IMG_PATH = p => `Image Files/${p}`;
+const VID_PATH = p => `Video Files/${p}`;
+const ICON_PATH = p => `Icon Files/${p}`;
+const LOGO_PATH = p => `Customer Logo Files/${p}`;
+
+const Pill = ({ children, variant = "primary" }) => (
+  <span className={`pill pill-${variant} pill-static`}>{children}</span>
+);
+
+const SectionBanner = ({ title, kicker, right }) => (
+  <div className="section-banner">
+    <div>
+      {kicker && <div className="section-kicker">{kicker}</div>}
+      <h2 className="section-title">{title}</h2>
+    </div>
+    {right && <div>{right}</div>}
+  </div>
+);
+
+// ─── HEADER ─────────────────────────────────────────────────────────────────
+const SECTIONS = ["home","case-studies","industries","capabilities","videos","numbers","contact"];
+const SECTION_LABELS = ["Home","Case Studies","Industries","Capabilities","Videos","By the Numbers","Contact"];
+
+const Header = ({ route, onNavigate, onBack, title }) => {
+  const isHome = route.name === "home";
+  const sectionIdx = (() => {
+    if (["case-study-detail"].includes(route.name)) return 1;
+    if (["industry-detail"].includes(route.name)) return 2;
+    if (["capability-detail"].includes(route.name)) return 3;
+    if (["video-detail"].includes(route.name)) return 4;
+    return SECTIONS.indexOf(route.name);
+  })();
+
+  return (
+    <header className="kheader">
+      <div className="kheader-left">
+        <div className="logo-block">
+          <img src="Blue SDC Logo.png" alt="SDC Automation" className="sdc-logo" />
+        </div>
+        <div className="header-divider" />
+        {!isHome && (
+          <button className="back-btn" onClick={onBack}>
+            <ArrowLeft size={18} color="#5BA0E0" />
+            <span>{title || "Back"}</span>
+          </button>
+        )}
+        {isHome && (
+          <div className="show-badge">
+            Automate 2026 &nbsp;·&nbsp; Booth <span>#26011</span>
+          </div>
+        )}
+      </div>
+      <div className="kheader-right">
+        <div className="dots">
+          {SECTION_LABELS.map((s, i) => (
+            <span key={i} title={s}
+              className={`dot ${i === sectionIdx ? "dot-active" : ""}`}
+              onClick={() => onNavigate({ name: SECTIONS[i] })} />
+          ))}
+        </div>
+      </div>
+    </header>
+  );
+};
+
+// ─── FOOTER ─────────────────────────────────────────────────────────────────
+const Footer = () => {
+  const D = window.SDC_DATA.company;
+  return (
+    <footer className="kfooter">
+      <div>{D.site}</div>
+      <div>
+        <span className="kfooter-email">{D.email}</span>
+        <span className="kfooter-sep">·</span>
+        <span className="kfooter-phone">{D.phone}</span>
+      </div>
+    </footer>
+  );
+};
+
+// ─── TOUCH TO EXPLORE ────────────────────────────────────────────────────────
+const TouchOrb = () => (
+  <div className="touch-text">Touch to<br/>Explore</div>
+);
+
+// ─── LOGO BAR ────────────────────────────────────────────────────────────────
+const LogoBar = () => {
+  const logos = window.SDC_DATA.customerLogos;
+  const doubled = [...logos, ...logos];
+  return (
+    <div className="logo-bar-outer">
+      <div className="logo-bar-label">Who we work with</div>
+      <div className="logo-bar-wrap">
+        <div className="logo-bar-track">
+          {doubled.map((logo, i) => (
+            <div key={i} className="logo-bar-item">
+              <img src={LOGO_PATH(logo)} alt={logo.replace(/\.[^/.]+$/, '')} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── FRAME ───────────────────────────────────────────────────────────────────
+const Frame = ({ route, onNavigate, onBack, title, children }) => (
+  <div className="frame">
+    <Header route={route} onNavigate={onNavigate} onBack={onBack} title={title} />
+    <div className="frame-body">{children}</div>
+    <Footer />
+  </div>
+);
+
+// ─── HOME SCREEN ─────────────────────────────────────────────────────────────
+const HomeScreen = ({ onNavigate }) => {
+  const D = window.SDC_DATA;
+  const cards = [
+    { icon: "Case_Studies_Icon.svg", title: "Case Studies", blurb: "Real projects, real results across industries", nav: "case-studies" },
+    { icon: "Industries_Icon.svg", title: "Industries", blurb: "Markets we engineer solutions for", nav: "industries" },
+    { icon: "Applications_Icon.svg", title: "Capabilities", blurb: "Machine types and application capabilities", nav: "capabilities" },
+    { icon: "Video_Library_Icon.svg", title: "Video Library", blurb: "See our machines in action — offline", nav: "videos" },
+    { icon: "By_the_Numbers_Icon.svg", title: "By the Numbers", blurb: "28 years, 1,500+ machines built, one team", nav: "numbers" },
+    { icon: "Contact_Us_Icon.svg", title: "Contact Us", blurb: "Start a conversation about your project", nav: "contact" },
+  ];
+  return (
+    <>
+      <div className="hero">
+        <div className="hero-left">
+          <h1 className="hero-title">Custom Automated Machines</h1>
+          <p className="hero-sub">Engineering Excellence. Trusted Partnerships.</p>
+        </div>
+        <div className="hero-right">
+          <TouchOrb />
+        </div>
+      </div>
+      <div className="screen-content" style={{paddingBottom: 20}}>
+        <div className="home-grid">
+          {cards.map(c => (
+            <button key={c.nav} className="home-card" onClick={() => onNavigate({ name: c.nav })}>
+              <div className="home-card-icon">
+                <img src={ICON_PATH(c.icon)} alt={c.title} />
+              </div>
+              <div className="home-card-title">{c.title}</div>
+              <div className="home-card-blurb">{c.blurb}</div>
+            </button>
+          ))}
+        </div>
+        <LogoBar />
+      </div>
+    </>
+  );
+};
+
+// ─── CASE CARD (extracted so useState is never called inside a loop) ──────────
+const CaseCard = ({ c, onNavigate }) => {
+  const [thumbErr, setThumbErr] = useState(false);
+  return (
+    <button key={c.id} className="case-card" onClick={() => onNavigate({ name: "case-study-detail", id: c.id })}>
+      {!thumbErr && c.image
+        ? <img className="case-card-img" src={IMG_PATH(c.image)} alt={c.title} onError={() => setThumbErr(true)} />
+        : <div className="case-card-img-placeholder"><img src={ICON_PATH("Applications_Icon.svg")} alt="" /></div>
+      }
+      <div className="case-card-body">
+        <div className="case-card-meta">
+          <Pill variant="primary">{c.industry}</Pill>
+          <Pill variant="navy">{c.capability.split("·")[0].trim()}</Pill>
+        </div>
+        <div className="case-card-title">{c.title}</div>
+        <div className="case-card-blurb">{c.blurb}</div>
+        <div className="case-card-footer">
+          <div className="case-card-rate">{c.rate}</div>
+          <div className="case-card-lead">{c.leadTime}</div>
+        </div>
+      </div>
+    </button>
+  );
+};
+
+// ─── CASE STUDIES SCREEN ─────────────────────────────────────────────────────
+const CaseStudiesScreen = ({ onNavigate, filterIndustryId, filterIndustryName }) => {
+  const D = window.SDC_DATA;
+  const [industryFilter, setIndustryFilter] = useState(filterIndustryId || "All");
+  const [capFilter, setCapFilter] = useState("All");
+
+  const industries = ["All", ...Array.from(new Set(D.caseStudies.map(c => c.industry)))];
+  const capabilities = ["All", ...Array.from(new Set(D.caseStudies.flatMap(c => c.capability.split("·").map(x => x.trim()))))].slice(0, 10);
+
+  let items = D.caseStudies;
+  if (industryFilter !== "All") items = items.filter(c => c.industry === industryFilter);
+  if (capFilter !== "All") items = items.filter(c => c.capability.includes(capFilter));
+
+  return (
+    <>
+      <SectionBanner
+        kicker={filterIndustryName ? `Industry · ${filterIndustryName}` : null}
+        title="Case Studies"
+      />
+      <div className="case-filter">
+        <span style={{fontSize:12,fontWeight:700,color:"var(--text-mute)",letterSpacing:"0.1em",textTransform:"uppercase",alignSelf:"center",marginRight:4}}>Industry:</span>
+        {industries.map(i => (
+          <button key={i} className={`filter-chip ${industryFilter === i ? "filter-chip-active" : ""}`}
+            style={{padding:"6px 12px",fontSize:13}} onClick={() => setIndustryFilter(i)}>{i}</button>
+        ))}
+      </div>
+      <div className="case-filter" style={{marginBottom:16}}>
+        <span style={{fontSize:12,fontWeight:700,color:"var(--text-mute)",letterSpacing:"0.1em",textTransform:"uppercase",alignSelf:"center",marginRight:4}}>Type:</span>
+        {capabilities.map(cap => (
+          <button key={cap} className={`filter-chip ${capFilter === cap ? "filter-chip-active" : ""}`}
+            style={{padding:"6px 12px",fontSize:13}} onClick={() => setCapFilter(cap)}>{cap}</button>
+        ))}
+      </div>
+      <div className="case-card-grid scrollable-list" style={{maxHeight:600}}>
+        {items.map(c => <CaseCard key={c.id} c={c} onNavigate={onNavigate} />)}
+      </div>
+    </>
+  );
+};
+
+// ─── CASE STUDY DETAIL ───────────────────────────────────────────────────────
+const CaseStudyDetail = ({ id, onNavigate }) => {
+  const D = window.SDC_DATA;
+  const c = D.caseStudies.find(x => x.id === id);
+  if (!c) return null;
+  const video = D.videos.find(v => v.caseId === c.id);
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <div className="detail-grid">
+      <div>
+        <div className="detail-meta">
+          <Pill variant="primary">{c.industry}</Pill>
+          {c.capability.split("·").slice(0,2).map((cap,i) => <Pill key={i} variant="navy">{cap.trim()}</Pill>)}
+        </div>
+        <h2 className="detail-title">{c.title}</h2>
+        <p className="detail-blurb">{c.blurb}</p>
+        <div className="detail-badges">
+          <span className="badge badge-primary">Investment: {c.investment}</span>
+          <span className="badge badge-navy">Lead Time: {c.leadTime}</span>
+          <span className="badge badge-navy">Rate: {c.rate}</span>
+        </div>
+        {!imgError && c.image ? (
+          <img className="case-image" src={IMG_PATH(c.image)} alt={c.title} onError={() => setImgError(true)} />
+        ) : (
+          <div className="case-image-placeholder">
+            <img src={ICON_PATH("Applications_Icon.svg")} alt="" style={{width:40,height:40,opacity:0.3}} />
+            <span>{c.title}</span>
+          </div>
+        )}
+      </div>
+      <div>
+        <div className="highlights-card">
+          <div className="highlights-title">Key Impact</div>
+          <div className="highlights-list">
+            <div className="highlight-row">
+              <div className="highlight-text">
+                <span className="highlight-value">{c.keyImpact}</span>
+              </div>
+            </div>
+            <div className="highlight-row">
+              <div className="highlight-text">
+                <span className="highlight-value">{c.rate}</span>
+                <span className="highlight-label"> production rate</span>
+              </div>
+            </div>
+            <div className="highlight-row">
+              <div className="highlight-text">
+                <span className="highlight-value">{c.investment}</span>
+                <span className="highlight-label"> investment range</span>
+              </div>
+            </div>
+            <div className="highlight-row">
+              <div className="highlight-text">
+                <span className="highlight-value">{c.leadTime}</span>
+                <span className="highlight-label"> typical lead time</span>
+              </div>
+            </div>
+          </div>
+          {video && (
+            <button className="watch-btn" onClick={() => onNavigate({ name: "video-detail", id: video.id })}>
+              <PlayIcon size={20} /> Watch Project Video
+            </button>
+          )}
+        </div>
+        {c.technologies && (
+          <div style={{marginTop:16}}>
+            <div className="ind-col-title" style={{marginBottom:10}}>Technology Used</div>
+            <div className="tech-tags">
+              {c.technologies.map((t,i) => <span key={i} className="tech-tag">{t}</span>)}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ─── INDUSTRIES SCREEN ───────────────────────────────────────────────────────
+const IndustriesScreen = ({ onNavigate }) => {
+  const D = window.SDC_DATA;
+  return (
+    <>
+      <SectionBanner title="Industries We Serve" />
+      <p style={{fontSize:19,color:"var(--text-dim)",fontWeight:500,lineHeight:1.5,margin:"0 0 22px",maxWidth:1200}}>
+        SDC works across all industries — from high-volume consumer manufacturing to the most complex, niche, and highly regulated applications in aerospace, life sciences, and energy. If it needs to be automated, we can build it.
+      </p>
+      <div className="tile-grid tile-grid-4">
+        {D.industries.map(ind => (
+          <button key={ind.id} className="tile-card" onClick={() => onNavigate({ name: "industry-detail", id: ind.id })}>
+            <img src={ICON_PATH(ind.icon)} alt={ind.name} style={{width:60,height:60,objectFit:"contain"}} />
+            <div className="tile-label">{ind.name}</div>
+            <div className="tile-desc">{ind.blurb.split(".")[0]}.</div>
+          </button>
+        ))}
+      </div>
+      <div className="notice" style={{marginTop:16}}>
+        <InfoIcon />
+        Tap any industry to see relevant case studies and videos filtered to that market.
+      </div>
+    </>
+  );
+};
+
+// ─── INDUSTRY DETAIL ─────────────────────────────────────────────────────────
+const IndustryDetail = ({ id, onNavigate }) => {
+  const D = window.SDC_DATA;
+  const ind = D.industries.find(x => x.id === id);
+  if (!ind) return null;
+  const cases = D.caseStudies.filter(c => c.industryId === id);
+  const videos = D.videos.filter(v => cases.find(c => c.id === v.caseId));
+
+  return (
+    <>
+      <SectionBanner kicker="Industry" title={ind.name}
+        right={<div className="banner-meta">{cases.length} projects · {videos.length} videos</div>} />
+      <div style={{marginBottom:16}}>
+        <p className="industry-blurb">{ind.blurb}</p>
+      </div>
+      <div className="industry-grid">
+        <div>
+          <div className="ind-col-title">Case Studies</div>
+          <div className="case-list scrollable-list" style={{maxHeight:540}}>
+            {cases.length === 0 && <div className="empty">More projects in development. Ask the team at the booth.</div>}
+            {cases.map(c => (
+              <button key={c.id} className="case-row" onClick={() => onNavigate({ name: "case-study-detail", id: c.id })}>
+                <div className="case-row-left">
+                  <div className="case-row-meta"><Pill variant="navy">{c.capability.split("·")[0].trim()}</Pill></div>
+                  <div className="case-row-title">{c.title}</div>
+                  <div className="case-row-blurb case-row-blurb-tight">{c.blurb}</div>
+                </div>
+                <div className="case-row-right">
+                  <div className="case-row-value">{c.investment}</div>
+                  <ChevronRight />
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div className="ind-col-title">Videos</div>
+          <div className="ind-video-list">
+            {videos.length === 0 && <div className="empty">See the Video Library for overview content.</div>}
+            {videos.map(v => (
+              <button key={v.id} className="video-row" onClick={() => onNavigate({ name: "video-detail", id: v.id })}>
+                <div className="video-play"><PlayIcon size={22} /></div>
+                <div className="video-row-body">
+                  <div className="video-row-title">{v.title}</div>
+                  <div className="video-row-tags">{v.tags.slice(0,2).join(" · ")}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+// ─── CAPABILITIES SCREEN ─────────────────────────────────────────────────────
+const CapabilitiesScreen = ({ onNavigate }) => {
+  const D = window.SDC_DATA;
+  return (
+    <>
+      <SectionBanner title="Machine Types & Capabilities" right={<div className="banner-meta">{D.capabilities.length} application types</div>} />
+      <div className="tile-grid tile-grid-3" style={{gridTemplateColumns:"repeat(3,1fr)"}}>
+        {D.capabilities.map(cap => (
+          <button key={cap.id} className="app-tile" onClick={() => onNavigate({ name: "capability-detail", id: cap.id })}>
+            <img src={ICON_PATH(cap.icon)} alt={cap.name} />
+            <div className="app-tile-name">{cap.name}</div>
+            <div className="app-tile-desc">{cap.desc}</div>
+            <div className="app-tile-rate">{cap.rate}</div>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+};
+
+// ─── CAPABILITY DETAIL ───────────────────────────────────────────────────────
+const CapabilityDetail = ({ id, onNavigate }) => {
+  const D = window.SDC_DATA;
+  const cap = D.capabilities.find(a => a.id === id);
+  if (!cap) return null;
+  const keyword = cap.name.toLowerCase().split(" ")[0];
+  const relatedCases = D.caseStudies.filter(c =>
+    (c.capability||"").toLowerCase().includes(keyword) ||
+    (c.capability||"").toLowerCase().includes(cap.id.replace("-"," "))
+  ).slice(0, 6);
+
+  return (
+    <>
+      <SectionBanner kicker="Capability" title={cap.name} right={<Pill variant="navy">{cap.rate}</Pill>} />
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32}}>
+        <div>
+          <img src={ICON_PATH(cap.icon)} alt={cap.name} style={{width:80,height:80,objectFit:"contain",marginBottom:16}} />
+          <p style={{fontSize:20,fontWeight:500,color:"var(--text-dim)",lineHeight:1.45,margin:"0 0 20px"}}>{cap.desc}</p>
+          <div style={{background:"var(--navy)",borderLeft:"4px solid var(--yellow)",padding:"18px 22px",borderRadius:"4px 10px 10px 4px"}}>
+            <div style={{fontSize:12,fontWeight:700,color:"var(--yellow)",letterSpacing:"0.16em",textTransform:"uppercase",marginBottom:6}}>Where it fits</div>
+            <div style={{color:"#fff",fontSize:15,lineHeight:1.5}}>SDC engineers each {cap.name.toLowerCase()} solution to the specific part, rate, and quality requirements of the customer's line. No catalog parts — every machine is sized for the production-critical role it has to play.</div>
+          </div>
+        </div>
+        <div>
+          <div className="ind-col-title">Related Projects</div>
+          <div className="case-list">
+            {relatedCases.length === 0 && <div className="empty">See the full Case Studies library for related work.</div>}
+            {relatedCases.map(c => (
+              <button key={c.id} className="case-row" onClick={() => onNavigate({ name: "case-study-detail", id: c.id })}>
+                <div className="case-row-left">
+                  <div className="case-row-meta"><Pill variant="primary">{c.industry}</Pill></div>
+                  <div className="case-row-title">{c.title}</div>
+                </div>
+                <div className="case-row-right">
+                  <ChevronRight />
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+// ─── VIDEOS SCREEN ───────────────────────────────────────────────────────────
+const VideosScreen = ({ onNavigate }) => {
+  const D = window.SDC_DATA;
+  const [cat, setCat] = useState("All");
+  const categories = ["All", ...Array.from(new Set(D.videos.map(v => v.category)))];
+  const filtered = cat === "All" ? D.videos : D.videos.filter(v => v.category === cat);
+
+  return (
+    <>
+      <SectionBanner title="Video Library"
+        right={<div className="offline-badge"><span className="offline-dot" /> All Offline · No Internet Needed</div>} />
+      <div className="video-filter">
+        {categories.map(c => (
+          <button key={c} className={`filter-chip ${cat === c ? "filter-chip-active" : ""}`} onClick={() => setCat(c)}>{c}</button>
+        ))}
+      </div>
+      <div className="video-list scrollable-list" style={{maxHeight:620}}>
+        {filtered.map(v => (
+          <button key={v.id} className="video-row" onClick={() => onNavigate({ name: "video-detail", id: v.id })}>
+            <div className="video-play"><PlayIcon size={24} /></div>
+            <div className="video-row-body">
+              <div className="video-row-title">{v.title}</div>
+              <div className="video-row-tags">{v.tags.join(" · ")}</div>
+            </div>
+            <Pill variant="navy">{v.category}</Pill>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+};
+
+// ─── VIDEO DETAIL ────────────────────────────────────────────────────────────
+const VideoDetail = ({ id, onNavigate }) => {
+  const D = window.SDC_DATA;
+  const v = D.videos.find(x => x.id === id);
+  if (!v) return null;
+  const c = v.caseId ? D.caseStudies.find(x => x.id === v.caseId) : null;
+  const videoRef = useRef(null);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState("0:00");
+  const [duration, setDuration] = useState("—");
+  const [hasVideo, setHasVideo] = useState(true);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    const onTime = () => {
+      if (el.duration) {
+        setProgress(el.currentTime / el.duration);
+        const m = Math.floor(el.currentTime / 60);
+        const s = String(Math.floor(el.currentTime % 60)).padStart(2,"0");
+        setCurrentTime(`${m}:${s}`);
+      }
+    };
+    const onMeta = () => {
+      const m = Math.floor(el.duration / 60);
+      const s = String(Math.floor(el.duration % 60)).padStart(2,"0");
+      setDuration(`${m}:${s}`);
+    };
+    el.addEventListener("timeupdate", onTime);
+    el.addEventListener("loadedmetadata", onMeta);
+    el.addEventListener("play", () => setPlaying(true));
+    el.addEventListener("pause", () => setPlaying(false));
+    return () => { el.removeEventListener("timeupdate", onTime); el.removeEventListener("loadedmetadata", onMeta); };
+  }, [v.id]);
+
+  const togglePlay = () => {
+    const el = videoRef.current;
+    if (!el) return;
+    playing ? el.pause() : el.play();
+  };
+
+  return (
+    <div className="video-detail">
+      <div className="video-stage">
+        {hasVideo ? (
+          <video ref={videoRef} src={VID_PATH(v.file)} style={{width:"100%",display:"block",background:"#000",maxHeight:480}}
+            onError={() => setHasVideo(false)} onClick={togglePlay} playsInline />
+        ) : (
+          <div className="video-stage-placeholder">
+            <PlayIcon size={64} color="#1574C4" />
+            <div style={{color:"var(--text-mute)",fontSize:14}}>Video: {v.file}</div>
+          </div>
+        )}
+        <div className="video-controls">
+          <button className="video-ctrl-play" onClick={togglePlay}>
+            {playing ? "❚❚" : <PlayIcon size={16} />}
+          </button>
+          <div className="video-progress">
+            <div className="video-progress-fill" style={{width:`${progress*100}%`}} />
+          </div>
+          <div className="video-time">{currentTime} / {duration}</div>
+        </div>
+      </div>
+      <div className="video-side">
+        <div className="video-side-title">{v.title}</div>
+        <div className="video-side-meta">
+          <Pill variant="primary">{v.category}</Pill>
+        </div>
+        <div className="video-side-tags">{v.tags.join(" · ")}</div>
+        {c && (
+          <>
+            <div style={{fontSize:14,color:"var(--text-dim)",lineHeight:1.4}}>{c.blurb}</div>
+            <button className="ghost-btn" onClick={() => onNavigate({ name: "case-study-detail", id: c.id })}>
+              View full case study →
+            </button>
+          </>
+        )}
+        <div className="video-side-note">Stored locally on this kiosk · No internet required</div>
+      </div>
+    </div>
+  );
+};
+
+// ─── NUMBERS SCREEN ──────────────────────────────────────────────────────────
+const NumbersScreen = () => {
+  const stats = [
+    { value: "28+", label: "Years in Business", sub: "Founded 1998 by Steve & Debbie Belliveau — still family-owned and operated" },
+    { value: "1,500+", label: "Machines Built", sub: "Production-critical custom automation delivered to manufacturers worldwide" },
+    { value: "80+", label: "Team Members", sub: "Engineers, builders, and problem solvers — all under one roof" },
+    { value: "69,000", label: "Sq Ft Facility", sub: "State-of-the-art build facility in Concord, Ohio" },
+    { value: "$250K–$2M+", label: "Typical Machine Value", sub: "Engineered-to-order, concept through factory acceptance testing" },
+    { value: "100%", label: "Built in the USA", sub: "One shop floor. One team. From first drawing to final installation." },
+  ];
+  const pillars = [
+    { label: "CREDIBILITY", title: "Trusted by the world's most demanding manufacturers.", body: "Certified robotic integrator — FANUC, Mecademic, and other top suppliers. Fortune 500 customers across automotive, life sciences, electronics, consumer products, energy, and aerospace." },
+    { label: "CAPABILITY", title: "Full-process automation under one U.S.-based roof.", body: "Assembly · Testing & Inspection · Material Handling · Micro Precision · Robotic Integration · Laser Applications · Part Feeding · Machine Vision · Continuous Motion · Dispensing" },
+    { label: "COMMITMENT", title: "End-to-end ownership: concept through ongoing production.", body: "From first conversation to final installation — and every production shift after. Long-term support isn't a service tier. It's how we operate." },
+  ];
+  return (
+    <>
+      <SectionBanner kicker="Our Story" title="Engineers. Builders. Problem Solvers." />
+      <p style={{fontSize:18,color:"var(--text-dim)",fontWeight:500,lineHeight:1.5,margin:"0 0 20px",maxWidth:1200}}>
+        SDC is a family-owned automation company with the capability to serve the world's most demanding manufacturers — and the personal accountability to treat every project as our own. We design, build, and support custom automation systems from concept to production, with machines running in facilities across the globe.
+      </p>
+      <div className="numbers-grid" style={{marginBottom:20}}>
+        {stats.map((s, i) => (
+          <div key={i} className="stat-card">
+            <div className="stat-value">{s.value}</div>
+            <div className="stat-label">{s.label}</div>
+            <div className="stat-sub">{s.sub}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginBottom:20}}>
+        {pillars.map((p,i) => (
+          <div key={i} style={{background:"var(--panel-2)",border:"1px solid var(--border)",borderRadius:12,padding:"22px 24px"}}>
+            <div style={{fontSize:11,fontWeight:700,color:"var(--green)",letterSpacing:"0.16em",textTransform:"uppercase",marginBottom:8}}>{p.label}</div>
+            <div style={{fontSize:16,fontWeight:700,color:"#fff",marginBottom:10,lineHeight:1.3}}>{p.title}</div>
+            <div style={{fontSize:14,color:"var(--text-dim)",lineHeight:1.5}}>{p.body}</div>
+          </div>
+        ))}
+      </div>
+      <div className="promise">
+        <div className="promise-quote-mark">"</div>
+        <div className="promise-text">Whatever you do, SDC can help you do it better, faster, and more reliably.</div>
+        <div className="promise-attr">— Our promise to every customer</div>
+      </div>
+    </>
+  );
+};
+
+// ─── CONTACT SCREEN ──────────────────────────────────────────────────────────
+const ContactScreen = () => {
+  const D = window.SDC_DATA.company;
+  return (
+    <>
+      <SectionBanner title="Let's talk about your project" kicker="Contact Us" />
+      <div className="contact-grid">
+        <div className="contact-left">
+          <div className="contact-block">
+            <div className="contact-label">Talk to engineering</div>
+            <a className="contact-phone" href={`tel:${D.phone}`}>{D.phone}</a>
+            <a className="contact-email" href={`mailto:${D.email}`}>{D.email}</a>
+          </div>
+          <div className="contact-block">
+            <div className="contact-label">Visit the shop</div>
+            <div className="contact-addr">{D.address}</div>
+            <div className="contact-note">Concord Township · Northeast Ohio · Founded 1998</div>
+          </div>
+          <div className="contact-block">
+            <div className="contact-label">Online</div>
+            <div className="contact-web">{D.site}</div>
+            <div className="contact-note">@sdcautomation on LinkedIn</div>
+          </div>
+        </div>
+        <div className="contact-right">
+          <div className="qr-card">
+            <div className="qr-art"><QRIcon size={130} color="#061D39" /></div>
+            <div>
+              <div className="qr-title">Scan to connect</div>
+              <div className="qr-sub">We'll send our capability deck + case studies to your email. Real engineers reply.</div>
+            </div>
+          </div>
+          <div className="leave-card">
+            <div className="leave-card-title">Or — drop your card with Ashley at the booth.</div>
+            <div className="leave-card-sub">She'll get the right engineer back to you within 48 hours.</div>
+          </div>
+          <div style={{background:"var(--panel-2)",border:"1px solid var(--border)",borderRadius:10,padding:"16px 20px"}}>
+            <div className="contact-label" style={{marginBottom:8}}>Automate 2026 · Booth #26011</div>
+            <div style={{color:"#fff",fontWeight:700,fontSize:17}}>McCormick Place, Chicago</div>
+            <div style={{color:"var(--text-dim)",fontSize:14,marginTop:3}}>June 22–25, 2026 · North Hall</div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+// ─── APP ─────────────────────────────────────────────────────────────────────
+function App() {
+  const [stack, setStack] = useState([{ name: "home" }]);
+  const route = stack[stack.length - 1];
+  const [showAttract, setShowAttract] = useState(false);
+  const lastInteract = useRef(Date.now());
+  const IDLE_SEC = 90;
+
+  const navigate = useCallback((r) => {
+    setStack(s => [...s, r]);
+    setTimeout(() => { const el = document.querySelector(".frame-body"); if (el) el.scrollTop = 0; }, 0);
+  }, []);
+
+  const back = useCallback(() => setStack(s => s.length > 1 ? s.slice(0,-1) : s), []);
+  const home = useCallback(() => setStack([{ name: "home" }]), []);
+
+  useEffect(() => {
+    const handler = () => {
+      lastInteract.current = Date.now();
+      if (showAttract) setShowAttract(false);
+    };
+    ["pointerdown","keydown","touchstart"].forEach(ev => document.addEventListener(ev, handler, true));
+    const t = setInterval(() => {
+      if ((Date.now() - lastInteract.current) / 1000 > IDLE_SEC) {
+        // Return to home (not attract screen) when idle
+        setStack([{ name: "home" }]);
+        lastInteract.current = Date.now();
+      }
+    }, 1000);
+    return () => {
+      clearInterval(t);
+      ["pointerdown","keydown","touchstart"].forEach(ev => document.removeEventListener(ev, handler, true));
+    };
+  }, [showAttract]);
+
+  const headerTitle = (() => {
+    switch (route.name) {
+      case "case-studies": return "Home";
+      case "case-study-detail": return "Case Studies";
+      case "industries": return "Home";
+      case "industry-detail": return "Industries";
+      case "capabilities": return "Home";
+      case "capability-detail": return "Capabilities";
+      case "videos": return "Home";
+      case "video-detail": return "Video Library";
+      case "numbers": return "Home";
+      case "contact": return "Home";
+      default: return null;
+    }
+  })();
+
+  let body;
+  switch (route.name) {
+    case "home": body = <HomeScreen onNavigate={navigate} />; break;
+    case "case-studies": body = <div className="screen-content"><CaseStudiesScreen onNavigate={navigate} filterIndustryId={route.filterIndustryId} filterIndustryName={route.filterIndustryName} /></div>; break;
+    case "case-study-detail": body = <div className="screen-content"><CaseStudyDetail id={route.id} onNavigate={navigate} /></div>; break;
+    case "industries": body = <div className="screen-content"><IndustriesScreen onNavigate={navigate} /></div>; break;
+    case "industry-detail": body = <div className="screen-content"><IndustryDetail id={route.id} onNavigate={navigate} /></div>; break;
+    case "capabilities": body = <div className="screen-content"><CapabilitiesScreen onNavigate={navigate} /></div>; break;
+    case "capability-detail": body = <div className="screen-content"><CapabilityDetail id={route.id} onNavigate={navigate} /></div>; break;
+    case "videos": body = <div className="screen-content"><VideosScreen onNavigate={navigate} /></div>; break;
+    case "video-detail": body = <div className="screen-content"><VideoDetail id={route.id} onNavigate={navigate} /></div>; break;
+    case "numbers": body = <div className="screen-content"><NumbersScreen /></div>; break;
+    case "contact": body = <div className="screen-content"><ContactScreen /></div>; break;
+    default: body = <HomeScreen onNavigate={navigate} />;
+  }
+
+  return (
+    <div className="stage">
+      <Frame route={route} onNavigate={(r) => setStack([{ name: "home" }, r])} onBack={back} title={headerTitle}>
+        {body}
+      </Frame>
+
+      {route.name !== "home" && (
+        <button className="home-overlay" onClick={home} aria-label="Home">
+          <HomeIcon size={24} />
+        </button>
+      )}
+
+      {showAttract && (
+        <div className="attract" onClick={() => setShowAttract(false)}>
+          <div className="attract-bg" />
+          <div className="attract-inner">
+            <img className="attract-logo" src="Blue SDC Logo.png" alt="SDC Automation" />
+            <div className="attract-tagline">Engineering Excellence. Trusted Partnerships.</div>
+            <div className="attract-pitch">
+              1,500+ custom automation machines built since 1998<br />
+              for automotive · life sciences · electronics · aerospace · energy
+            </div>
+            <div className="attract-touch">
+              <div className="touch-pulse" /><div className="touch-pulse touch-pulse-2" />
+              <div className="attract-touch-label">— Touch to explore —</div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+
+</body>
+</html>

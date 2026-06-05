@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 121.48 121.48">
+  <!-- By the Numbers: rising bar chart with data points -->
+  <!-- Chart bars (3 bars, increasing height) -->
+  <rect x="22" y="70" width="18" height="22" rx="2" fill="#ABD4EE"/>
+  <rect x="46" y="52" width="18" height="40" rx="2" fill="#ABD4EE"/>
+  <rect x="70" y="34" width="18" height="58" rx="2" fill="#2573BA"/>
+  <!-- Ground baseline -->
+  <rect x="16" y="92" width="90" height="4" rx="2" fill="#ABD4EE"/>
+  <!-- Trend line overlaid -->
+  <polyline points="31,68 55,50 79,32" fill="none" stroke="#213D6B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Data point dots on trend line -->
+  <circle cx="31" cy="68" r="4" fill="#213D6B"/>
+  <circle cx="55" cy="50" r="4" fill="#213D6B"/>
+  <circle cx="79" cy="32" r="4" fill="#213D6B"/>
+</svg>

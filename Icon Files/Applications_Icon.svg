@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 121.48 121.48">
+  <!-- Applications: gear/wrench combo — machine types and capabilities -->
+  <!-- Large gear -->
+  <circle cx="52" cy="52" r="18" fill="#ABD4EE"/>
+  <circle cx="52" cy="52" r="10" fill="#213D6B"/>
+  <!-- Gear teeth (8 teeth via rects rotated) -->
+  <g transform="translate(52,52)">
+    <rect x="-4" y="-26" width="8" height="10" rx="2" fill="#ABD4EE"/>
+    <rect x="-4" y="16" width="8" height="10" rx="2" fill="#ABD4EE"/>
+    <rect x="-26" y="-4" width="10" height="8" rx="2" fill="#ABD4EE"/>
+    <rect x="16" y="-4" width="10" height="8" rx="2" fill="#ABD4EE"/>
+    <rect x="-20" y="-21" width="8" height="10" rx="2" fill="#ABD4EE" transform="rotate(45)"/>
+    <rect x="-20" y="11" width="8" height="10" rx="2" fill="#ABD4EE" transform="rotate(-45)"/>
+    <rect x="12" y="-21" width="8" height="10" rx="2" fill="#ABD4EE" transform="rotate(-45)"/>
+    <rect x="12" y="11" width="8" height="10" rx="2" fill="#ABD4EE" transform="rotate(45)"/>
+  </g>
+  <!-- Small gear overlapping bottom-right -->
+  <circle cx="78" cy="76" r="12" fill="#2573BA"/>
+  <circle cx="78" cy="76" r="6" fill="#213D6B"/>
+  <g transform="translate(78,76)">
+    <rect x="-3" y="-17" width="6" height="7" rx="1.5" fill="#2573BA"/>
+    <rect x="-3" y="10" width="6" height="7" rx="1.5" fill="#2573BA"/>
+    <rect x="-17" y="-3" width="7" height="6" rx="1.5" fill="#2573BA"/>
+    <rect x="10" y="-3" width="7" height="6" rx="1.5" fill="#2573BA"/>
+  </g>
+</svg>

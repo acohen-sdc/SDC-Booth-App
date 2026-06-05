@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 121.48 121.48">
+  <!-- Video Library: play button inside film frame -->
+  <!-- Film frame outer -->
+  <rect x="18" y="30" width="86" height="62" rx="6" fill="#ABD4EE"/>
+  <!-- Film sprocket holes left -->
+  <rect x="22" y="36" width="8" height="10" rx="2" fill="#213D6B"/>
+  <rect x="22" y="52" width="8" height="10" rx="2" fill="#213D6B"/>
+  <rect x="22" y="68" width="8" height="10" rx="2" fill="#213D6B"/>
+  <!-- Film sprocket holes right -->
+  <rect x="91" y="36" width="8" height="10" rx="2" fill="#213D6B"/>
+  <rect x="91" y="52" width="8" height="10" rx="2" fill="#213D6B"/>
+  <rect x="91" y="68" width="8" height="10" rx="2" fill="#213D6B"/>
+  <!-- Screen area -->
+  <rect x="34" y="36" width="54" height="50" rx="3" fill="#213D6B"/>
+  <!-- Play triangle -->
+  <polygon points="50,48 50,74 74,61" fill="#ABD4EE"/>
+</svg>

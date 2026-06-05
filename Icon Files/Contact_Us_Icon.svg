@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 121.48 121.48">
+  <!-- Contact Us: speech bubble / message with cursor -->
+  <!-- Main speech bubble -->
+  <rect x="16" y="22" width="80" height="58" rx="8" fill="#ABD4EE"/>
+  <!-- Tail of speech bubble pointing bottom-left -->
+  <polygon points="24,80 36,80 24,96" fill="#ABD4EE"/>
+  <!-- Message lines inside bubble -->
+  <rect x="26" y="36" width="50" height="5" rx="2.5" fill="#213D6B"/>
+  <rect x="26" y="48" width="40" height="5" rx="2.5" fill="#213D6B"/>
+  <rect x="26" y="60" width="30" height="5" rx="2.5" fill="#213D6B"/>
+  <!-- Send/arrow badge bottom-right -->
+  <circle cx="88" cy="88" r="16" fill="#2573BA"/>
+  <path d="M80 88 L96 88 M90 82 L96 88 L90 94" fill="none" stroke="#ABD4EE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
