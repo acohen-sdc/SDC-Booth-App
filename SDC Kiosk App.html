@@ -1523,7 +1523,7 @@ const IndustryDetail = ({ id, onNavigate }) => {
           <div className="ind-video-list">
             {videos.length === 0 && <div className="empty">See the Video Library for overview content.</div>}
             {videos.map(v => (
-              <button key={v.id} className="video-row" onClick={() => onNavigate({ name: "video-detail", id: v.id })}>
+              <button key={v.id} className="video-row" onClick={() => onNavigate({ name: "video-detail", id: v.id, autoplay: true })}>
                 <div className="video-play"><PlayIcon size={22} /></div>
                 <div className="video-row-body">
                   <div className="video-row-title">{v.title}</div>
@@ -1621,7 +1621,7 @@ const VideosScreen = ({ onNavigate }) => {
       </div>
       <div className="video-list scrollable-list" style={{maxHeight:620}}>
         {filtered.map(v => (
-          <button key={v.id} className="video-row" onClick={() => onNavigate({ name: "video-detail", id: v.id })}>
+          <button key={v.id} className="video-row" onClick={() => onNavigate({ name: "video-detail", id: v.id, autoplay: true })}>
             <div className="video-play"><PlayIcon size={24} /></div>
             <div className="video-row-body">
               <div className="video-row-title">{v.title}</div>
