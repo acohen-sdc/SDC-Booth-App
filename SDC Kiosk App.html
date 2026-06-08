@@ -1439,7 +1439,7 @@ const CaseStudyDetail = ({ id, onNavigate }) => {
             </div>
           </div>
           {video && (
-            <button className="watch-btn" onClick={() => onNavigate({ name: "video-detail", id: video.id })}>
+            <button className="watch-btn" onClick={() => onNavigate({ name: "video-detail", id: video.id, autoplay: true })}>
               <PlayIcon size={20} /> Watch Project Video
             </button>
           )}
@@ -1636,7 +1636,7 @@ const VideosScreen = ({ onNavigate }) => {
 };
 
 // ─── VIDEO DETAIL ────────────────────────────────────────────────────────────
-const VideoDetail = ({ id, onNavigate }) => {
+const VideoDetail = ({ id, onNavigate, autoplay }) => {
   const D = window.SDC_DATA;
   const v = D.videos.find(x => x.id === id);
   if (!v) return null;
@@ -1647,6 +1647,12 @@ const VideoDetail = ({ id, onNavigate }) => {
   const [currentTime, setCurrentTime] = useState("0:00");
   const [duration, setDuration] = useState("—");
   const [hasVideo, setHasVideo] = useState(true);
+
+  useEffect(() => {
+    if (autoplay && videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
 
   useEffect(() => {
     const el = videoRef.current;
@@ -1912,7 +1918,7 @@ function App() {
     case "capabilities": body = <div className="screen-content"><CapabilitiesScreen onNavigate={navigate} /></div>; break;
     case "capability-detail": body = <div className="screen-content"><CapabilityDetail id={route.id} onNavigate={navigate} /></div>; break;
     case "videos": body = <div className="screen-content"><VideosScreen onNavigate={navigate} /></div>; break;
-    case "video-detail": body = <div className="screen-content"><VideoDetail id={route.id} onNavigate={navigate} /></div>; break;
+    case "video-detail": body = <div className="screen-content"><VideoDetail id={route.id} onNavigate={navigate} autoplay={route.autoplay} /></div>; break;
     case "numbers": body = <div className="screen-content"><NumbersScreen /></div>; break;
     case "contact": body = <div className="screen-content"><ContactScreen /></div>; break;
     default: body = <HomeScreen onNavigate={navigate} />;
