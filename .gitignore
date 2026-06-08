@@ -9,8 +9,9 @@ Video Files/
 # Auto-updater log (written on the kiosk, not committed)
 update-log.txt
 
-# Isolated kiosk browser profile (created locally by the launcher)
+# Isolated kiosk browser profiles (created locally by the launcher)
 kiosk-browser-profile/
+kiosk-profile/
 
 # Build scripts (one-time tooling, not part of the deployable app)
 bake_assets.py
