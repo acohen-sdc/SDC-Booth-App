@@ -1887,6 +1887,8 @@ function App() {
     };
     ["pointerdown","keydown","touchstart"].forEach(ev => document.addEventListener(ev, handler, true));
     const t = setInterval(() => {
+      const videoPlaying = document.querySelector("video") && !document.querySelector("video").paused;
+      if (videoPlaying) { lastInteract.current = Date.now(); return; }
       if ((Date.now() - lastInteract.current) / 1000 > IDLE_SEC) {
         // Return to home (not attract screen) when idle
         setStack([{ name: "home" }]);
