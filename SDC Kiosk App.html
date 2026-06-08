@@ -36,115 +36,6 @@
   --text-mute: #6c7689;
 }
 
-/* ── Light theme overrides ── */
-:root[data-theme="light"] {
-  --bg: #eef1f6;
-  --panel: #ffffff;
-  --panel-2: #f5f7fa;
-  --panel-3: #e8ecf2;
-  --border: #cdd5e0;
-  --border-2: #b0bccf;
-  --text: #0d1117;
-  --text-dim: #3d4a5c;
-  --text-mute: #7a8799;
-  --navy: #0d3a6e;
-  --navy-2: #1a4f8f;
-}
-
-/* Cards & containers: override hardcoded #fff text */
-:root[data-theme="light"] .home-card,
-:root[data-theme="light"] .tile-card,
-:root[data-theme="light"] .app-tile,
-:root[data-theme="light"] .case-row,
-:root[data-theme="light"] .case-card,
-:root[data-theme="light"] .video-card,
-:root[data-theme="light"] .video-row { color: var(--text); }
-
-/* Section / page titles */
-:root[data-theme="light"] .section-title,
-:root[data-theme="light"] .detail-title,
-:root[data-theme="light"] .highlights-title,
-:root[data-theme="light"] .video-side-title,
-:root[data-theme="light"] .tile-label,
-:root[data-theme="light"] .app-tile-name,
-:root[data-theme="light"] .case-row-title,
-:root[data-theme="light"] .case-card-title,
-:root[data-theme="light"] .video-row-title,
-:root[data-theme="light"] .video-card-title,
-:root[data-theme="light"] .stat-label,
-:root[data-theme="light"] .highlight-value,
-:root[data-theme="light"] .contact-phone,
-:root[data-theme="light"] .contact-addr,
-:root[data-theme="light"] .leave-card-title,
-:root[data-theme="light"] .promise-text { color: var(--text); }
-
-/* Badge navy: keep readable on light */
-:root[data-theme="light"] .badge-navy,
-:root[data-theme="light"] .app-tile-rate,
-:root[data-theme="light"] .pill-navy {
-  background: var(--panel-3);
-  color: var(--blue);
-  border-color: var(--border-2);
-}
-
-/* Scrolling logo bar: flip filter so logos appear dark on light bg */
-:root[data-theme="light"] .logo-bar-wrap { background: var(--panel-2); }
-:root[data-theme="light"] .logo-bar-item img {
-  filter: brightness(0);
-  opacity: 0.55;
-}
-:root[data-theme="light"] .logo-bar-item img:hover { opacity: 0.85; }
-:root[data-theme="light"] .logo-bar-label { background: var(--panel-2); }
-
-/* Touch to Explore: keep white text, green bg is fine */
-:root[data-theme="light"] .touch-text { color: #fff; }
-
-/* Stat value stays blue, fine. Promise block: keep navy bg readable */
-:root[data-theme="light"] .promise {
-  background: var(--navy);
-}
-:root[data-theme="light"] .promise-text { color: #fff; }
-:root[data-theme="light"] .promise-attr { color: var(--green); }
-
-/* Video controls bar in light mode */
-:root[data-theme="light"] .video-controls { background: #dde3ed; border-top-color: var(--border); }
-:root[data-theme="light"] .video-progress { background: var(--border-2); }
-:root[data-theme="light"] .video-vol-slider { background: var(--border-2); }
-:root[data-theme="light"] .video-time { color: var(--text-dim); }
-
-/* Industry / capability blurb */
-:root[data-theme="light"] .industry-blurb,
-:root[data-theme="light"] .detail-blurb { color: var(--text-dim); }
-
-/* QR card keep white text on green bg */
-:root[data-theme="light"] .qr-title,
-:root[data-theme="light"] .qr-sub { color: #fff; }
-
-/* Highlight rows */
-:root[data-theme="light"] .highlight-row { border-bottom-color: var(--border); }
-
-/* Nav dots on light header bg */
-:root[data-theme="light"] .dot { background: rgba(13,17,23,0.2); }
-:root[data-theme="light"] .dot:hover { background: rgba(13,17,23,0.45); }
-
-/* Case card lead-time badge: green text on green tint → darken */
-:root[data-theme="light"] .case-card-lead {
-  background: rgba(30,120,10,0.08);
-  border-color: rgba(30,120,10,0.3);
-  color: #2a7a08;
-}
-
-/* "See our machines in action — offline" blurb & card sub-texts */
-:root[data-theme="light"] .home-card-blurb { color: var(--text-dim); }
-
-/* Section kicker on light panels */
-:root[data-theme="light"] .section-kicker { color: var(--blue); }
-
-/* Capability detail "Where it fits" — sits on navy bg so white is correct; no override needed */
-
-/* Contact labels & sub text */
-:root[data-theme="light"] .leave-card-sub { color: var(--text-dim); }
-:root[data-theme="light"] .video-side-note { color: var(--text-mute); }
 
 * { box-sizing: border-box; }
 html, body {
@@ -829,26 +720,6 @@ video:fullscreen { width: 100vw; height: 100vh; object-fit: contain; background:
 .kfooter-email, .kfooter-phone { color: var(--blue-2); font-weight: 600; }
 .kfooter-sep { color: var(--text-mute); margin: 0 6px; }
 
-/* Theme toggle */
-.theme-toggle {
-  display: flex; align-items: center; gap: 0;
-  background: var(--panel-3); border: 1px solid var(--border-2);
-  border-radius: 999px; padding: 4px;
-  flex-shrink: 0;
-}
-.theme-toggle-btn {
-  width: 36px; height: 36px; border-radius: 50%; border: none;
-  background: transparent; color: var(--text-mute);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: background 0.2s ease, color 0.2s ease;
-  font-size: 17px;
-}
-.theme-toggle-btn.active {
-  background: var(--blue); color: #fff;
-  box-shadow: 0 2px 8px rgba(21,116,196,0.4);
-}
-.theme-toggle-btn:not(.active):hover { color: var(--text); }
-
 /* Home button overlay */
 .home-overlay {
   position: absolute; bottom: 80px; right: 44px;
@@ -1358,7 +1229,7 @@ const StaffMenuOverlay = ({ onCancel }) => {
   );
 };
 
-const Header = ({ route, onNavigate, onBack, title, theme, onToggleTheme }) => {
+const Header = ({ route, onNavigate, onBack, title }) => {
   const isHome = route.name === "home";
   const { showMenu, setShowMenu, handleLogoTap } = useStaffMenu();
 
@@ -1392,19 +1263,6 @@ const Header = ({ route, onNavigate, onBack, title, theme, onToggleTheme }) => {
           )}
         </div>
         <div className="kheader-right">
-          {/* Dark / Light theme toggle */}
-          <div className="theme-toggle" title="Toggle dark/light theme">
-            <button
-              className={`theme-toggle-btn ${theme === "dark" ? "active" : ""}`}
-              onClick={() => onToggleTheme("dark")}
-              title="Dark mode"
-            >🌙</button>
-            <button
-              className={`theme-toggle-btn ${theme === "light" ? "active" : ""}`}
-              onClick={() => onToggleTheme("light")}
-              title="Light mode"
-            >☀️</button>
-          </div>
           <div className="dots">
             {SECTION_LABELS.map((s, i) => (
               <span key={i} title={s}
@@ -1459,9 +1317,9 @@ const LogoBar = () => {
 };
 
 // ─── FRAME ───────────────────────────────────────────────────────────────────
-const Frame = ({ route, onNavigate, onBack, title, theme, onToggleTheme, children }) => (
+const Frame = ({ route, onNavigate, onBack, title, children }) => (
   <div className="frame">
-    <Header route={route} onNavigate={onNavigate} onBack={onBack} title={title} theme={theme} onToggleTheme={onToggleTheme} />
+    <Header route={route} onNavigate={onNavigate} onBack={onBack} title={title} />
     <div className="frame-body">{children}</div>
     <Footer />
   </div>
@@ -2089,12 +1947,6 @@ function App() {
   const [showAttract, setShowAttract] = useState(false);
   const lastInteract = useRef(Date.now());
   const IDLE_SEC = 90;
-  const [theme, setTheme] = useState("dark");
-
-  const toggleTheme = (t) => {
-    setTheme(t);
-    document.documentElement.setAttribute("data-theme", t);
-  };
 
   const navigate = useCallback((r) => {
     setStack(s => [...s, r]);
@@ -2159,7 +2011,7 @@ function App() {
 
   return (
     <div className="stage">
-      <Frame route={route} onNavigate={(r) => setStack([{ name: "home" }, r])} onBack={back} title={headerTitle} theme={theme} onToggleTheme={toggleTheme}>
+      <Frame route={route} onNavigate={(r) => setStack([{ name: "home" }, r])} onBack={back} title={headerTitle}>
         {body}
       </Frame>
 
