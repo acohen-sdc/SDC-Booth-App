@@ -609,6 +609,13 @@ button { font-family: inherit; cursor: pointer; }
 .video-ctrl-skip:hover { color: #fff; }
 .video-ctrl-skip svg { width: 16px; height: 16px; }
 .video-time { color: var(--text-dim); font-size: 13px; min-width: 90px; text-align: right; }
+.video-ctrl-fs {
+  background: transparent; color: var(--text-dim); border: none;
+  cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;
+  margin-left: 4px;
+}
+.video-ctrl-fs:hover { color: #fff; }
+.video-ctrl-fs svg { width: 20px; height: 20px; }
 .video-vol-wrap { position: relative; display: flex; align-items: center; gap: 6px; }
 .video-ctrl-vol {
   background: transparent; color: var(--text-dim); border: none;
@@ -1717,6 +1724,24 @@ const VideoDetail = ({ id, onNavigate, autoplay }) => {
     playing ? el.pause() : el.play();
   };
 
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => document.removeEventListener("fullscreenchange", onFsChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    const stage = videoRef.current?.closest(".video-stage");
+    if (!stage) return;
+    if (!document.fullscreenElement) {
+      stage.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   const changeVolume = (val) => {
     const v = parseFloat(val);
     setVolume(v);
@@ -1790,6 +1815,12 @@ const VideoDetail = ({ id, onNavigate, autoplay }) => {
             <input className="video-vol-slider" type="range" min="0" max="1" step="0.05"
               value={volume} onChange={e => changeVolume(e.target.value)} />
           </div>
+          <button className="video-ctrl-fs" onClick={toggleFullscreen} title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}>
+            {isFullscreen
+              ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+              : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            }
+          </button>
         </div>
       </div>
       <div className="video-side">
