@@ -505,6 +505,24 @@ button { font-family: inherit; cursor: pointer; }
 .filter-chip:hover { color: #fff; border-color: var(--blue); }
 .filter-chip-active { background: var(--blue); color: #fff; border-color: var(--blue); }
 
+.video-list { display: flex; flex-direction: column; gap: 8px; }
+.video-row {
+  display: flex; align-items: center; gap: 18px;
+  background: var(--panel-2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 20px;
+  color: #fff; text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+}
+.video-row:hover { background: var(--panel-3); border-color: var(--blue); transform: translateX(2px); }
+.video-play {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--blue);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.video-row-body { flex: 1; min-width: 0; }
+.video-row-title { font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+.video-row-tags { color: var(--text-dim); font-size: 13px; }
+
 .video-card-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
