@@ -1649,9 +1649,12 @@ const VideoDetail = ({ id, onNavigate, autoplay }) => {
   const [hasVideo, setHasVideo] = useState(true);
 
   useEffect(() => {
-    if (autoplay && videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
+    if (!autoplay || !videoRef.current) return;
+    const el = videoRef.current;
+    const tryPlay = () => el.play().catch(() => {});
+    el.addEventListener("canplay", tryPlay, { once: true });
+    tryPlay();
+    return () => el.removeEventListener("canplay", tryPlay);
   }, []);
 
   useEffect(() => {
@@ -1717,7 +1720,7 @@ const VideoDetail = ({ id, onNavigate, autoplay }) => {
       <div className="video-stage">
         {hasVideo ? (
           <video ref={videoRef} src={VID_PATH(v.file)} style={{width:"100%",display:"block",background:"#000",maxHeight:480}}
-            onError={() => setHasVideo(false)} onClick={togglePlay} playsInline />
+            onError={() => setHasVideo(false)} onClick={togglePlay} playsInline autoPlay={!!autoplay} />
         ) : (
           <div className="video-stage-placeholder">
             <PlayIcon size={64} color="#1574C4" />
