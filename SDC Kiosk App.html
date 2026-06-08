@@ -1613,7 +1613,7 @@ const VideosScreen = ({ onNavigate }) => {
   return (
     <>
       <SectionBanner title="Video Library"
-        right={<div className="offline-badge"><span className="offline-dot" /> All Offline · No Internet Needed</div>} />
+        />
       <div className="video-filter">
         {categories.map(c => (
           <button key={c} className={`filter-chip ${cat === c ? "filter-chip-active" : ""}`} onClick={() => setCat(c)}>{c}</button>
