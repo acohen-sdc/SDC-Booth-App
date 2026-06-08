@@ -1436,9 +1436,14 @@ const CaseStudyDetail = ({ id, onNavigate }) => {
           {c.technologies && (
             <>
               <div className="highlights-title">Technologies Used</div>
-              <div className="tech-tags" style={{marginBottom:20}}>
-                {c.technologies.map((t,i) => <span key={i} className="tech-tag">{t}</span>)}
-              </div>
+              <ul style={{listStyle:"none",margin:"0 0 20px",padding:0,display:"flex",flexDirection:"column",gap:8}}>
+                {c.technologies.map((t,i) => (
+                  <li key={i} style={{color:"#fff",fontWeight:700,fontSize:15,display:"flex",alignItems:"center",gap:10}}>
+                    <span style={{width:6,height:6,borderRadius:"50%",background:"var(--blue)",flexShrink:0,display:"inline-block"}} />
+                    {t}
+                  </li>
+                ))}
+              </ul>
             </>
           )}
           {video && (
