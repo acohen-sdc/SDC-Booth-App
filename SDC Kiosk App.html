@@ -570,6 +570,12 @@ button { font-family: inherit; cursor: pointer; }
   display: flex; flex-direction: column;
 }
 .video-stage video { width: 100%; display: block; background: #000; max-height: 600px; }
+.video-stage:fullscreen { display: flex; flex-direction: column; background: #000; width: 100vw; height: 100vh; border-radius: 0; }
+.video-stage:-webkit-full-screen { display: flex; flex-direction: column; background: #000; width: 100vw; height: 100vh; border-radius: 0; }
+.video-stage:fullscreen video { flex: 1; width: 100%; height: 100%; max-height: none; object-fit: contain; }
+.video-stage:-webkit-full-screen video { flex: 1; width: 100%; height: 100%; max-height: none; object-fit: contain; }
+.video-stage:fullscreen .video-controls { flex-shrink: 0; }
+.video-stage:-webkit-full-screen .video-controls { flex-shrink: 0; }
 .video-stage-placeholder {
   aspect-ratio: 16/9;
   background: radial-gradient(ellipse at center, #1a2638 0%, #000 75%);
