@@ -1306,7 +1306,7 @@ const LogoBar = () => {
       <div className="logo-bar-wrap">
         <div className="logo-bar-track">
           {doubled.map((logo, i) => (
-            <div key={i} className="logo-bar-item">
+            <div key={`${logo}-${i}`} className="logo-bar-item">
               <img src={LOGO_PATH(logo)} alt={logo.replace(/\.[^/.]+$/, '')} />
             </div>
           ))}
@@ -1443,7 +1443,7 @@ const CaseStudyDetail = ({ id, onNavigate }) => {
       <div>
         <div className="detail-meta">
           <Pill variant="primary">{c.industry}</Pill>
-          {c.capability.split("·").slice(0,2).map((cap,i) => <Pill key={i} variant="navy">{cap.trim()}</Pill>)}
+          {c.capability.split("·").slice(0,2).map((cap) => <Pill key={cap.trim()} variant="navy">{cap.trim()}</Pill>)}
         </div>
         <h2 className="detail-title">{c.title}</h2>
         <p className="detail-blurb">{c.blurb}</p>
