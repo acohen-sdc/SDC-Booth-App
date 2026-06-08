@@ -563,13 +563,13 @@ button { font-family: inherit; cursor: pointer; }
 .video-card-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: auto; padding-top: 6px; }
 
 /* Video detail / player */
-.video-detail { display: grid; grid-template-columns: 1.6fr 1fr; gap: 28px; }
+.video-detail { display: grid; grid-template-columns: 2.2fr 1fr; gap: 28px; }
 .video-stage {
   background: #000; border: 1px solid var(--border);
   border-radius: 12px; overflow: hidden;
   display: flex; flex-direction: column;
 }
-.video-stage video { width: 100%; display: block; background: #000; max-height: 480px; }
+.video-stage video { width: 100%; display: block; background: #000; max-height: 600px; }
 .video-stage-placeholder {
   aspect-ratio: 16/9;
   background: radial-gradient(ellipse at center, #1a2638 0%, #000 75%);
@@ -609,6 +609,23 @@ button { font-family: inherit; cursor: pointer; }
 .video-ctrl-skip:hover { color: #fff; }
 .video-ctrl-skip svg { width: 16px; height: 16px; }
 .video-time { color: var(--text-dim); font-size: 13px; min-width: 90px; text-align: right; }
+.video-vol-wrap { position: relative; display: flex; align-items: center; gap: 6px; }
+.video-ctrl-vol {
+  background: transparent; color: var(--text-dim); border: none;
+  cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;
+}
+.video-ctrl-vol:hover { color: #fff; }
+.video-ctrl-vol svg { width: 20px; height: 20px; }
+.video-vol-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 80px; height: 4px; border-radius: 2px;
+  background: #1f2530; outline: none; cursor: pointer;
+}
+.video-vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--blue); cursor: pointer;
+}
 
 .video-side {
   background: var(--panel-2); border: 1px solid var(--border);
@@ -1660,6 +1677,7 @@ const VideoDetail = ({ id, onNavigate, autoplay }) => {
   const [currentTime, setCurrentTime] = useState("0:00");
   const [duration, setDuration] = useState("—");
   const [hasVideo, setHasVideo] = useState(true);
+  const [volume, setVolume] = useState(1);
 
   useEffect(() => {
     if (!autoplay || !videoRef.current) return;
@@ -1697,6 +1715,12 @@ const VideoDetail = ({ id, onNavigate, autoplay }) => {
     const el = videoRef.current;
     if (!el) return;
     playing ? el.pause() : el.play();
+  };
+
+  const changeVolume = (val) => {
+    const v = parseFloat(val);
+    setVolume(v);
+    if (videoRef.current) videoRef.current.volume = v;
   };
 
   const skip = (secs) => {
@@ -1756,6 +1780,16 @@ const VideoDetail = ({ id, onNavigate, autoplay }) => {
             <div className="video-progress-fill" style={{width:`${progress*100}%`}} />
           </div>
           <div className="video-time">{currentTime} / {duration}</div>
+          <div className="video-vol-wrap">
+            <button className="video-ctrl-vol" title="Volume">
+              {volume === 0
+                ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/></svg>
+                : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              }
+            </button>
+            <input className="video-vol-slider" type="range" min="0" max="1" step="0.05"
+              value={volume} onChange={e => changeVolume(e.target.value)} />
+          </div>
         </div>
       </div>
       <div className="video-side">
