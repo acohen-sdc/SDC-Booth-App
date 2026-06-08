@@ -38,18 +38,94 @@
 
 /* ── Light theme overrides ── */
 :root[data-theme="light"] {
-  --bg: #f0f2f5;
+  --bg: #eef1f6;
   --panel: #ffffff;
   --panel-2: #f5f7fa;
   --panel-3: #e8ecf2;
-  --border: #d0d7e3;
-  --border-2: #b8c2d4;
+  --border: #cdd5e0;
+  --border-2: #b0bccf;
   --text: #0d1117;
-  --text-dim: #4a5568;
-  --text-mute: #8a96a8;
+  --text-dim: #3d4a5c;
+  --text-mute: #7a8799;
   --navy: #0d3a6e;
   --navy-2: #1a4f8f;
 }
+
+/* Cards & containers: override hardcoded #fff text */
+:root[data-theme="light"] .home-card,
+:root[data-theme="light"] .tile-card,
+:root[data-theme="light"] .app-tile,
+:root[data-theme="light"] .case-row,
+:root[data-theme="light"] .case-card,
+:root[data-theme="light"] .video-card,
+:root[data-theme="light"] .video-row { color: var(--text); }
+
+/* Section / page titles */
+:root[data-theme="light"] .section-title,
+:root[data-theme="light"] .detail-title,
+:root[data-theme="light"] .highlights-title,
+:root[data-theme="light"] .video-side-title,
+:root[data-theme="light"] .tile-label,
+:root[data-theme="light"] .app-tile-name,
+:root[data-theme="light"] .case-row-title,
+:root[data-theme="light"] .case-card-title,
+:root[data-theme="light"] .video-row-title,
+:root[data-theme="light"] .video-card-title,
+:root[data-theme="light"] .stat-label,
+:root[data-theme="light"] .highlight-value,
+:root[data-theme="light"] .contact-phone,
+:root[data-theme="light"] .contact-addr,
+:root[data-theme="light"] .leave-card-title,
+:root[data-theme="light"] .promise-text { color: var(--text); }
+
+/* Badge navy: keep readable on light */
+:root[data-theme="light"] .badge-navy,
+:root[data-theme="light"] .app-tile-rate,
+:root[data-theme="light"] .pill-navy {
+  background: var(--panel-3);
+  color: var(--blue);
+  border-color: var(--border-2);
+}
+
+/* Scrolling logo bar: flip filter so logos appear dark on light bg */
+:root[data-theme="light"] .logo-bar-wrap { background: var(--panel-2); }
+:root[data-theme="light"] .logo-bar-item img {
+  filter: brightness(0);
+  opacity: 0.55;
+}
+:root[data-theme="light"] .logo-bar-item img:hover { opacity: 0.85; }
+:root[data-theme="light"] .logo-bar-label { background: var(--panel-2); }
+
+/* Touch to Explore: keep white text, green bg is fine */
+:root[data-theme="light"] .touch-text { color: #fff; }
+
+/* Stat value stays blue, fine. Promise block: keep navy bg readable */
+:root[data-theme="light"] .promise {
+  background: var(--navy);
+}
+:root[data-theme="light"] .promise-text { color: #fff; }
+:root[data-theme="light"] .promise-attr { color: var(--green); }
+
+/* Video controls bar in light mode */
+:root[data-theme="light"] .video-controls { background: #dde3ed; border-top-color: var(--border); }
+:root[data-theme="light"] .video-progress { background: var(--border-2); }
+:root[data-theme="light"] .video-vol-slider { background: var(--border-2); }
+:root[data-theme="light"] .video-time { color: var(--text-dim); }
+
+/* Industry / capability blurb */
+:root[data-theme="light"] .industry-blurb,
+:root[data-theme="light"] .detail-blurb { color: var(--text-dim); }
+
+/* QR card keep white text on green bg */
+:root[data-theme="light"] .qr-title,
+:root[data-theme="light"] .qr-sub { color: #fff; }
+
+/* Highlight rows */
+:root[data-theme="light"] .highlight-row { border-bottom-color: var(--border); }
+
+/* Nav dots on light header bg */
+:root[data-theme="light"] .dot { background: rgba(13,17,23,0.2); }
+:root[data-theme="light"] .dot:hover { background: rgba(13,17,23,0.45); }
 
 * { box-sizing: border-box; }
 html, body {
