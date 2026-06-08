@@ -1433,46 +1433,20 @@ const CaseStudyDetail = ({ id, onNavigate }) => {
       </div>
       <div>
         <div className="highlights-card">
-          <div className="highlights-title">Key Impact</div>
-          <div className="highlights-list">
-            <div className="highlight-row">
-              <div className="highlight-text">
-                <span className="highlight-value">{c.keyImpact}</span>
+          {c.technologies && (
+            <>
+              <div className="highlights-title">Technologies Used</div>
+              <div className="tech-tags" style={{marginBottom:20}}>
+                {c.technologies.map((t,i) => <span key={i} className="tech-tag">{t}</span>)}
               </div>
-            </div>
-            <div className="highlight-row">
-              <div className="highlight-text">
-                <span className="highlight-value">{c.rate}</span>
-                <span className="highlight-label"> production rate</span>
-              </div>
-            </div>
-            <div className="highlight-row">
-              <div className="highlight-text">
-                <span className="highlight-value">{c.investment}</span>
-                <span className="highlight-label"> investment range</span>
-              </div>
-            </div>
-            <div className="highlight-row">
-              <div className="highlight-text">
-                <span className="highlight-value">{c.leadTime}</span>
-                <span className="highlight-label"> typical lead time</span>
-              </div>
-            </div>
-          </div>
+            </>
+          )}
           {video && (
             <button className="watch-btn" onClick={() => onNavigate({ name: "video-detail", id: video.id, autoplay: true })}>
               <PlayIcon size={20} /> Watch Project Video
             </button>
           )}
         </div>
-        {c.technologies && (
-          <div style={{marginTop:16}}>
-            <div className="ind-col-title" style={{marginBottom:10}}>Technology Used</div>
-            <div className="tech-tags">
-              {c.technologies.map((t,i) => <span key={i} className="tech-tag">{t}</span>)}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
