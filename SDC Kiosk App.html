@@ -1,4 +1,4 @@
-<!doctype html><!-- logo-assets-v3 -->
+<!doctype html><!-- logo-assets-v3 video-player-v2 -->
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -564,7 +564,7 @@ button { font-family: inherit; cursor: pointer; }
 .video-card-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: auto; padding-top: 6px; }
 
 /* Video detail / player */
-.video-detail { display: grid; grid-template-columns: 3.5fr 1fr; gap: 20px; }
+.video-detail { display: grid; grid-template-columns: 4fr 1fr; gap: 24px; align-items: start; }
 .video-stage {
   background: #000; border: 1px solid var(--border);
   border-radius: 12px; overflow: hidden;
@@ -1770,7 +1770,7 @@ const VideoDetail = ({ id, onNavigate, autoplay }) => {
     <div className="video-detail">
       <div className="video-stage">
         {hasVideo ? (
-          <video ref={videoRef} src={VID_PATH(v.file)} style={{width:"100%",display:"block",background:"#000",maxHeight:480}}
+          <video ref={videoRef} src={VID_PATH(v.file)} style={{width:"100%",display:"block",background:"#000"}}
             onError={() => setHasVideo(false)} onClick={togglePlay} playsInline autoPlay={!!autoplay} muted />
         ) : (
           <div className="video-stage-placeholder">
