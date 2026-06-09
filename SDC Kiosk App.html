@@ -1,4 +1,4 @@
-<!doctype html><!-- logo-assets-v3 video-player-v2 cards-v2 -->
+<!doctype html><!-- logo-assets-v4 video-player-v2 cards-v2 -->
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -1014,7 +1014,6 @@ window.SDC_DATA = {
     // ✅ Previously missing — transparent PNGs added
     "Mar-Bal.png",
     "bleep.png",
-    "boxit.png",
     // ✅ Converted from JPG/no-alpha — white background removed
     "ge healthcare.png",
     "schneider electric.png",
@@ -1062,7 +1061,7 @@ const QRIcon = ({ size = 140, color = "#061D39" }) => (
 const IMG_PATH = p => `Image Files/${p}`;
 const VID_PATH = p => `Video Files/${p}`;
 const ICON_PATH = p => `Icon Files/${p}`;
-const LOGO_PATH = p => `Customer Logo Files/${p}`;
+const LOGO_PATH = p => `Customer Logo Files/${p}?v=5`;
 
 const Pill = ({ children, variant = "primary" }) => (
   <span className={`pill pill-${variant} pill-static`}>{children}</span>
