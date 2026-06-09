@@ -1861,35 +1861,47 @@ const NumbersScreen = () => {
     { label: "COMMITMENT", title: "End-to-end ownership: concept through ongoing production.", body: "From first conversation to final installation — and every production shift after. Long-term support isn't a service tier. It's how we operate." },
   ];
   return (
-    <>
-      <SectionBanner kicker="Our Story" title="Engineers. Builders. Problem Solvers." />
-      <p style={{fontSize:18,color:"var(--text-dim)",fontWeight:500,lineHeight:1.5,margin:"0 0 20px",maxWidth:1200}}>
-        SDC is a family-owned automation company with the capability to serve the world's most demanding manufacturers — and the personal accountability to treat every project as our own. We design, build, and support custom automation systems from concept to production, with machines running in facilities across the globe.
-      </p>
-      <div className="numbers-grid" style={{marginBottom:20}}>
-        {stats.map((s, i) => (
-          <div key={i} className="stat-card">
-            <div className="stat-value">{s.value}</div>
-            <div className="stat-label">{s.label}</div>
-            <div className="stat-sub">{s.sub}</div>
+    <div style={{display:"flex",flexDirection:"column",height:"100%",gap:10,overflow:"hidden"}}>
+      {/* Header row */}
+      <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",flexShrink:0}}>
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:"var(--blue-2)",letterSpacing:"0.16em",textTransform:"uppercase",marginBottom:4}}>Our Story</div>
+          <h1 style={{fontSize:32,fontWeight:800,letterSpacing:"-0.02em",margin:0,color:"#fff",lineHeight:1.05}}>Engineers. Builders. Problem Solvers.</h1>
+        </div>
+        <p style={{fontSize:14,color:"var(--text-dim)",fontWeight:500,lineHeight:1.45,margin:0,maxWidth:620,textAlign:"right"}}>
+          SDC is a family-owned automation company — designing, building, and supporting custom automation systems from concept to production, with machines running in facilities across the globe.
+        </p>
+      </div>
+
+      {/* Stats grid */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,flexShrink:0}}>
+        {stats.map((s,i) => (
+          <div key={i} style={{background:"var(--panel-2)",border:"1px solid var(--border)",borderRadius:12,padding:"14px 20px"}}>
+            <div style={{fontSize:46,fontWeight:800,letterSpacing:"-0.03em",color:"var(--blue)",lineHeight:1,marginBottom:4}}>{s.value}</div>
+            <div style={{fontSize:15,fontWeight:700,color:"#fff",marginBottom:3}}>{s.label}</div>
+            <div style={{fontSize:12,color:"var(--text-dim)",lineHeight:1.35}}>{s.sub}</div>
           </div>
         ))}
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginBottom:20}}>
+
+      {/* Pillars grid */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,flexShrink:0}}>
         {pillars.map((p,i) => (
-          <div key={i} style={{background:"var(--panel-2)",border:"1px solid var(--border)",borderRadius:12,padding:"22px 24px"}}>
-            <div style={{fontSize:11,fontWeight:700,color:"var(--green)",letterSpacing:"0.16em",textTransform:"uppercase",marginBottom:8}}>{p.label}</div>
-            <div style={{fontSize:16,fontWeight:700,color:"var(--text)",marginBottom:10,lineHeight:1.3}}>{p.title}</div>
-            <div style={{fontSize:14,color:"var(--text-dim)",lineHeight:1.5}}>{p.body}</div>
+          <div key={i} style={{background:"var(--panel-2)",border:"1px solid var(--border)",borderRadius:12,padding:"14px 20px"}}>
+            <div style={{fontSize:10,fontWeight:700,color:"var(--green)",letterSpacing:"0.16em",textTransform:"uppercase",marginBottom:5}}>{p.label}</div>
+            <div style={{fontSize:14,fontWeight:700,color:"#fff",marginBottom:6,lineHeight:1.25}}>{p.title}</div>
+            <div style={{fontSize:12,color:"var(--text-dim)",lineHeight:1.4}}>{p.body}</div>
           </div>
         ))}
       </div>
-      <div className="promise">
-        <div className="promise-quote-mark">"</div>
-        <div className="promise-text">Whatever you do, SDC can help you do it better, faster, and more reliably.</div>
-        <div className="promise-attr">— Our promise to every customer</div>
+
+      {/* Promise bar */}
+      <div style={{background:"var(--navy)",borderLeft:"4px solid var(--green)",borderRadius:"4px 12px 12px 4px",padding:"16px 32px",position:"relative",flexShrink:0}}>
+        <div style={{position:"absolute",top:2,left:22,fontFamily:"Georgia,serif",fontSize:56,fontWeight:700,color:"var(--green)",lineHeight:1,opacity:0.7}}>"</div>
+        <div style={{fontSize:20,fontWeight:700,color:"#fff",lineHeight:1.3,letterSpacing:"-0.01em"}}>Whatever you do, SDC can help you do it better, faster, and more reliably.</div>
+        <div style={{marginTop:6,fontSize:11,fontWeight:700,color:"var(--green)",letterSpacing:"0.16em",textTransform:"uppercase"}}>— Our promise to every customer</div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -2004,7 +2016,7 @@ function App() {
     case "capability-detail": body = <div className="screen-content"><CapabilityDetail id={route.id} onNavigate={navigate} /></div>; break;
     case "videos": body = <div className="screen-content"><VideosScreen onNavigate={navigate} /></div>; break;
     case "video-detail": body = <div className="screen-content"><VideoDetail id={route.id} onNavigate={navigate} autoplay={route.autoplay} /></div>; break;
-    case "numbers": body = <div className="screen-content"><NumbersScreen /></div>; break;
+    case "numbers": body = <div className="screen-content" style={{height:"100%",boxSizing:"border-box"}}><NumbersScreen /></div>; break;
     case "contact": body = <div className="screen-content"><ContactScreen /></div>; break;
     default: body = <HomeScreen onNavigate={navigate} />;
   }
