@@ -1393,11 +1393,9 @@ const CaseCard = ({ c, onNavigate }) => {
 // ─── CASE STUDIES SCREEN ─────────────────────────────────────────────────────
 const CaseStudiesScreen = ({ onNavigate, filterIndustryId, filterIndustryName }) => {
   const D = window.SDC_DATA;
-  const [industryFilter, setIndustryFilter] = useState(filterIndustryId || "All");
-  const industries = ["All", ...Array.from(new Set(D.caseStudies.map(c => c.industry)))];
-
-  let items = D.caseStudies;
-  if (industryFilter !== "All") items = items.filter(c => c.industry === industryFilter);
+  const items = filterIndustryId
+    ? D.caseStudies.filter(c => c.industryId === filterIndustryId)
+    : D.caseStudies;
 
   return (
     <>
@@ -1405,14 +1403,7 @@ const CaseStudiesScreen = ({ onNavigate, filterIndustryId, filterIndustryName })
         kicker={filterIndustryName ? `Industry · ${filterIndustryName}` : null}
         title="Case Studies"
       />
-      <div className="case-filter" style={{marginBottom:16}}>
-        <span style={{fontSize:12,fontWeight:700,color:"var(--text-mute)",letterSpacing:"0.1em",textTransform:"uppercase",alignSelf:"center",marginRight:4}}>Industry:</span>
-        {industries.map(i => (
-          <button key={i} className={`filter-chip ${industryFilter === i ? "filter-chip-active" : ""}`}
-            style={{padding:"6px 12px",fontSize:13}} onClick={() => setIndustryFilter(i)}>{i}</button>
-        ))}
-      </div>
-      <div className="case-card-grid scrollable-list" style={{maxHeight:600}}>
+      <div className="case-card-grid scrollable-list" style={{maxHeight:620}}>
         {items.map(c => <CaseCard key={c.id} c={c} onNavigate={onNavigate} />)}
       </div>
     </>
