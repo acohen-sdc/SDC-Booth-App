@@ -1394,14 +1394,10 @@ const CaseCard = ({ c, onNavigate }) => {
 const CaseStudiesScreen = ({ onNavigate, filterIndustryId, filterIndustryName }) => {
   const D = window.SDC_DATA;
   const [industryFilter, setIndustryFilter] = useState(filterIndustryId || "All");
-  const [capFilter, setCapFilter] = useState("All");
-
   const industries = ["All", ...Array.from(new Set(D.caseStudies.map(c => c.industry)))];
-  const capabilities = ["All", ...Array.from(new Set(D.caseStudies.flatMap(c => c.capability.split("·").map(x => x.trim()))))].slice(0, 10);
 
   let items = D.caseStudies;
   if (industryFilter !== "All") items = items.filter(c => c.industry === industryFilter);
-  if (capFilter !== "All") items = items.filter(c => c.capability.includes(capFilter));
 
   return (
     <>
@@ -1409,18 +1405,11 @@ const CaseStudiesScreen = ({ onNavigate, filterIndustryId, filterIndustryName })
         kicker={filterIndustryName ? `Industry · ${filterIndustryName}` : null}
         title="Case Studies"
       />
-      <div className="case-filter">
+      <div className="case-filter" style={{marginBottom:16}}>
         <span style={{fontSize:12,fontWeight:700,color:"var(--text-mute)",letterSpacing:"0.1em",textTransform:"uppercase",alignSelf:"center",marginRight:4}}>Industry:</span>
         {industries.map(i => (
           <button key={i} className={`filter-chip ${industryFilter === i ? "filter-chip-active" : ""}`}
             style={{padding:"6px 12px",fontSize:13}} onClick={() => setIndustryFilter(i)}>{i}</button>
-        ))}
-      </div>
-      <div className="case-filter" style={{marginBottom:16}}>
-        <span style={{fontSize:12,fontWeight:700,color:"var(--text-mute)",letterSpacing:"0.1em",textTransform:"uppercase",alignSelf:"center",marginRight:4}}>Type:</span>
-        {capabilities.map(cap => (
-          <button key={cap} className={`filter-chip ${capFilter === cap ? "filter-chip-active" : ""}`}
-            style={{padding:"6px 12px",fontSize:13}} onClick={() => setCapFilter(cap)}>{cap}</button>
         ))}
       </div>
       <div className="case-card-grid scrollable-list" style={{maxHeight:600}}>
