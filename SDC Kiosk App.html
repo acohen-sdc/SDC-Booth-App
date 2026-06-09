@@ -986,43 +986,14 @@ window.SDC_DATA = {
   ],
 
   customerLogos: [
-    // ✅ Transparent PNGs — original
-    "GE aero.png",
-    "Indy honeycomb.png",
-    "JM.png",
-    "alene.png",
-    "aptiv.png",
-    "beckett.png",
-    "duracell.png",
-    "first solar.png",
-    "foundation.png",
-    "gillette.png",
-    "honeywell.png",
-    "kdc one.png",
-    "kyocera.png",
-    "milwaukee.png",
-    "momentive.png",
-    "nestle.png",
-    "newell.png",
-    "pentair.png",
-    "rochling.png",
-    "shurtape.png",
-    "sonoco.png",
-    "stuller.png",
-    "tesla.png",
-    "thermacell.png",
-    // ✅ Previously missing — transparent PNGs added
-    "Mar-Bal.png",
-    "bleep.png",
-    // ✅ Converted from JPG/no-alpha — white background removed
-    "ge healthcare.png",
-    "schneider electric.png",
-    "Centrus.png",
-    "Ilpea.png",
-    "SSP.png",
-    "hp.png",
-    "norma group.png",
-    "wooster.png",
+    "GE aero.png", "Indy honeycomb.png", "JM.png", "alene.png", "aptiv.png",
+    "beckett.png", "duracell.png", "first solar.png", "foundation.png",
+    "gillette.png", "honeywell.png", "kdc one.png", "kyocera.png",
+    "milwaukee.png", "momentive.png", "nestle.png", "newell.png", "pentair.png",
+    "rochling.png", "shurtape.png", "sonoco.png", "stuller.png", "tesla.png",
+    "thermacell.png", "Mar-Bal.png", "bleep.png", "ge healthcare.png",
+    "schneider electric.png", "Centrus.png", "Ilpea.png", "SSP.png",
+    "hp.png", "norma group.png", "wooster.png",
   ],
 };
 </script>
@@ -1061,7 +1032,7 @@ const QRIcon = ({ size = 140, color = "#061D39" }) => (
 const IMG_PATH = p => `Image Files/${p}`;
 const VID_PATH = p => `Video Files/${p}`;
 const ICON_PATH = p => `Icon Files/${p}`;
-const LOGO_PATH = p => `Customer Logo Files/${p}?v=5`;
+const LOGO_PATH = p => `Customer Logo Files/${p}`;
 
 const Pill = ({ children, variant = "primary" }) => (
   <span className={`pill pill-${variant} pill-static`}>{children}</span>
