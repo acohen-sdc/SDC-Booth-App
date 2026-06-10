@@ -730,48 +730,6 @@ video:fullscreen { width: 100vw; height: 100vh; object-fit: contain; background:
 }
 .home-overlay:hover { transform: scale(1.08); }
 
-/* Attract screen */
-.attract {
-  position: absolute; inset: 0; z-index: 30;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; overflow: hidden;
-}
-.attract-bg {
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse at 30% 40%, rgba(21,116,196,0.4) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 60%, rgba(170,206,232,0.18) 0%, transparent 50%),
-    var(--navy);
-  animation: attractGlow 10s ease-in-out infinite;
-}
-@keyframes attractGlow {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.04); }
-}
-.attract-inner { position: relative; z-index: 1; text-align: center; }
-.attract-logo { height: 80px; margin-bottom: 28px; }
-.attract-tagline {
-  color: var(--yellow); font-size: 24px; font-weight: 700;
-  letter-spacing: 0.04em; margin-bottom: 28px;
-}
-.attract-pitch {
-  font-size: 20px; color: rgba(255,255,255,0.85);
-  line-height: 1.5; max-width: 900px; margin: 0 auto 60px;
-}
-.attract-touch { display: inline-flex; flex-direction: column; align-items: center; position: relative; }
-.touch-pulse {
-  width: 72px; height: 72px; border-radius: 50%;
-  border: 3px solid var(--yellow);
-  animation: touchRing 2s ease-out infinite;
-  margin-bottom: 20px;
-}
-.touch-pulse-2 { position: absolute; top: 0; animation-delay: 1s; }
-@keyframes touchRing {
-  0% { transform: scale(0.6); opacity: 1; }
-  100% { transform: scale(1.6); opacity: 0; }
-}
-.attract-touch-label { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: 0.16em; text-transform: uppercase; }
-
 /* Scrollable case list helper */
 .scrollable-list { max-height: 740px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border-2) transparent; }
 </style>
@@ -1921,7 +1879,6 @@ const ContactScreen = () => {
 function App() {
   const [stack, setStack] = useState([{ name: "home" }]);
   const route = stack[stack.length - 1];
-  const [showAttract, setShowAttract] = useState(false);
   const lastInteract = useRef(Date.now());
   const IDLE_SEC = 60;
 
@@ -1978,14 +1935,12 @@ function App() {
   useEffect(() => {
     const handler = () => {
       lastInteract.current = Date.now();
-      if (showAttract) setShowAttract(false);
     };
     ["pointerdown","keydown","touchstart"].forEach(ev => document.addEventListener(ev, handler, true));
     const t = setInterval(() => {
       const videoPlaying = document.querySelector("video") && !document.querySelector("video").paused;
       if (videoPlaying) { lastInteract.current = Date.now(); return; }
       if ((Date.now() - lastInteract.current) / 1000 > IDLE_SEC) {
-        setShowAttract(true);
         setStack([{ name: "home" }]);
         lastInteract.current = Date.now();
       }
@@ -1994,7 +1949,7 @@ function App() {
       clearInterval(t);
       ["pointerdown","keydown","touchstart"].forEach(ev => document.removeEventListener(ev, handler, true));
     };
-  }, [showAttract]);
+  }, []);
 
   const ROUTE_LABEL = {
     home: "Home", "case-studies": "Case Studies", "case-study-detail": "Case Study",
@@ -2034,23 +1989,6 @@ function App() {
         </button>
       )}
 
-      {showAttract && (
-        <div className="attract" onClick={() => setShowAttract(false)}>
-          <div className="attract-bg" />
-          <div className="attract-inner">
-            <img className="attract-logo" src="Blue SDC Logo.png" alt="SDC Automation" />
-            <div className="attract-tagline">Engineering Excellence. Trusted Partnerships.</div>
-            <div className="attract-pitch">
-              1,500+ custom automation machines built since 1998<br />
-              for automotive · life sciences · electronics · aerospace · energy
-            </div>
-            <div className="attract-touch">
-              <div className="touch-pulse" /><div className="touch-pulse touch-pulse-2" />
-              <div className="attract-touch-label">— Touch to explore —</div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
