@@ -152,9 +152,9 @@ button { font-family: inherit; cursor: pointer; }
 }
 .show-badge span { color: var(--yellow); }
 
-.dots { display: flex; align-items: center; gap: 10px; }
+.dots { display: flex; align-items: center; gap: 8px; }
 .dot {
-  width: 12px; height: 12px; border-radius: 50%;
+  width: 16px; height: 16px; border-radius: 50%;
   background: rgba(255,255,255,0.18);
   cursor: pointer;
   transition: transform 0.15s ease, background 0.2s ease;
@@ -281,7 +281,7 @@ button { font-family: inherit; cursor: pointer; }
   width: 120px; height: 44px;
   object-fit: contain;
   filter: brightness(0) invert(1);
-  opacity: 0.7;
+  opacity: 0.85;
   transition: opacity 0.2s;
 }
 .logo-bar-item img:hover { opacity: 1; }
@@ -1454,9 +1454,9 @@ const IndustriesScreen = ({ onNavigate }) => {
       <p style={{fontSize:19,color:"var(--text-dim)",fontWeight:500,lineHeight:1.5,margin:"0 0 22px",maxWidth:1200}}>
         SDC works across all industries — from high-volume consumer manufacturing to the most complex, niche, and highly regulated applications in aerospace, life sciences, and energy. If it needs to be automated, we can build it.
       </p>
-      <div className="tile-grid tile-grid-4">
+      <div style={{display:"flex",flexWrap:"wrap",gap:14,justifyContent:"center"}}>
         {D.industries.map(ind => (
-          <button key={ind.id} className="tile-card" onClick={() => onNavigate({ name: "industry-detail", id: ind.id })}>
+          <button key={ind.id} className="tile-card" style={{flex:"0 0 calc(25% - 11px)"}} onClick={() => onNavigate({ name: "industry-detail", id: ind.id })}>
             <img src={ICON_PATH(ind.icon)} alt={ind.name} style={{width:60,height:60,objectFit:"contain"}} />
             <div className="tile-label">{ind.name}</div>
             <div className="tile-desc">{ind.blurb.split(".")[0]}.</div>
@@ -1508,7 +1508,7 @@ const IndustryDetail = ({ id, onNavigate }) => {
         </div>
         <div>
           <div className="ind-col-title">Videos</div>
-          <div className="ind-video-list">
+          <div className="ind-video-list scrollable-list" style={{maxHeight:420}}>
             {videos.length === 0 && <div className="empty">See the Video Library for overview content.</div>}
             {videos.map(v => (
               <button key={v.id} className="video-row" onClick={() => onNavigate({ name: "video-detail", id: v.id, autoplay: true })}>
@@ -1571,7 +1571,7 @@ const CapabilityDetail = ({ id, onNavigate }) => {
         </div>
         <div>
           <div className="ind-col-title">Related Projects</div>
-          <div className="case-list">
+          <div className="case-list scrollable-list" style={{maxHeight:500}}>
             {relatedCases.length === 0 && <div className="empty">See the full Case Studies library for related work.</div>}
             {relatedCases.map(c => (
               <button key={c.id} className="case-row" onClick={() => onNavigate({ name: "case-study-detail", id: c.id })}>
@@ -1592,9 +1592,10 @@ const CapabilityDetail = ({ id, onNavigate }) => {
 };
 
 // ─── VIDEOS SCREEN ───────────────────────────────────────────────────────────
-const VideosScreen = ({ onNavigate }) => {
+const VideosScreen = ({ onNavigate, initialCat = "All", onCatChange }) => {
   const D = window.SDC_DATA;
-  const [cat, setCat] = useState("All");
+  const [cat, setCat] = useState(initialCat);
+  const handleCat = (c) => { setCat(c); if (onCatChange) onCatChange(c); };
   const categories = ["All", ...Array.from(new Set(D.videos.map(v => v.category)))];
   const filtered = cat === "All" ? D.videos : D.videos.filter(v => v.category === cat);
 
@@ -1604,7 +1605,7 @@ const VideosScreen = ({ onNavigate }) => {
         />
       <div className="video-filter">
         {categories.map(c => (
-          <button key={c} className={`filter-chip ${cat === c ? "filter-chip-active" : ""}`} onClick={() => setCat(c)}>{c}</button>
+          <button key={c} className={`filter-chip ${cat === c ? "filter-chip-active" : ""}`} onClick={() => handleCat(c)}>{c}</button>
         ))}
       </div>
       <div className="video-card-grid scrollable-list" style={{maxHeight:700}}>
@@ -1819,7 +1820,7 @@ const NumbersScreen = () => {
     { label: "COMMITMENT", title: "End-to-end ownership: concept through ongoing production.", body: "From first conversation to final installation — and every production shift after. Long-term support isn't a service tier. It's how we operate." },
   ];
   return (
-    <div style={{display:"flex",flexDirection:"column",height:"100%",gap:14,overflow:"hidden"}}>
+    <div style={{display:"flex",flexDirection:"column",height:"100%",gap:14,overflowY:"auto"}}>
       {/* Header row */}
       <div style={{flexShrink:0}}>
         <div style={{fontSize:12,fontWeight:700,color:"var(--blue-2)",letterSpacing:"0.16em",textTransform:"uppercase",marginBottom:6}}>Our Story</div>
@@ -1922,9 +1923,10 @@ function App() {
   const route = stack[stack.length - 1];
   const [showAttract, setShowAttract] = useState(false);
   const lastInteract = useRef(Date.now());
-  const IDLE_SEC = 90;
+  const IDLE_SEC = 60;
 
   const savedScroll = useRef({});
+  const savedFilters = useRef({});
   const isGoingBack = useRef(false);
 
   const navigate = useCallback((r) => {
@@ -1983,7 +1985,7 @@ function App() {
       const videoPlaying = document.querySelector("video") && !document.querySelector("video").paused;
       if (videoPlaying) { lastInteract.current = Date.now(); return; }
       if ((Date.now() - lastInteract.current) / 1000 > IDLE_SEC) {
-        // Return to home (not attract screen) when idle
+        setShowAttract(true);
         setStack([{ name: "home" }]);
         lastInteract.current = Date.now();
       }
@@ -1994,21 +1996,15 @@ function App() {
     };
   }, [showAttract]);
 
-  const headerTitle = (() => {
-    switch (route.name) {
-      case "case-studies": return "Home";
-      case "case-study-detail": return "Case Studies";
-      case "industries": return "Home";
-      case "industry-detail": return "Industries";
-      case "capabilities": return "Home";
-      case "capability-detail": return "Capabilities";
-      case "videos": return "Home";
-      case "video-detail": return "Video Library";
-      case "numbers": return "Home";
-      case "contact": return "Home";
-      default: return null;
-    }
-  })();
+  const ROUTE_LABEL = {
+    home: "Home", "case-studies": "Case Studies", "case-study-detail": "Case Study",
+    industries: "Industries", "industry-detail": "Industry",
+    capabilities: "Capabilities", "capability-detail": "Capability",
+    videos: "Video Library", "video-detail": "Video",
+    numbers: "By the Numbers", contact: "Contact",
+  };
+  const prevRoute = stack.length > 1 ? stack[stack.length - 2] : null;
+  const headerTitle = prevRoute ? (ROUTE_LABEL[prevRoute.name] || "Back") : null;
 
   let body;
   switch (route.name) {
@@ -2019,7 +2015,7 @@ function App() {
     case "industry-detail": body = <div className="screen-content"><IndustryDetail id={route.id} onNavigate={navigate} /></div>; break;
     case "capabilities": body = <div className="screen-content"><CapabilitiesScreen onNavigate={navigate} /></div>; break;
     case "capability-detail": body = <div className="screen-content"><CapabilityDetail id={route.id} onNavigate={navigate} /></div>; break;
-    case "videos": body = <div className="screen-content"><VideosScreen onNavigate={navigate} /></div>; break;
+    case "videos": body = <div className="screen-content"><VideosScreen onNavigate={navigate} initialCat={savedFilters.current.videos || "All"} onCatChange={c => { savedFilters.current.videos = c; }} /></div>; break;
     case "video-detail": body = <div className="screen-content"><VideoDetail id={route.id} onNavigate={navigate} autoplay={route.autoplay} /></div>; break;
     case "numbers": body = <div className="screen-content" style={{height:"100%",boxSizing:"border-box"}}><NumbersScreen /></div>; break;
     case "contact": body = <div className="screen-content"><ContactScreen /></div>; break;
