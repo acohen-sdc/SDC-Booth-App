@@ -1168,9 +1168,14 @@ const StaffMenuOverlay = ({ onCancel }) => {
   );
 };
 
-const Header = ({ route, onNavigate, onBack, title }) => {
+const Header = ({ route, onNavigate, onBack, onHome, title }) => {
   const isHome = route.name === "home";
   const { showMenu, setShowMenu, handleLogoTap } = useStaffMenu();
+
+  const handleLogoClick = () => {
+    handleLogoTap();
+    if (!isHome) onHome();
+  };
 
   const sectionIdx = (() => {
     if (["case-study-detail"].includes(route.name)) return 1;
@@ -1185,7 +1190,7 @@ const Header = ({ route, onNavigate, onBack, title }) => {
       {showMenu && <StaffMenuOverlay onCancel={() => setShowMenu(false)} />}
       <header className="kheader">
         <div className="kheader-left">
-          <div className="logo-block" onClick={handleLogoTap} style={{cursor:"default"}}>
+          <div className="logo-block" onClick={handleLogoClick} style={{cursor: isHome ? "default" : "pointer"}}>
             <img src="Blue SDC Logo.png" alt="SDC Automation" className="sdc-logo" />
           </div>
           <div className="header-divider" />
@@ -1256,9 +1261,9 @@ const LogoBar = () => {
 };
 
 // ─── FRAME ───────────────────────────────────────────────────────────────────
-const Frame = ({ route, onNavigate, onBack, title, children }) => (
+const Frame = ({ route, onNavigate, onBack, onHome, title, children }) => (
   <div className="frame">
-    <Header route={route} onNavigate={onNavigate} onBack={onBack} title={title} />
+    <Header route={route} onNavigate={onNavigate} onBack={onBack} onHome={onHome} title={title} />
     <div className="frame-body">{children}</div>
     <Footer />
   </div>
@@ -1708,11 +1713,13 @@ const VideoDetail = ({ id, onNavigate, autoplay }) => {
             onError={() => setHasVideo(false)} onClick={togglePlay} playsInline autoPlay={!!autoplay} muted={volume === 0} />
         ) : (
           <div className="video-stage-placeholder">
-            <PlayIcon size={64} color="#1574C4" />
-            <div style={{color:"var(--text-mute)",fontSize:14}}>Video: {v.file}</div>
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--text-mute)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="3"/><line x1="2" y1="2" x2="22" y2="22"/>
+            </svg>
+            <div style={{color:"var(--text-mute)",fontSize:15,fontWeight:500}}>Video not yet available</div>
           </div>
         )}
-        <div className="video-controls">
+        {hasVideo && <div className="video-controls">
           <button className="video-ctrl-play" onClick={togglePlay}>
             {playing ? "❚❚" : <PlayIcon size={16} />}
           </button>
@@ -1744,7 +1751,7 @@ const VideoDetail = ({ id, onNavigate, autoplay }) => {
               : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
             }
           </button>
-        </div>
+        </div>}
       </div>
       <div className="video-side">
         <div className="video-side-title">{v.title}</div>
@@ -1982,7 +1989,7 @@ function App() {
 
   return (
     <div className="stage">
-      <Frame route={route} onNavigate={(r) => setStack([{ name: "home" }, r])} onBack={back} title={headerTitle}>
+      <Frame route={route} onNavigate={(r) => setStack([{ name: "home" }, r])} onBack={back} onHome={home} title={headerTitle}>
         {body}
       </Frame>
 
