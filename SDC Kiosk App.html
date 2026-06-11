@@ -1236,8 +1236,8 @@ const Footer = () => {
 };
 
 // ─── TOUCH TO EXPLORE ────────────────────────────────────────────────────────
-const TouchOrb = () => (
-  <div className="touch-text">Touch to<br/>Explore</div>
+const TouchOrb = ({ onClick }) => (
+  <div className="touch-text" onClick={onClick} style={{cursor:"pointer"}}>Touch to<br/>Explore</div>
 );
 
 // ─── LOGO BAR ────────────────────────────────────────────────────────────────
@@ -1288,7 +1288,7 @@ const HomeScreen = ({ onNavigate }) => {
           <p className="hero-sub">Engineering Excellence. Trusted Partnerships.</p>
         </div>
         <div className="hero-right">
-          <TouchOrb />
+          <TouchOrb onClick={() => onNavigate({ name: "case-studies" })} />
         </div>
       </div>
       <div className="screen-content" style={{paddingBottom: 20}}>
