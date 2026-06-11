@@ -1192,11 +1192,6 @@ const Header = ({ route, onNavigate, onBack, onHome, title }) => {
           <div className="logo-block" onClick={handleLogoClick} style={{cursor: isHome ? "default" : "pointer"}}>
             <img src="Blue SDC Logo.png" alt="SDC Automation" className="sdc-logo" />
           </div>
-          {!isHome && (
-            <button className="home-header-btn" onClick={onHome} aria-label="Home">
-              <HomeIcon size={20} />
-            </button>
-          )}
           <div className="header-divider" />
           {!isHome && (
             <button className="back-btn" onClick={onBack}>
@@ -1211,6 +1206,11 @@ const Header = ({ route, onNavigate, onBack, onHome, title }) => {
           )}
         </div>
         <div className="kheader-right">
+          {!isHome && (
+            <button className="home-header-btn" onClick={onHome} aria-label="Home">
+              <HomeIcon size={20} />
+            </button>
+          )}
           <div className="dots">
             {SECTION_LABELS.map((s, i) => (
               <span key={i} title={s}
