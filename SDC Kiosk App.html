@@ -720,16 +720,15 @@ video:fullscreen { width: 100vw; height: 100vh; object-fit: contain; background:
 .kfooter-email, .kfooter-phone { color: var(--blue-2); font-weight: 600; }
 .kfooter-sep { color: var(--text-mute); margin: 0 6px; }
 
-/* Home button overlay */
-.home-overlay {
-  position: absolute; bottom: 80px; right: 44px;
-  width: 58px; height: 58px; border-radius: 50%;
+/* Home button in header */
+.home-header-btn {
+  width: 42px; height: 42px; border-radius: 50%;
   background: var(--blue); border: none;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 8px 24px rgba(21,116,196,0.5);
-  z-index: 10; transition: transform 0.15s ease;
+  box-shadow: 0 4px 14px rgba(21,116,196,0.45);
+  cursor: pointer; transition: transform 0.15s ease; flex-shrink: 0;
 }
-.home-overlay:hover { transform: scale(1.08); }
+.home-header-btn:hover { transform: scale(1.08); }
 
 /* Scrollable case list helper */
 .scrollable-list { max-height: 740px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border-2) transparent; }
@@ -1193,6 +1192,11 @@ const Header = ({ route, onNavigate, onBack, onHome, title }) => {
           <div className="logo-block" onClick={handleLogoClick} style={{cursor: isHome ? "default" : "pointer"}}>
             <img src="Blue SDC Logo.png" alt="SDC Automation" className="sdc-logo" />
           </div>
+          {!isHome && (
+            <button className="home-header-btn" onClick={onHome} aria-label="Home">
+              <HomeIcon size={20} />
+            </button>
+          )}
           <div className="header-divider" />
           {!isHome && (
             <button className="back-btn" onClick={onBack}>
@@ -1992,12 +1996,6 @@ function App() {
       <Frame route={route} onNavigate={(r) => setStack([{ name: "home" }, r])} onBack={back} onHome={home} title={headerTitle}>
         {body}
       </Frame>
-
-      {route.name !== "home" && (
-        <button className="home-overlay" onClick={home} aria-label="Home">
-          <HomeIcon size={24} />
-        </button>
-      )}
 
     </div>
   );
