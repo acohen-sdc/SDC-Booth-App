@@ -25,7 +25,7 @@ try {
     $result = & git -C $AppDir pull origin master 2>&1
     Log "git pull: $result"
 } catch {
-    Log "ERROR: git pull failed — $_"
+    Log "ERROR: git pull failed -- $_"
     exit 1
 }
 
