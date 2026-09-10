@@ -135,7 +135,7 @@ button { font-family: inherit; cursor: pointer; }
   background: var(--panel-2);
   border: 1px solid var(--border-2);
   color: var(--blue-2);
-  border-radius: 8px;
+  border-radius: 8px; 
   padding: 8px 16px 8px 12px;
   font-size: 15px; font-weight: 700;
   transition: background 0.15s, border-color 0.15s;
@@ -162,6 +162,17 @@ button { font-family: inherit; cursor: pointer; }
 }
 .dot:hover { background: rgba(255,255,255,0.4); }
 .dot-active { background: var(--green); transform: scale(1.15); }
+
+/* Confidentiality Disclaimer */
+.confidentiality-disclaimer{
+    color: var(--text-mute);
+    display: block;
+    font-size: 9px; font-weight: 900;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    position: absolute;
+    right: 19%;
+}
 
 /* Hero */
 .hero {
@@ -1479,13 +1490,13 @@ const Header = ({ route, onNavigate, onBack, onHome, title }) => {
           )}
           {isHome && (
             <div className="show-badge">
-              Alcon Technology Expo &nbsp;·&nbsp; <span>A Future In Focus</span> &nbsp;·&nbsp; 
-                <small>
-                  This content is confidential and provided for internal Alcon use only. 
-                  Please do not photograph, copy, or share outside your organization.
-                </small>
+              Alcon Technology Expo &nbsp;·&nbsp; <span>A Future In Focus</span> &nbsp; &nbsp;
             </div>
           )}
+          <div className="confidentiality-disclaimer">
+                This content is confidential and provided for internal Alcon use only. 
+                Please do not photograph, copy, or share outside your organization.
+          </div>
         </div>
         <div className="kheader-right">
           {!isHome && (
