@@ -138,3 +138,37 @@ Valid route names: `home`, `case-studies`, `case-study-detail`, `industries`,
 - Do not remove the `Video Files/` path fallback in the asset helpers — it is the only way videos load
 - Do not change the 1920×1080 canvas size without also updating the scale-fit JS
 - Do not commit the `Video Files/` folder — it is gitignored (5–6 GB)
+- Do not put non-ASCII characters (em dashes, smart quotes) on an **executable** line of any `.ps1` — see below
+
+---
+
+## PowerShell Scripts — Keep Executable Lines ASCII
+
+`AUTO-UPDATE.ps1` and the two `SETUP - *.ps1` files are saved as **UTF-8 without a BOM**.
+Windows PowerShell 5.1 decodes BOM-less files as codepage 1252, so a UTF-8 em dash
+(`E2 80 94`) turns into three characters ending in a right smart quote (`”`) — and
+PowerShell's tokenizer accepts smart quotes as real string delimiters. It closes the
+string early and the parser then reports a misleading error somewhere else entirely
+(e.g. "Missing closing `}`" pointing at a line with balanced braces).
+
+The script dies at parse time, so it never runs and never logs. **An empty or stale
+`update-log.txt` on the kiosk is the fingerprint of this bug.**
+
+Em dashes and box-drawing characters inside `#` comments are harmless — only string
+literals and other executable code reach the tokenizer.
+
+After editing any `.ps1`, verify before trusting it:
+
+```powershell
+# 1. Everything parses
+Get-ChildItem *.ps1 | ForEach-Object {
+  $e = $null
+  [void][System.Management.Automation.Language.Parser]::ParseFile($_.FullName,[ref]$null,[ref]$e)
+  if ($e) { "FAIL $($_.Name) line $($e[0].Extent.StartLineNumber)" } else { "PASS $($_.Name)" }
+}
+
+# 2. No non-ASCII left outside comments
+Select-String *.ps1 -Pattern '[^\x00-\x7F]' | Where-Object { $_.Line -notmatch '^\s*#' }
+```
+
+Check 1 should print only `PASS` lines; check 2 should print nothing.

@@ -11,7 +11,7 @@ $Link       = $WshShell.CreateShortcut($Shortcut)
 $Link.TargetPath       = "wscript.exe"
 $Link.Arguments        = "`"$VbsPath`""
 $Link.WorkingDirectory = $ScriptDir
-$Link.Description      = "SDC Automation Kiosk — Automate 2026"
+$Link.Description      = "SDC Automation Kiosk -- Automate 2026"
 $Link.WindowStyle      = 1
 
 # Use Chrome icon if available, otherwise default
