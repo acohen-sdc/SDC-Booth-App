@@ -19,3 +19,7 @@ kiosk-profile/
 Thumbs.db
 .DS_Store
 desktop.ini
+
+# Raw source media dropped in for the Milwaukee build (compressed copies live in Image Files/ and Video Files/)
+Custom Automated Tool Packaging Machine/
+Drill Bit Assembly and Packaging Machine/

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>SDC Kiosk — Alcon Technology Expo</title>
+<title>SDC Kiosk — Milwaukee Technology Expo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -10,7 +10,7 @@
 
 <style>
 /* =================================================================
-   SDC Kiosk — Alcon Technology Expo (A Future In Focus)
+   SDC Kiosk — Milwaukee Technology Expo
    Brand: Steven Douglas Corp. (sdcautomation.com)
    Colors: Primary Blue #1574C4 · Dark Navy #061D39 · Accent Green #74C415
    ================================================================= */
@@ -162,17 +162,6 @@ button { font-family: inherit; cursor: pointer; }
 }
 .dot:hover { background: rgba(255,255,255,0.4); }
 .dot-active { background: var(--green); transform: scale(1.15); }
-
-/* Confidentiality Disclaimer */
-.confidentiality-disclaimer{
-    color: var(--text-mute);
-    display: block;
-    font-size: 9px; font-weight: 900;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    position: absolute;
-    right: 19%;
-}
 
 /* Hero */
 .hero {
@@ -755,16 +744,7 @@ video:fullscreen { width: 100vw; height: 100vh; object-fit: contain; background:
 /* Scrollable case list helper */
 .scrollable-list { max-height: 740px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border-2) transparent; }
 
-/* ===== ALCON BUILD ADDITIONS ============================================== */
-
-/* Co-brand chip in the hero (keeps the customer mark in its own colours) */
-.cobrand-chip {
-  display: inline-flex; align-items: center; justify-content: center;
-  background: #fff; border-radius: 10px;
-  padding: 10px 20px; margin-bottom: 16px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
-}
-.cobrand-chip img { height: 38px; width: auto; display: block; }
+/* ===== CUSTOMER-SHOW ADDITIONS (featured strip, gallery, status pill) ===== */
 
 /* Featured strip on Home */
 .featured-strip { display: flex; gap: 12px; margin: 16px; }
@@ -980,9 +960,8 @@ window.SDC_DATA = {
     phone: "440-564-5200",
     address: "7750 Discovery Lane, Concord Twp, OH 44077",
     signature: "Whatever you do, SDC can help you do it better, faster, and more reliably.",
-    show: "Alcon Technology Expo",
-    booth: "A Future In Focus",
-    venue: "Automation engineered for Alcon"
+    show: "Milwaukee Technology Expo",
+    venue: "Automation engineered for Milwaukee Tool"
   },
 
   stats: [
@@ -997,11 +976,11 @@ window.SDC_DATA = {
   industries: [
     { id: "life-sciences", name: "Life Sciences", icon: "Life Sciences Icon.svg", blurb: "Ophthalmic device automation, IOL wafer processing, sterile package handling, catheter assembly, and Class II/III device automation. Micron-level precision and full regulatory traceability.", cases: ["alcon-picking-cracking", "alcon-casting", "alcon-sterilization-baskets", "alcon-rfid-labeling", "automated-rf", "endoscope-brush", "microscopic-medical", "medical-feed-tube"] },
     { id: "automotive", name: "Automotive", icon: "Automotive Icon.svg", blurb: "Ignition coil production, connector assembly, sensor integration, and high-speed small part assembly for Tier 1 & Tier 2 automotive suppliers.", cases: ["ignition-coil", "ev-charging", "automotive-dash"] },
-    { id: "consumer", name: "Consumer Products", icon: "Consumer Products Icon.svg", blurb: "Fragrance diffusers, cap assembly, dispenser mechanisms, and flexible multi-SKU production lines running at rates up to 140+ parts per minute.", cases: ["wick-assembly", "hose-clamp-cartoning", "drill-bit", "precision-packaging", "custom-cartoning", "fluid-dispensing"] },
+    { id: "consumer", name: "Consumer Products", icon: "Consumer Products Icon.svg", blurb: "Fragrance diffusers, cap assembly, dispenser mechanisms, and flexible multi-SKU production lines running at rates up to 140+ parts per minute.", cases: ["milwaukee-drill-bit", "wick-assembly", "hose-clamp-cartoning", "precision-packaging", "custom-cartoning", "fluid-dispensing"] },
     { id: "electronics", name: "Electronics", icon: "Electronics Icon.svg", blurb: "Sub-assembly, functional test, inspection, and high-mix/low-volume flexible automation for electronic components and devices.", cases: ["precision-label", "industry-40-hmi", "electrical-small-part", "electrical-safety-switch"] },
     { id: "energy", name: "Energy", icon: "Energy Icon.svg", blurb: "Automated assembly and testing for energy system components — supporting the transition to cleaner, more reliable power systems.", cases: ["solar-dynamic", "solar-sweep", "gas-valve", "optical-electrical-tester", "leak-testing-propane"] },
     { id: "aerospace", name: "Aerospace", icon: "Aerospace Icon.svg", blurb: "Precision assembly, torque-to-spec, and full component traceability for mission-critical aerospace and defense applications.", cases: ["honeycomb-welding", "filter-assembly", "fin-former", "resistance-welding"] },
-    { id: "industrial", name: "General Industrial", icon: "Applications_Icon.svg", blurb: "Gas burner assembly, press-fit, seal assembly, stamping, and fiber laser marking for industrial fluid and combustion component manufacturers.", cases: ["gas-burner", "hose-clamp-assembly", "hose-assembly-test", "custom-tool-packaging", "robotic-eoat"] },
+    { id: "industrial", name: "General Industrial", icon: "Applications_Icon.svg", blurb: "Gas burner assembly, press-fit, seal assembly, stamping, and fiber laser marking for industrial fluid and combustion component manufacturers.", cases: ["gas-burner", "hose-clamp-assembly", "tool-packaging", "hose-assembly-test", "robotic-eoat"] },
   ],
 
   capabilities: [
@@ -1017,13 +996,84 @@ window.SDC_DATA = {
   ],
 
   caseStudies: [
-    // == FEATURED FOR ALCON ====================================================
+    // == FEATURED FOR MILWAUKEE TECHNOLOGY EXPO ================================
+    // Source: Milwaukee_Tech_Expo_Case_Studies.pdf. featured:true puts a case on
+    // the Home strip and at the top of Case Studies. extended:true gives a
+    // non-featured case the same 5-section detail layout.
+    // The tool-packaging machine is for a similar stone-drill customer, NOT
+    // Milwaukee -- keep its wording customer-neutral. The drill-bit machine is
+    // the Milwaukee one ("Built for Milwaukee").
+    { id: "tool-packaging", featured: true,
+      hook: "One Machine. 20,000+ Parts. Zero Changeover Downtime.",
+      hookSub: "How a stone drill manufacturer packages 40+ drill tool styles on a single flexible line.",
+      title: "Custom Automated Tool Packaging Machine", industry: "General Industrial", industryId: "industrial",
+      capability: "Robotic Integration · Material Handling · Machine Vision",
+      blurb: "This customer needed to package 20,000+ part variations across 40+ package types — previously assembled by hand, with no automated line flexible enough to handle that much variety. Precision robotic integration built around an SDC Indexing Ring solves it: three FANUC SCARA robots work with SDC's Flex Feeding system for vision-guided part selection and nest placement, while a FANUC 6-axis robot handles pallet-based drill tool picking.",
+      problem: [
+        "SDC Flex Feeding delivers vision-guided, accurately oriented parts continuously, eliminating robotic wait time",
+        "Telesis pulsed-fiber laser marks each part with dimensional info and/or lot number before placement",
+        "Servo-driven part placement orients parts tip-up or tip-down automatically, calculated from part and package dimensions",
+        "Schunk electric servo gripper positions jaws with clearances as low as 0.5mm, handling 3mm–20mm diameters with no tooling changer",
+        "Ignition software links the PLC to the customer's 20,000+ tool product database in real time — new variants added without re-engineering",
+      ],
+      proven: [
+        "Running in production: 750 parts/hour at 98.5% operational efficiency",
+        "Automatic label placement repositions vertically/horizontally per recipe — no manual changeover between package sizes",
+        "3 ATI end effectors with automatic robotic tooling changeover adapt the SCARA robots between tasks without manual swap",
+        "Machine vision (FANUC iRVision, Balluff magnetic sensors, Keyence color sensors) verifies label placement and part orientation at every stage",
+      ],
+      effort: [
+        "Skills: standard PLC/HMI operation (Allen-Bradley PLC, PanelView 5000); new product variants are added through Ignition software recipes, not reprogramming",
+        "Scalability: modular design and software programmability allow quick adjustments for new package styles without major re-engineering",
+      ],
+      close: "Proven in production. Engineered to handle what's next.",
+      technologies: ["SDC Indexing Ring", "Three FANUC SCARA robots + FANUC 6-axis robot", "SDC Flex Feeding with vision guidance", "Telesis pulsed-fiber laser marking", "Schunk electric servo gripper", "ATI automatic tool changers", "Ignition software with Allen-Bradley PLC"],
+      rate: "750 parts/hour",
+      status: "In Production", hideInvestment: true,
+      keyImpact: "Packages 40+ drill tool styles on a single flexible line with no changeover downtime", delivered: "On-Time",
+      image: "Tool Packaging Machine 1.jpg",
+      images: ["Tool Packaging Machine 1.jpg", "Tool Packaging Machine 2.jpg", "Tool Packaging Machine 3.jpg", "Tool Packaging Machine 4.jpg", "Tool Packaging Machine 5.jpg", "Tool Packaging Machine 6.jpg", "Tool Packaging Machine 7.jpg", "Tool Packaging Machine 8.jpg"],
+      video: "Tool Packaging Machine Case Study.mp4" },
+
+    { id: "milwaukee-drill-bit", featured: true,
+      hook: "Drill Bits In, Packaged Product Out — Fully Automated.",
+      hookSub: "How Milwaukee boosted end-of-line packaging speed and safety.",
+      title: "Drill Bit Assembly & Packaging Machine", industry: "Consumer Products", industryId: "consumer",
+      capability: "Robotic Integration · Material Handling · Machine Vision",
+      blurb: "After rigorous quality testing, drill bits still needed automated assembly (foam insert, clip) and packaging before shipping — previously a manual, bottleneck-prone end-of-line step with safety exposure during servicing. Built on SDC's pre-engineered Indexing Ring, this system synchronizes multiple robotic stations around one platform for high-throughput assembly with minimal manual intervention.",
+      problem: [
+        "Two SDC Flex Feeders continuously deliver components and plastic clips to the ring",
+        "Keyence 3D bin-picking vision system guides a 6-axis FANUC robot to orient and load drill bits",
+        "Servo-controlled press with vision-guided twisting mechanism secures exact drill bit alignment",
+        "Plastic clip is ultrasonically welded in place for products requiring it",
+        "Vision-guided robotic label placement and high-speed label wrapping complete packaging with no manual step",
+      ],
+      proven: [
+        "Running in production at a 3.5 parts/second machine rate",
+        "30% reduction in service-related safety concerns through dual-channel interlocks and improved component access",
+        "Quick-change end-of-arm tooling adapts the cell to different drill bit sizes and packaging configurations without a major rebuild",
+        "Vision inspection at each station ensures repeatable, defect-free assemblies",
+      ],
+      effort: [
+        "Skills: standard robotic cell operation; quick-change end-of-arm tooling reduces changeover effort between configurations",
+        "Scalability: modular SDC Indexing Ring and Flex Feeding platform supports new part sizes or packaging formats without major reinvestment",
+      ],
+      close: "Built for Milwaukee. Proven in production. Engineered for speed and safety.",
+      technologies: ["SDC Indexing Ring", "Two SDC Flex Feeders", "Keyence 3D bin-picking vision", "6-axis FANUC robot", "Servo press with vision-guided twisting", "Ultrasonic clip welding", "Vision-guided label wrapping"],
+      rate: "3.5 parts/second",
+      status: "In Production", hideInvestment: true,
+      keyImpact: "30% reduction in service-related safety concerns", delivered: "On-Time",
+      image: "Milwaukee Drill Bit Assembly 1.jpg",
+      images: ["Milwaukee Drill Bit Assembly 1.jpg", "Milwaukee Drill Bit Assembly 2.jpg", "Milwaukee Drill Bit Assembly 3.jpg", "Milwaukee Drill Bit Assembly 4.jpg", "Milwaukee Drill Bit Assembly 5.jpg", "Milwaukee Drill Bit Assembly 6.jpg", "Milwaukee Drill Bit Assembly 7.jpg", "Milwaukee Drill Bit Assembly 8.jpg"],
+      video: "Milwaukee Drill Bit Assembly and Packaging Machine.mp4" },
+
+    // == ALCON (extended 5-section detail; not featured on Home) ===============
     // NOTE: internal job numbers (1003 / 1029 / 1124 / 1145 / 1146 / 917) are
     // deliberately NOT referenced anywhere in this file, per Riana.
     // MEDIA PENDING: the image/video filenames below are the expected names.
     // Drop files into "Image Files/" and "Video Files/" using these exact names
     // and they light up automatically; missing files fall back to placeholders.
-    { id: "alcon-picking-cracking", featured: true,
+    { id: "alcon-picking-cracking", extended: true,
       hook: "Two Dials. One Motion. Zero Hands.",
       hookSub: "IOL wafer cracking, automated without slowing down.",
       title: "Automated Picking and Cracking Machine", industry: "Life Sciences", industryId: "life-sciences",
@@ -1056,7 +1106,7 @@ window.SDC_DATA = {
       images: ["Alcon Picking and Cracking 1.jpg", "Alcon Picking and Cracking 2.jpg", "Alcon Picking and Cracking 3.jpg", "Alcon Picking and Cracking 4.jpg", "Alcon Picking and Cracking 5.jpg", "Alcon Picking and Cracking 6.jpg"],
       video: "Alcon Picking and Cracking Machine.mp4" },
 
-    { id: "alcon-casting", featured: true,
+    { id: "alcon-casting", extended: true,
       hook: "Two Arms, One Rhythm, Zero Downtime.",
       hookSub: "Next-generation casting cells that keep pace without missing a fill.",
       title: "Next Generation Automated Casting Machine", industry: "Life Sciences", industryId: "life-sciences",
@@ -1096,7 +1146,7 @@ window.SDC_DATA = {
       images: ["Alcon Casting Machine 1.jpg", "Alcon Casting Machine 2.jpg", "Alcon Casting Machine 3.jpg", "Alcon Casting Machine 4.jpg", "Alcon Casting Machine 5.jpg", "Alcon Casting Machine 6.jpg"],
       video: "Alcon Casting Machine.mp4" },
 
-    { id: "alcon-sterilization-baskets", featured: true,
+    { id: "alcon-sterilization-baskets", extended: true,
       hook: "From Basket to Belt, Untouched.",
       hookSub: "Automated sterilization basket load and unload, working as one system.",
       title: "Sterilization Basket Load & Unload Automation", industry: "Life Sciences", industryId: "life-sciences",
@@ -1131,7 +1181,7 @@ window.SDC_DATA = {
       images: ["Alcon Sterilization Basket 1.jpg", "Alcon Sterilization Basket 2.jpg", "Alcon Sterilization Basket 3.jpg", "Alcon Sterilization Basket 4.jpg", "Alcon Sterilization Basket 5.jpg", "Alcon Sterilization Basket 6.jpg"],
       video: "Alcon Sterilization Basket Automation.mp4" },
 
-    { id: "alcon-rfid-labeling", featured: true,
+    { id: "alcon-rfid-labeling", extended: true,
       hook: "One Ring, Ten Stations, Zero Mix-Ups.",
       hookSub: "Tag, verify, and track every package at 2,400 units per hour.",
       title: "RFID Labeling and Processing Machine", industry: "Life Sciences", industryId: "life-sciences",
@@ -1182,10 +1232,8 @@ window.SDC_DATA = {
     { id: "hose-assembly-test", title: "Hose Assembly & Test Machine", industry: "General Industrial", industryId: "industrial", capability: "Testing & Inspection · Material Handling", blurb: "Single machine handles spin welding, compression testing, air leak testing to 15 PSI, inkjet marking, and sorting at 24 PPM. Replaced 3 machines with 1.", technologies: ["FANUC SCARA robot", "Cognex vision", "2 spin weld stations", "CTS air leak test (15 PSI)", "Two Keyence CIJ inkjet heads", "Bellco vibratory feeder"], rate: "24 PPM", investment: "$500K–$1M", leadTime: "32–36 weeks", keyImpact: "Replaced 3 machines with 1", delivered: "On-Time", image: "Hose Assembly & Test Machine.jpg", video: "Hose Assembly & Test Machine.mp4" },
     { id: "gas-burner", title: "Gas Burner Assembly Machine", industry: "General Industrial", industryId: "industrial", capability: "Robotic Integration · Material Handling · Parts Feeding Technology", blurb: "Five FANUC robots, 3 SDC Flex Feeders, SDC Indexing Ring (20 fixtures), Telesis fiber laser — 1 burner assembly every 2 seconds with simple tooling changeover.", technologies: ["Four FANUC SCARA robots", "One FANUC 6-axis robot", "Three SDC Flex Feeders", "SDC Indexing Ring (20 fixtures)", "SEYI SN1-28 press", "Telesis F30DSVE 30W fiber laser"], rate: "1 assembly every 2 seconds", investment: "$750K–$1.5M", leadTime: "36–40 weeks", keyImpact: "Simple tooling inserts enable size changeover", delivered: "On-Time", image: "Gas Burner Assembly Machine.jpg", video: "Gas Burner Assembly Machine.mp4" },
     { id: "electrical-safety-switch", title: "Electrical Safety Switch Assembly", industry: "Electronics", industryId: "electronics", capability: "Robotic Integration · Assembly · Machine Vision", blurb: "Yaskawa Motoman robots, SDC Flex Feeding, SDC Indexing Ring, bin-picking vision, automated screwdriving, grease dispensing, 10kV hipot testing.", technologies: ["Yaskawa Motoman 6-axis robot", "Yaskawa Motoman SG400 SCARA", "3 SDC servo pick-and-place units", "SDC Flex Feeding", "Deprag screwdrivers & nutrunners", "Keyence vision system"], rate: "1 assembly every 15 seconds", investment: "$1M–$2M", leadTime: "36–40 weeks", keyImpact: "Hybrid bin-picking + flex feeding optimized footprint and cost", delivered: "On-Time", image: "Electrical Safety Switch Assembly.jpg", video: "Electrical Safety Switch Assembly.mp4" },
-    { id: "drill-bit", title: "Drill Bit Assembly & Packaging Machine", industry: "Consumer Products", industryId: "consumer", capability: "Robotic Integration · Material Handling · Machine Vision", blurb: "4-robot system on SDC Indexing Ring with Keyence 3D bin-picking, SDC Flex Feeders, vision-guided label placement, robotic label wrapping at 3.5 parts per second.", technologies: ["Two SDC Flex Feeders", "Two 6-axis FANUC robots", "Two FANUC SCARA robots", "SDC Indexing Ring", "Keyence 3D bin-picking vision", "Ultrasonic welding"], rate: "15+ PPM", investment: "$1M–$2M", leadTime: "40–48 weeks", keyImpact: "Repeat customer; flexible platform handles multiple drill bit sizes", delivered: "On-Time", image: "Drill Bit Assembly & Packaging Machine.jpg", video: "Drill Bit Assembly & Packaging Machine.mp4" },
     { id: "optical-electrical-tester", title: "Precision Optical & Electrical Tester", industry: "Energy", industryId: "energy", capability: "Testing & Inspection", blurb: "FANUC LR Mate 200iD 7L robot with four cassette stations, barcode reading, Cognex vision, custom .NET software with SQL recipe management, hot-swap capability.", technologies: ["FANUC LR Mate 200iD 7L robot", "Four coupon cassette stations", "Barcode reader", "Cognex inspection camera", "Custom .NET PC application", "SQL Server database", "Light curtain for hot-swap"], rate: "3 per minute", investment: "$500K–$750K", leadTime: "28–32 weeks", keyImpact: "Hot-swap capability for continuous operation", delivered: "On-Time", image: "Precision Optical & Electrical Tester.jpg", video: "Precision Optical & Electrical Tester.mp4" },
     { id: "precision-label", title: "Precision Label Application", industry: "Electronics", industryId: "electronics", capability: "Machine Vision · Robotic Integration · Material Handling", blurb: "FANUC SR-3iA SCARA robot applies foil shielding strips to two jack module styles at 30 PPM with automatic tooling changeover.", technologies: ["FANUC SR-3iA SCARA robot", "Two ATI end effectors with auto tool changer", "Cognex vision system", "Foil label applicator", "Allen-Bradley PLC & HMI"], rate: "30 PPM", investment: "$500K–$750K", leadTime: "28–32 weeks", keyImpact: "Vision inspection catches every defect; reduced downtime", delivered: "On-Time", image: "Precision Label Application.png", video: "Precision Label Application.mp4" },
-    { id: "custom-tool-packaging", title: "Custom Automated Tool Packaging Machine", industry: "General Industrial", industryId: "industrial", capability: "Robotic Integration · Material Handling · Machine Vision", blurb: "4-robot system on SDC Indexing Ring — 40+ package types, 20,000+ part configurations, Telesis fiber laser, Glideline pallet conveyor, Ignition software.", technologies: ["3 FANUC SCARA robots", "FANUC 6-axis robot", "2 SDC Flex Feeders", "SDC Indexing Ring", "Telesis pulsed-fiber laser", "Glideline power & free conveyor", "Ignition software with A-B PLC"], rate: "10+ PPM", investment: "$750K–$1M", leadTime: "36–40 weeks", keyImpact: "FANUC-preferred customer; modular architecture", delivered: "On-Time", image: "Custom Automated Tool Packaging Machine.jpg", video: "Custom Automated Tool Packaging Machine.mp4" },
     // ── LOWER PRIORITY ────────────────────────────────────────────────────────
     { id: "honeycomb-welding", title: "Honeycomb Core Welding Machine", industry: "Aerospace", industryId: "aerospace", capability: "Assembly · Material Handling · Machine Vision · Laser", blurb: "Four-welder servo system with Keyence vision weld inspection — upgraded from prior proven design — at 0.5 seconds per weld.", technologies: ["Four servo-driven weld wheels", "Servo-driven forming gear and pin plates", "Servo-driven XY strip cutter", "Power despooler with dancer", "Keyence vision system"], rate: "0.5 seconds per weld", investment: "$250K–$500K", leadTime: "28–32 weeks", keyImpact: "Repeat customer; upgraded proven design", delivered: "On-Time", image: "Honeycomb Core Welding Machine.png", video: "Honeycomb Core Welding Machine.mp4" },
     { id: "filter-assembly", title: "Automatic Filter Assembly Machine", industry: "Aerospace", industryId: "aerospace", hideFromCaseStudies: true, capability: "Assembly · Material Handling", blurb: "Servo-driven fiberglass media wrapping with multi-belt nesting, three circular slitters, heat stake seaming, light curtain safety — 1–2 filters per minute.", technologies: ["Servo-driven pulley system", "Multi-belt rolling nest", "8-roll media feed racks", "Three circular slitter blades", "11-gripper pull-down mechanism", "Heat stake device", "Banner EZ Screen LS light curtain"], rate: "2 filters per minute", investment: "$500K–$1M", leadTime: "28–32 weeks", keyImpact: "Servo-driven changeover for different filter sizes", delivered: "On-Time", image: "Automatic Filter Assembly Machine.jpg", video: "Automatic Filter Assembly Machine.mp4" },
@@ -1204,6 +1252,8 @@ window.SDC_DATA = {
   ],
 
   videos: [
+    { id: "v-milwaukee-drill-bit", caseId: "milwaukee-drill-bit", title: "Drill Bit Assembly & Packaging Machine", industry: "Consumer Products", category: "Consumer Products", tags: ["Indexing Ring", "3D Bin Picking", "Ultrasonic Welding"], file: "Milwaukee Drill Bit Assembly and Packaging Machine.mp4" },
+    { id: "v-tool-pkg", caseId: "tool-packaging", title: "Custom Automated Tool Packaging Machine", industry: "General Industrial", category: "General Industrial", tags: ["4-robot system", "40+ package types", "Ignition HMI"], file: "Tool Packaging Machine Case Study.mp4" },
     { id: "v-alcon-picking-cracking", caseId: "alcon-picking-cracking", title: "Automated Picking and Cracking Machine", industry: "Life Sciences", category: "Life Sciences", tags: ["Dual Dial", "SCARA", "Force Feedback"], file: "Alcon Picking and Cracking Machine.mp4" },
     { id: "v-alcon-casting", caseId: "alcon-casting", title: "Next Generation Automated Casting Machine", industry: "Life Sciences", category: "Life Sciences", tags: ["Dual-Arm Robotics", "Dispensing", "Vision"], file: "Alcon Casting Machine.mp4" },
     { id: "v-alcon-sterilization-baskets", caseId: "alcon-sterilization-baskets", title: "Sterilization Basket Load & Unload Automation", industry: "Life Sciences", category: "Life Sciences", tags: ["EPSON Robotics", "Vision Guided", "Sterile Packaging"], file: "Alcon Sterilization Basket Automation.mp4" },
@@ -1221,7 +1271,6 @@ window.SDC_DATA = {
     { id: "v-hose-test", caseId: "hose-assembly-test", title: "Hose Assembly & Test Machine", industry: "General Industrial", category: "General Industrial", tags: ["Spin welding", "Leak test", "24 PPM"], file: "Hose Assembly & Test Machine.mp4" },
     { id: "v-gas-burner", caseId: "gas-burner", title: "Gas Burner Assembly Machine", industry: "General Industrial", category: "General Industrial", tags: ["5 FANUC robots", "SDC Flex Feeders", "Fiber laser"], file: "Gas Burner Assembly Machine.mp4" },
     { id: "v-safety-switch", caseId: "electrical-safety-switch", title: "Electrical Safety Switch Assembly", industry: "Electronics", category: "Electronics", tags: ["Yaskawa Motoman", "Bin picking", "10kV hipot"], file: "Electrical Safety Switch Assembly.mp4" },
-    { id: "v-drill-bit", caseId: "drill-bit", title: "Drill Bit Assembly & Packaging Machine", industry: "Consumer Products", category: "Consumer Products", tags: ["4-robot system", "3D bin picking", "15+ PPM"], file: "Drill Bit Assembly & Packaging Machine.mp4" },
     { id: "v-optical", caseId: "optical-electrical-tester", title: "Precision Optical & Electrical Tester", industry: "Energy", category: "Energy", tags: ["FANUC 6-axis", "4 cassette stations", "Hot-swap"], file: "Precision Optical & Electrical Tester.mp4" },
     { id: "v-precision-label", caseId: "precision-label", title: "Precision Label Application", industry: "Electronics", category: "Electronics", tags: ["FANUC SCARA", "Foil shielding", "30 PPM"], file: "Precision Label Application.mp4" },
     { id: "v-eoat", caseId: "robotic-eoat", title: "SDC Custom Robotic End-of-Arm Tooling", industry: "General Industrial", category: "General Industrial", tags: ["FANUC R-2000ic", "Auto changeover", "54\" parts"], file: "SDC Custom Robotic End-of-Arm Tooling.mp4" },
@@ -1230,7 +1279,6 @@ window.SDC_DATA = {
     { id: "v-button-flow", caseId: "button-flow-test", title: "High-Speed Button Flow Test Machine", industry: "Aerospace", category: "Aerospace", hideFromVideos: true, tags: ["3-axis robot", "Flow test", "10 parts/sec"], file: "Button Flow Test Machine.mp4" },
     { id: "v-solar-dynamic", caseId: "solar-dynamic", title: "Solar Panel Dynamic Load Test Machine", industry: "Energy", category: "Energy", tags: ["Pneumatic actuators", "Zone control", "UL 61730"], file: "Solar Panel Dynamic Load Test Machine.mp4" },
     { id: "v-solar-sweep", caseId: "solar-sweep", title: "Solar Panel Sweep Test Machine", industry: "Energy", category: "Energy", tags: ["Wire brush abrasion", "HEPA filtration", "Humidity control"], file: "Solar Panel Sweep Test Machine.mp4" },
-    { id: "v-tool-pkg", caseId: "custom-tool-packaging", title: "Custom Automated Tool Packaging Machine", industry: "General Industrial", category: "General Industrial", tags: ["4-robot system", "40+ package types", "Ignition HMI"], file: "Custom Automated Tool Packaging Machine.mp4" },
     { id: "v-gas-valve", caseId: "gas-valve", title: "Semi-Automated Gas Valve Assembly", industry: "Energy", category: "Energy", tags: ["Servo torquing", "Sealant application", "140/hr"], file: "Semi-Automated Gas Valve Assembly.mp4" },
   ],
 
@@ -1490,13 +1538,9 @@ const Header = ({ route, onNavigate, onBack, onHome, title }) => {
           )}
           {isHome && (
             <div className="show-badge">
-              Alcon Technology Expo &nbsp;·&nbsp; <span>A Future In Focus</span> &nbsp; &nbsp;
+              <span>{window.SDC_DATA.company.show}</span> &nbsp; &nbsp;
             </div>
           )}
-          <div className="confidentiality-disclaimer">
-                This content is confidential and provided for internal Alcon use only. 
-                Please do not photograph, copy, or share outside your organization.
-          </div>
         </div>
         <div className="kheader-right">
           {!isHome && (
@@ -1569,22 +1613,6 @@ const Frame = ({ route, onNavigate, onBack, onHome, title, children }) => (
 );
 
 // ─── HOME SCREEN ─────────────────────────────────────────────────────────────
-// ---- CO-BRAND CHIP (Alcon build) -------------------------------------------
-// Renders the customer logo on a white chip so the mark keeps its own colour on
-// the blue hero. Opt-in by file presence: if "Customer Logo Files/Alcon Logo.png"
-// is absent (or fails to load) nothing renders and the hero looks as it does now.
-// Use the logo at its native colours here -- do NOT route it through the
-// scrolling logo bar, whose invert/screen filter is built for transparent PNGs.
-const CoBrandChip = () => {
-  const [ok, setOk] = useState(true);
-  if (!ok) return null;
-  return (
-    <div className="cobrand-chip">
-      <img src={LOGO_PATH("Alcon Logo.png")} alt="Alcon" onError={() => setOk(false)} />
-    </div>
-  );
-};
-
 const HomeScreen = ({ onNavigate }) => {
   const D = window.SDC_DATA;
   const cards = [
@@ -1599,8 +1627,7 @@ const HomeScreen = ({ onNavigate }) => {
     <>
       <div className="hero">
         <div className="hero-left">
-          <CoBrandChip />
-          <h1 className="hero-title">Automation Built for Alcon</h1>
+          <h1 className="hero-title">Automation Built for Milwaukee</h1>
           <p className="hero-sub">Engineering Excellence. Trusted Partnerships.</p>
         </div>
         <div className="hero-right">
@@ -1609,7 +1636,7 @@ const HomeScreen = ({ onNavigate }) => {
       </div>
       <div className="screen-content" style={{paddingBottom: 20}}>
         <div className="featured-lead">
-          Alcon machines engineered and built by SDC &mdash; tap any one to see the technology, the proof, and what it takes to adopt.
+          Two SDC machines proven in tool manufacturing &mdash; tap either one to see the technology, the proof, and what it takes to adopt.
         </div>
         <div className="featured-strip">
           {D.caseStudies.filter(c => c.featured).map(c => {
@@ -1689,7 +1716,7 @@ const CaseStudiesScreen = ({ onNavigate, filterIndustryId, filterIndustryName })
       <div className="scrollable-list" style={{maxHeight:760}}>
         {featured.length > 0 && (
           <>
-            <div className="featured-kicker" style={{marginBottom:8}}>Built for Alcon</div>
+            <div className="featured-kicker" style={{marginBottom:8}}>Featured at the Milwaukee Technology Expo</div>
             <div className="case-card-grid" style={{marginBottom:22,gridTemplateColumns:"repeat(2,1fr)"}}>
               {featured.map(c => <CaseCard key={c.id} c={c} onNavigate={onNavigate} />)}
             </div>
@@ -1708,7 +1735,7 @@ const CaseStudiesScreen = ({ onNavigate, filterIndustryId, filterIndustryName })
   );
 };
 
-// ---- PHOTO GALLERY (Alcon build) -------------------------------------------
+// ---- PHOTO GALLERY -------------------------------------------
 const CaseGallery = ({ images, title, video, onNavigate }) => {
   const [idx, setIdx] = useState(0);
   const [bad, setBad] = useState({});
@@ -1839,7 +1866,7 @@ const CaseStudyDetail = ({ id, onNavigate }) => {
   const video = D.videos.find(v => v.caseId === c.id);
   const [imgError, setImgError] = useState(false);
 
-  if (c.featured) return <FeaturedCaseDetail c={c} video={video} onNavigate={onNavigate} />;
+  if (c.featured || c.extended) return <FeaturedCaseDetail c={c} video={video} onNavigate={onNavigate} />;
 
   return (
     <div className="detail-grid">
@@ -2318,7 +2345,7 @@ const ContactScreen = () => {
             <div className="contact-label">Talk to engineering</div>
             <a className="contact-phone" href={`tel:${D.phone}`}>{D.phone}</a>
             <a className="contact-email" href={`mailto:${D.email}`}>{D.email}</a>
-            <a href={`mailto:SDC Sales <${D.email}>?subject=Project Inquiry — Alcon Technology Expo&body=Hi SDC team,%0D%0A%0D%0AI'd like to learn more about your automation capabilities.%0D%0A%0D%0A`}
+            <a href={`mailto:SDC Sales <${D.email}>?subject=Project Inquiry — Milwaukee Technology Expo&body=Hi SDC team,%0D%0A%0D%0AI'd like to learn more about your automation capabilities.%0D%0A%0D%0A`}
               style={{display:"inline-flex",alignItems:"center",gap:10,marginTop:12,
                 background:"var(--blue)",color:"#fff",borderRadius:10,
                 padding:"13px 22px",fontWeight:700,fontSize:16,textDecoration:"none",
@@ -2351,9 +2378,8 @@ const ContactScreen = () => {
             </div>
           </div>
           <div style={{background:"var(--panel-2)",border:"1px solid var(--border)",borderRadius:10,padding:"16px 20px"}}>
-            <div className="contact-label" style={{marginBottom:8}}>{D.show} · {D.booth}</div>
+            <div className="contact-label" style={{marginBottom:8}}>{D.show}</div>
             <div style={{color:"var(--text)",fontWeight:700,fontSize:17}}>{D.venue}</div>
-            <div style={{color:"var(--text-dim)",fontSize:14,marginTop:3}}>June 22–25, 2026 · North Hall</div>
           </div>
         </div>
       </div>
