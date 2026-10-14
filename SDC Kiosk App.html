@@ -976,7 +976,7 @@ window.SDC_DATA = {
   industries: [
     { id: "life-sciences", name: "Life Sciences", icon: "Life Sciences Icon.svg", blurb: "Ophthalmic device automation, IOL wafer processing, sterile package handling, catheter assembly, and Class II/III device automation. Micron-level precision and full regulatory traceability.", cases: ["alcon-picking-cracking", "alcon-casting", "alcon-sterilization-baskets", "alcon-rfid-labeling", "automated-rf", "endoscope-brush", "microscopic-medical", "medical-feed-tube"] },
     { id: "automotive", name: "Automotive", icon: "Automotive Icon.svg", blurb: "Ignition coil production, connector assembly, sensor integration, and high-speed small part assembly for Tier 1 & Tier 2 automotive suppliers.", cases: ["ignition-coil", "ev-charging", "automotive-dash"] },
-    { id: "consumer", name: "Consumer Products", icon: "Consumer Products Icon.svg", blurb: "Fragrance diffusers, cap assembly, dispenser mechanisms, and flexible multi-SKU production lines running at rates up to 140+ parts per minute.", cases: ["milwaukee-drill-bit", "wick-assembly", "hose-clamp-cartoning", "precision-packaging", "custom-cartoning", "fluid-dispensing"] },
+    { id: "consumer", name: "Consumer Products", icon: "Consumer Products Icon.svg", blurb: "Fragrance diffusers, cap assembly, dispenser mechanisms, and flexible multi-SKU production lines running at rates up to 140+ parts per minute.", cases: ["milwaukee-drill-bit", "tip-up-drill-bit", "wick-assembly", "hose-clamp-cartoning", "precision-packaging", "custom-cartoning", "fluid-dispensing"] },
     { id: "electronics", name: "Electronics", icon: "Electronics Icon.svg", blurb: "Sub-assembly, functional test, inspection, and high-mix/low-volume flexible automation for electronic components and devices.", cases: ["precision-label", "industry-40-hmi", "electrical-small-part", "electrical-safety-switch"] },
     { id: "energy", name: "Energy", icon: "Energy Icon.svg", blurb: "Automated assembly and testing for energy system components — supporting the transition to cleaner, more reliable power systems.", cases: ["solar-dynamic", "solar-sweep", "gas-valve", "optical-electrical-tester", "leak-testing-propane"] },
     { id: "aerospace", name: "Aerospace", icon: "Aerospace Icon.svg", blurb: "Precision assembly, torque-to-spec, and full component traceability for mission-critical aerospace and defense applications.", cases: ["honeycomb-welding", "filter-assembly", "fin-former", "resistance-welding"] },
@@ -1066,6 +1066,47 @@ window.SDC_DATA = {
       image: "Milwaukee Drill Bit Assembly 1.jpg",
       images: ["Milwaukee Drill Bit Assembly 1.jpg", "Milwaukee Drill Bit Assembly 2.jpg", "Milwaukee Drill Bit Assembly 3.jpg", "Milwaukee Drill Bit Assembly 4.jpg", "Milwaukee Drill Bit Assembly 5.jpg", "Milwaukee Drill Bit Assembly 6.jpg", "Milwaukee Drill Bit Assembly 7.jpg", "Milwaukee Drill Bit Assembly 8.jpg"],
       video: "Milwaukee Drill Bit Assembly and Packaging Machine.mp4" },
+
+    // No video yet -- the FINAL docx says "N/A. Use SolidWorks screenshots", so
+    // the gallery is CAD renders and video is null.
+    // TODO -- CONFIRM production status before changing "status" below; the docx
+    // does not say whether this machine is running yet.
+    { id: "tip-up-drill-bit", featured: true,
+      hook: "Four Seconds. Every Station. All at Once.",
+      hookSub: "How Milwaukee's linear indexing packaging machine clips, welds, and labels long drill bits in parallel.",
+      title: "Tip-Up Drill Bit Packaging Machine", industry: "Consumer Products", industryId: "consumer",
+      capability: "Robotic Integration · Machine Vision · Material Handling",
+      blurb: "Large SDS-Max and SDS-Plus drill bits, spanning 29 SKUs, need to be inserted, clipped, ultrasonically welded, and labeled consistently. The range is the challenge: bits run from 6¼\" to 21\" long and from 9/16\" to 1⅜\" in diameter, too long for a rotary dial, and all accommodated on one machine. A servo-driven linear indexing chassis solves it. Every station runs simultaneously, so each index moves every package forward one station, and each automated station finishes in 4 seconds or less.",
+      problem: [
+        "Recipe-driven automated changeover: a two-conveyor chassis with one fixed side and one stepper-adjusted side, nests that index into position for each bit diameter, and bit supports that slide along a rail to match bit length. Operators never unbolt or swap fixtures",
+        "SDC Flex Feeder feeds front clips from bulk, loading them right-side-up or upside-down, with a servo flipper to orient them",
+        "Servo-controlled shear cutter trims all six clip posts to a SKU-specific length, vision verifies the cut, and an SDC-supplied vacuum system collects the trimmings",
+        "FANUC SCARA robot applies the label, then rollers wrap it around the clip before it is verified. The station handles both clip styles, and one end-of-arm tool picks both",
+        "Vision-guided, multi-axis servo orient station rotates each drill bit into the orientation the customer wants shown, with the peak of the flute across the back clip rib so the welder presses the flutes into the rib for retention",
+        "Herrmann ultrasonic welder deforms and fuses the front clip posts into the back clip, permanently locking the package, with a clamp holding the back clip while the weld cools",
+        "Custom SDC HMI built on custom Ignition software, giving operators recipe-based control of all 29 SKUs",
+      ],
+      proven: [
+        "The label and orient stations use similar tooling and software. Post trimming and ultrasonic welding of the clip posts are new to this machine",
+        "Quality checks at multiple points: sensor and vision verification of clip load, post cut, and back clip load, plus a label camera and a backside barcode scanner",
+        "Recipe-driven Ignition HMI configures each SKU automatically. This was one of the first SDC machines built on Ignition",
+        "Meets the customer spec: 4.0 sec cycle, under 1.5% machine-caused rejects, at least 85% uptime, changeovers in 15 minutes or less",
+        "Rejected bits can be pulled from the packaging and rerun through the machine",
+      ],
+      effort: [
+        "Skills: recipe-based operation on a 12\" HMI. The operator loads drill bits and clears finished parts from the accumulation conveyor",
+        "Changeover: conveyor width, nest position, and bit supports all set themselves from the recipe, so there are no fixtures to swap. After the machine purge, the machine typically switches over in under 15 seconds, and the operator then swaps labels in about 3 minutes",
+        "Infrastructure: 208VAC, 3-phase, 60 A service and compressed air, with a footprint of roughly 25 x 17 ft. No separate dust collection is needed; an SDC-supplied vacuum system collects post trimmings",
+        "Staffing: 2 operators per shift. One loads drill bits, and the other unloads finished packages into boxes and keeps the feeders full",
+      ],
+      close: "Designed for Milwaukee. Built on knowledge. Engineered for the longest bits.",
+      technologies: ["Servo-driven linear indexing chassis", "Recipe-driven automated changeover", "SDC Flex Feeder", "Servo shear cutter with vision verification", "FANUC SCARA robot label application", "Herrmann ultrasonic welder", "Custom Ignition HMI (29 SKUs)"],
+      rate: "4-second cycle",
+      status: "Engineered for Milwaukee", hideInvestment: true,
+      keyImpact: "29 SKUs, 6¼\"–21\" bits, one machine with recipe-driven changeover", delivered: "On-Time",
+      image: "Tip-Up Drill Bit Packaging 1.jpg",
+      images: ["Tip-Up Drill Bit Packaging 1.jpg", "Tip-Up Drill Bit Packaging 2.jpg", "Tip-Up Drill Bit Packaging 3.jpg", "Tip-Up Drill Bit Packaging 4.jpg", "Tip-Up Drill Bit Packaging 5.jpg", "Tip-Up Drill Bit Packaging 6.jpg", "Tip-Up Drill Bit Packaging 7.jpg", "Tip-Up Drill Bit Packaging 8.jpg"],
+      video: null },
 
     // == ALCON (extended 5-section detail; not featured on Home) ===============
     // NOTE: internal job numbers (1003 / 1029 / 1124 / 1145 / 1146 / 917) are
@@ -1636,7 +1677,7 @@ const HomeScreen = ({ onNavigate }) => {
       </div>
       <div className="screen-content" style={{paddingBottom: 20}}>
         <div className="featured-lead">
-          Two SDC machines proven in tool manufacturing &mdash; tap either one to see the technology, the proof, and what it takes to adopt.
+          Three SDC machines for tool manufacturing &mdash; tap any one to see the technology, the proof, and what it takes to adopt.
         </div>
         <div className="featured-strip">
           {D.caseStudies.filter(c => c.featured).map(c => {
@@ -1717,7 +1758,7 @@ const CaseStudiesScreen = ({ onNavigate, filterIndustryId, filterIndustryName })
         {featured.length > 0 && (
           <>
             <div className="featured-kicker" style={{marginBottom:8}}>Featured at the Milwaukee Technology Expo</div>
-            <div className="case-card-grid" style={{marginBottom:22,gridTemplateColumns:"repeat(2,1fr)"}}>
+            <div className="case-card-grid" style={{marginBottom:22,gridTemplateColumns:"repeat(3,1fr)"}}>
               {featured.map(c => <CaseCard key={c.id} c={c} onNavigate={onNavigate} />)}
             </div>
           </>
