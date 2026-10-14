@@ -1003,39 +1003,7 @@ window.SDC_DATA = {
     // The tool-packaging machine is for a similar stone-drill customer, NOT
     // Milwaukee -- keep its wording customer-neutral. The drill-bit machine is
     // the Milwaukee one ("Built for Milwaukee").
-    { id: "tool-packaging", featured: true,
-      hook: "One Machine. 20,000+ Parts. Zero Changeover Downtime.",
-      hookSub: "How a stone drill manufacturer packages 40+ drill tool styles on a single flexible line.",
-      title: "Custom Automated Tool Packaging Machine", industry: "General Industrial", industryId: "industrial",
-      capability: "Robotic Integration · Material Handling · Machine Vision",
-      blurb: "This customer needed to package 20,000+ part variations across 40+ package types — previously assembled by hand, with no automated line flexible enough to handle that much variety. Precision robotic integration built around an SDC Indexing Ring solves it: three FANUC SCARA robots work with SDC's Flex Feeding system for vision-guided part selection and nest placement, while a FANUC 6-axis robot handles pallet-based drill tool picking.",
-      problem: [
-        "SDC Flex Feeding delivers vision-guided, accurately oriented parts continuously, eliminating robotic wait time",
-        "Telesis pulsed-fiber laser marks each part with dimensional info and/or lot number before placement",
-        "Servo-driven part placement orients parts tip-up or tip-down automatically, calculated from part and package dimensions",
-        "Schunk electric servo gripper positions jaws with clearances as low as 0.5mm, handling 3mm–20mm diameters with no tooling changer",
-        "Ignition software links the PLC to the customer's 20,000+ tool product database in real time — new variants added without re-engineering",
-      ],
-      proven: [
-        "Running in production: 750 parts/hour at 98.5% operational efficiency",
-        "Automatic label placement repositions vertically/horizontally per recipe — no manual changeover between package sizes",
-        "3 ATI end effectors with automatic robotic tooling changeover adapt the SCARA robots between tasks without manual swap",
-        "Machine vision (FANUC iRVision, Balluff magnetic sensors, Keyence color sensors) verifies label placement and part orientation at every stage",
-      ],
-      effort: [
-        "Skills: standard PLC/HMI operation (Allen-Bradley PLC, PanelView 5000); new product variants are added through Ignition software recipes, not reprogramming",
-        "Scalability: modular design and software programmability allow quick adjustments for new package styles without major re-engineering",
-      ],
-      close: "Proven in production. Engineered to handle what's next.",
-      technologies: ["SDC Indexing Ring", "Three FANUC SCARA robots + FANUC 6-axis robot", "SDC Flex Feeding with vision guidance", "Telesis pulsed-fiber laser marking", "Schunk electric servo gripper", "ATI automatic tool changers", "Ignition software with Allen-Bradley PLC"],
-      rate: "750 parts/hour",
-      status: "In Production", hideInvestment: true,
-      keyImpact: "Packages 40+ drill tool styles on a single flexible line with no changeover downtime", delivered: "On-Time",
-      image: "Tool Packaging Machine 1.jpg",
-      images: ["Tool Packaging Machine 1.jpg", "Tool Packaging Machine 2.jpg", "Tool Packaging Machine 3.jpg", "Tool Packaging Machine 4.jpg", "Tool Packaging Machine 5.jpg", "Tool Packaging Machine 6.jpg", "Tool Packaging Machine 7.jpg", "Tool Packaging Machine 8.jpg"],
-      video: "Tool Packaging Machine Case Study.mp4" },
-
-    { id: "milwaukee-drill-bit", featured: true,
+    { id: "milwaukee-drill-bit", featured: true, homeKicker: "BULK BITS TO BOXED",
       hook: "Drill Bits In, Packaged Product Out — Fully Automated.",
       hookSub: "How Milwaukee boosted end-of-line packaging speed and safety.",
       title: "Drill Bit Assembly & Packaging Machine", industry: "Consumer Products", industryId: "consumer",
@@ -1071,7 +1039,7 @@ window.SDC_DATA = {
     // the gallery is CAD renders and video is null.
     // TODO -- CONFIRM production status before changing "status" below; the docx
     // does not say whether this machine is running yet.
-    { id: "tip-up-drill-bit", featured: true,
+    { id: "tip-up-drill-bit", featured: true, homeKicker: "29 SKUS, AUTOMATIC CHANGEOVER",
       hook: "Four Seconds. Every Station. All at Once.",
       hookSub: "How Milwaukee's linear indexing packaging machine clips, welds, and labels long drill bits in parallel.",
       title: "Tip-Up Drill Bit Packaging Machine", industry: "Consumer Products", industryId: "consumer",
@@ -1107,6 +1075,38 @@ window.SDC_DATA = {
       image: "Tip-Up Drill Bit Packaging 1.jpg",
       images: ["Tip-Up Drill Bit Packaging 1.jpg", "Tip-Up Drill Bit Packaging 2.jpg", "Tip-Up Drill Bit Packaging 3.jpg", "Tip-Up Drill Bit Packaging 4.jpg", "Tip-Up Drill Bit Packaging 5.jpg", "Tip-Up Drill Bit Packaging 6.jpg", "Tip-Up Drill Bit Packaging 7.jpg", "Tip-Up Drill Bit Packaging 8.jpg"],
       video: null },
+
+    { id: "tool-packaging", featured: true, homeKicker: "750 PARTS PER HOUR",
+      hook: "One Machine. 20,000+ Parts. Zero Changeover Downtime.",
+      hookSub: "How a stone drill manufacturer packages 40+ drill tool styles on a single flexible line.",
+      title: "Custom Automated Tool Packaging Machine", industry: "General Industrial", industryId: "industrial",
+      capability: "Robotic Integration · Material Handling · Machine Vision",
+      blurb: "This customer needed to package 20,000+ part variations across 40+ package types — previously assembled by hand, with no automated line flexible enough to handle that much variety. Precision robotic integration built around an SDC Indexing Ring solves it: three FANUC SCARA robots work with SDC's Flex Feeding system for vision-guided part selection and nest placement, while a FANUC 6-axis robot handles pallet-based drill tool picking.",
+      problem: [
+        "SDC Flex Feeding delivers vision-guided, accurately oriented parts continuously, eliminating robotic wait time",
+        "Telesis pulsed-fiber laser marks each part with dimensional info and/or lot number before placement",
+        "Servo-driven part placement orients parts tip-up or tip-down automatically, calculated from part and package dimensions",
+        "Schunk electric servo gripper positions jaws with clearances as low as 0.5mm, handling 3mm–20mm diameters with no tooling changer",
+        "Ignition software links the PLC to the customer's 20,000+ tool product database in real time — new variants added without re-engineering",
+      ],
+      proven: [
+        "Running in production: 750 parts/hour at 98.5% operational efficiency",
+        "Automatic label placement repositions vertically/horizontally per recipe — no manual changeover between package sizes",
+        "3 ATI end effectors with automatic robotic tooling changeover adapt the SCARA robots between tasks without manual swap",
+        "Machine vision (FANUC iRVision, Balluff magnetic sensors, Keyence color sensors) verifies label placement and part orientation at every stage",
+      ],
+      effort: [
+        "Skills: standard PLC/HMI operation (Allen-Bradley PLC, PanelView 5000); new product variants are added through Ignition software recipes, not reprogramming",
+        "Scalability: modular design and software programmability allow quick adjustments for new package styles without major re-engineering",
+      ],
+      close: "Proven in production. Engineered to handle what's next.",
+      technologies: ["SDC Indexing Ring", "Three FANUC SCARA robots + FANUC 6-axis robot", "SDC Flex Feeding with vision guidance", "Telesis pulsed-fiber laser marking", "Schunk electric servo gripper", "ATI automatic tool changers", "Ignition software with Allen-Bradley PLC"],
+      rate: "750 parts/hour",
+      status: "In Production", hideInvestment: true,
+      keyImpact: "Packages 40+ drill tool styles on a single flexible line with no changeover downtime", delivered: "On-Time",
+      image: "Tool Packaging Machine 1.jpg",
+      images: ["Tool Packaging Machine 1.jpg", "Tool Packaging Machine 2.jpg", "Tool Packaging Machine 3.jpg", "Tool Packaging Machine 4.jpg", "Tool Packaging Machine 5.jpg", "Tool Packaging Machine 6.jpg", "Tool Packaging Machine 7.jpg", "Tool Packaging Machine 8.jpg"],
+      video: "Tool Packaging Machine Case Study.mp4" },
 
     // == ALCON (extended 5-section detail; not featured on Home) ===============
     // NOTE: internal job numbers (1003 / 1029 / 1124 / 1145 / 1146 / 917) are
@@ -1687,7 +1687,7 @@ const HomeScreen = ({ onNavigate }) => {
                 onClick={() => onNavigate({ name: "case-study-detail", id: c.id })}>
                 {thumb && <img className="featured-card-thumb" src={IMG_PATH(thumb)} alt="" />}
                 <div className="featured-card-body">
-                  <div className="featured-kicker">{c.status}</div>
+                  <div className="featured-kicker">{c.homeKicker || c.status}</div>
                   <div className="featured-hook">{c.hook}</div>
                   <div className="featured-name">{c.title}</div>
                   <div className="featured-stat">{c.rate}</div>
