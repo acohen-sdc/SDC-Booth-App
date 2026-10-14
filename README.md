@@ -84,3 +84,5 @@ This compresses and base64-encodes all images, icons, and logos into a new `SDC 
 - **Pillow** (Python, for image compression during the bake step only)
 
 No `npm install`, no webpack, no bundler. The source file opens directly in any browser.
+
+Re-encoded Videos: https://stevendouglascorp-my.sharepoint.com/:f:/g/personal/mvest_sdcautomation_com/IgCeMAbEPjzmQLzUnAIIpzksASX-7Nmg6D97APKkDDlWWl4?e=eURrQU
